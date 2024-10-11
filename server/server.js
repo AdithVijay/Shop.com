@@ -5,6 +5,7 @@ const cors = require('cors')
 const path = require('path');
 const mongoose = require( 'mongoose')
 const userRoute = require("./routes/userRoutes");
+const adminRoute = require("./routes/adminRoute");
 
 app.use(cors({
     origin: ' http://localhost:5173', // Change this to your frontend's URL if different
@@ -18,7 +19,9 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((error) => console.error('Failed to connect to MongoDB:', error));
 
   app.use("/user",userRoute)
+  app.use("/admin",adminRoute)
 
+ 
 
 
 const PORT = process.env.PORT;  

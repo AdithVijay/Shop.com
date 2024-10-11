@@ -1,14 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axiosInstance from '@/config/axiosInstance';
+import Sidebar from '@/Majorcomponents/bars/Sidebar';
 
 const AdminLogin = () => {
+
+    const [email, setemail] = useState("");
+    const [password, setpassword] = useState("");
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting:", {  email, password }); 
+    try {
+      const response = await axiosInstance.post("/admin/login",{ email, password });
+      console.log(response.data);
+    } catch (error) {
+      console.error("ther is ",error);
+    }
+  };
+
   return (
+    
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <Sidebar/>
       <div className="bg-white rounded-lg shadow-md max-w-md w-full p-6">
         <div className="flex flex-col items-center mb-6">
           <h2 className="text-2xl font-bold">Admin Login</h2>
         </div>
         
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -18,6 +38,7 @@ const AdminLogin = () => {
               id="email"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
               placeholder="Enter your email"
+              onChange={(e) => setemail(e.target.value)}
             />
           </div>
           
@@ -30,6 +51,7 @@ const AdminLogin = () => {
               id="password"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-black"
               placeholder="Enter your password"
+              onChange={(e) => setpassword(e.target.value)}
             />
           </div>
           

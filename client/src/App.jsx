@@ -4,6 +4,7 @@ import UserSignup from './pages/userpages/UserSignup'
 import OtpSignup from './Majorcomponents/OtpSignup'
 import UserLogin from './pages/userpages/UserLogin'
 import AdminLogin from './pages/adminpages/AdminLogin'
+import Category from './pages/adminpages/category/Category'
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
             <Route path='/otp' element={<OtpSignup/>}></Route>
             <Route path='/login' element={<UserLogin/>}></Route>
             <Route path='/admin' element={<AdminLogin/>}></Route>
+            <Route path='/category' element={<Category/>}></Route>
           </Routes>
         </BrowserRouter>
     </div>
