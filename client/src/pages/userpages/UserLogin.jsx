@@ -3,21 +3,21 @@ import axiosInstance from "../../config/axiosInstance";
 import { FaGoogle, FaTwitter } from "react-icons/fa";
 import dp2 from "../../assets/dp2.jpg";
 import logo from "../../assets/logo.png";
-
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 const UserLogin = () => {
-  const [name, setname] = useState("");
+ 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const [phonenumber, setphonenumber] = useState("");
 
-  console.log(name);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting:", { name, email, password, phonenumber }); 
+    console.log("Submitting:", {  email, password }); 
     try {
-      const response = await axiosInstance.post("/user/create",{ name, email, password,phonenumber });
+      const response = await axiosInstance.post("/user/login",{ email, password });
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -78,16 +78,32 @@ const UserLogin = () => {
             </button>
           </form>
 
-          <div className="mt-6 space-y-4">
-            <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <FaGoogle className="mr-2 text-red-500" />
-              Sign up with Google
-            </button>
 
-            <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <FaTwitter className="mr-2 text-blue-400" />
-              Sign in with Twitter
-            </button>
+            
+
+            <div className="flex items-center justify-center w-full py-2 px-4  ">
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  var credentialResponseDecoded = jwtDecode(credentialResponse.credential);
+                  const googleToken = credentialResponse.credential;
+
+                  axiosInstance.post("/user/googleLogin", { token: googleToken })
+                  .then(response => {
+                    console.log("Google sign-in successful:", response.data);
+                    alert(response.data.message)
+                    // navigate("/login")
+                  })
+                  .catch(error => {
+                    console.error("Google sign-in error:", error.response);
+                    alert(error.response.data.message)
+                  });
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+
+              />
+
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">

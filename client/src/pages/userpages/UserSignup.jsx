@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../../config/axiosInstance";
 import { FaGoogle, FaTwitter } from "react-icons/fa";
 import dp4 from "../../assets/dp4.jpg";
 import logo from "../../assets/logo.png";
 import { OTPVerification } from "@/components/ui/OTPVerification";
-
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const [name, setname] = useState("");
@@ -13,28 +15,37 @@ const SignupPage = () => {
   const [phonenumber, setphonenumber] = useState("");
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
 
-  console.log(name);
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {  // Logic for sending the user responses 
+  const handleSubmit = async (e) => {  
     e.preventDefault();
     setIsOTPDialogOpen(true);
     console.log("Submitting at front end :", { name, email, password, phonenumber }); 
     try {
-      const response = await axiosInstance.post("/user/create",{ name, email, password,phonenumber });
+      const response = await axiosInstance.post("/user/otp",{ email });
       console.log(response.data);
       console.log(response.message);
+   
     } catch (error) {
         console.error("Error da response:", error.response);
-        console.log("Message:", error.response.data.message); // Access the error message
+         console.log("Message:", error.response.data.message); // Access the error message
     }
   };
 
 
-  const handleOTPVerify = (otp) => {
-    // Add your OTP verification logic here
+  const handleOTPVerify =async (otp) => {
+
     console.log('OTP verified:', otp);
+    try {
+      const response = await axiosInstance.post("/user/create",{name,email,password,phonenumber,otp});
+      console.log(response.data);
+      navigate("/login")
+      alert(response.data.message)
+    } catch (error) {
+      console.log("Error da response:", error.response);
+      alert( error.response.data.message); // Access the error message
+    }
     setIsOTPDialogOpen(false);
-    // Proceed with user creation after OTP verification
   };
 
   return (
@@ -121,15 +132,42 @@ const SignupPage = () => {
           </form>
 
           <div className="mt-6 space-y-4">
-            <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            {/* <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <FaGoogle className="mr-2 text-red-500" />
               Sign up with Google
-            </button>
+            </button> */}
 
+            <div className="flex items-center justify-center w-full py-2 px-4rounded-md shadow-sm text-sm ">
+              <GoogleLogin
+                onSuccess={credentialResponse => {
+                  var credentialResponseDecoded = jwtDecode(credentialResponse.credential);
+                  const googleToken = credentialResponse.credential;
+
+                  //Post request being sending  to the server 
+
+                  axiosInstance.post("/user/googlesignin", { token: googleToken })
+                  .then(response => {
+                    console.log("Google sign-in successful:", response.data);
+                    navigate("/login")
+                  })
+                  .catch(error => {
+                    console.error("Google sign-in error:", error.response);
+                    alert(error.response.data.message)
+                  });
+               
+                }}
+                onError={() => {
+                  console.log('Login Failed');
+                }}
+
+              />
+            </div>
+
+{/* 
             <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <FaTwitter className="mr-2 text-blue-400" />
               Sign in with Twitter
-            </button>
+            </button> */}
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">

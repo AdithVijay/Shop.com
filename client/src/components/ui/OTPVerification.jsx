@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 
 export function OTPVerification({ isOpen, onClose, onVerify, email }) {
-  const [otp, setOtp] = useState(['', '', '', '', '']);
+  const [otp, setOtp] = useState(['', '', '', '', '','']);
   const [timer, setTimer] = useState(20);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
       const newOtp = [...otp];
       newOtp[index] = value;
       setOtp(newOtp);
-      if (value !== '' && index < 4) {
+      if (value !== '' && index < 5) {
         document.getElementById(`otp-${index + 1}`)?.focus();
       }
     }

@@ -1,5 +1,5 @@
 mongoose= require("mongoose")
-const mailSender = require('../utils/mailSender')
+const {mailSender} = require('../utils/mailSender')
 
 const OTPSchema = new mongoose.Schema({
     email: {
