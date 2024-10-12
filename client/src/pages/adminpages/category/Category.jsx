@@ -1,73 +1,135 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Edit2 } from 'lucide-react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import axiosInstance from '@/config/axiosInstance';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function CategoryManagement() {
-  const [categories, setCategories] = useState([
-    { id: 1, name: 'Brand', description: 'Product Brand', isListed: true },
-    { id: 2, name: 'Brand', description: 'Product Brand', isListed: true },
-    { id: 3, name: 'Brand', description: 'Product Brand', isListed: true },
-  ]);
+  const [category, setCategories] = useState("");
+  const [description, setdescription] = useState("");
+  const [recieveCategory, setrecieveCategory] = useState([]);
 
-  const [newCategory, setNewCategory] = useState({ name: '', description: '' });
+  const navigate = useNavigate()
+  
+// ===================FETCHING DAT TO LIST IN TABLES=========================================================================
 
-  const handleInputChange = (e) => {
-    setNewCategory({ ...newCategory, [e.target.name]: e.target.value });
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await axiosInstance.get("/admin/getcategory");
+        setrecieveCategory(response.data.data)
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchData()
+  }, [])
+  
+// ===================ADD NEW CATGEORY=========================================================================
+
+  const addCategory = async (e) => {
+    e.preventDefault();
+    console.log("Submitting:", { category, description }); 
+    try {
+      const response = await axiosInstance.post("/admin/addcategory", { category, description });
+      console.log(response.data);
+      if (response.data.success) {
+        alert(response.data.message);
+        setrecieveCategory([...recieveCategory, response.data.data]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    setCategories("")
+    setdescription("")
   };
 
-  const addCategory = () => {
-    if (newCategory.name && newCategory.description) {
-      setCategories([...categories, { ...newCategory, id: categories.length + 1, isListed: true }]);
-      setNewCategory({ name: '', description: '' });
+// ===================LIST CATGEORY=========================================================================
+
+  const handleList = async (id) => {
+    console.log(id);
+    try {
+      const response = await axiosInstance.put(`/admin/listcategory/${id}`);
+      setrecieveCategory(recieveCategory.map((x) => {
+        if (x._id == id) {
+          x.isListed = true
+        }
+        return x
+      }))
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  const toggleListStatus = (id) => {
-    setCategories(categories.map(category => 
-      category.id === id ? { ...category, isListed: !category.isListed } : category
-    ));
+// ===================UNLIST CATGEORY=========================================================================
+
+  const handleUnlist = async (id) => {
+    try {
+      const response = await axiosInstance.put(`/admin/unlistcategory/${id}`);
+      setrecieveCategory(recieveCategory.map((x) => {
+        if (x._id === id) {
+          x.isListed = false
+        }
+        return x;
+      })) 
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+// ===================EDIT CATGEORY=========================================================================
+
+  const editCategory = (id) => {
+    console.log(id);
+    navigate(`/categoryedit/${id}`);
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
-      <div className="flex-grow flex items-center justify-center p-4 sm:p-6 lg:p-12">
-        <div className="w-full max-w-4xl bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
+      <div className="flex-grow p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
-            <h2 className="text-2xl font-bold mb-6">Category</h2>
+            <h2 className="text-2xl font-bold mb-2">Category Management</h2>
+            <div className="text-sm text-gray-500 mb-6">
+              <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt; category
+            </div>
             
             <div className="mb-8 p-4 border border-gray-200 rounded-md">
               <h3 className="text-lg font-semibold mb-4">Add Category</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <form onSubmit={addCategory} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
                   <input
                     type="text"
                     name="name"
-                    value={newCategory.name}
-                    onChange={handleInputChange}
+                    value={category}
+                    onChange={(e) => setCategories(e.target.value)} 
                     placeholder="Enter Category Name"
                     className="w-full p-2 border border-gray-300 rounded-md"
+                    required
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category Description</label>
-                  <input
-                    type="text"
+                  <textarea
                     name="description"
-                    value={newCategory.description}
-                    onChange={handleInputChange}
+                    value={description}
+                    onChange={(e) => setdescription(e.target.value)} 
                     placeholder="Enter Category Description"
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    className="w-full p-2 border border-gray-300 rounded-md h-24"
+                    required
                   />
                 </div>
-              </div>
-              <button
-                // onClick={addCategory}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-              >
-                Add Category
-              </button>
+                <div>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+                  >
+                    Add Category
+                  </button>
+                </div>
+              </form>
             </div>
 
             <div className="overflow-x-auto">
@@ -82,25 +144,32 @@ export default function CategoryManagement() {
                   </tr>
                 </thead>
                 <tbody>
-                  {categories.map((category) => (
-                    <tr key={category.id} className="border-b">
-                      <td className="border p-2">{category.id}</td>
-                      <td className="border p-2">{category.name}</td>
+                  {recieveCategory.map((category, index) => (
+                    <tr key={category._id} className="border-b">
+                      <td className="border p-2">{index + 1}</td>
+                      <td className="border p-2">{category.category}</td>
                       <td className="border p-2">{category.description}</td>
                       <td className="border p-2 text-center">
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input 
-                            type="checkbox" 
-                            checked={category.isListed} 
-                            onChange={() => toggleListStatus(category.id)}
-                            className="sr-only peer" 
-                          />
-                          <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
+                        <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                          style={{ opacity: category.isListed ? "0.5" : "1" }}
+                          onClick={() => handleList(category._id)}
+                          disabled={category.isListed}
+                        >
+                          List
+                        </button>
+                        <button
+                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 ml-2"
+                          style={{ opacity: !category.isListed ? "0.5" : "1" }}
+                          onClick={() => handleUnlist(category._id)}
+                          disabled={!category.isListed}
+                        >
+                          Unlist
+                        </button>
                       </td>
                       <td className="border p-2 text-center">
-                        <button className="text-blue-600 hover:text-blue-800">
-                          <Edit2 size={18} />
+                        <button className="text-blue-600 hover:text-blue-800" onClick={() => editCategory(category._id)}>
+                          <Edit2 size={19} />
                         </button>
                       </td>
                     </tr>
