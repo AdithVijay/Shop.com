@@ -10,11 +10,8 @@ export default function ProductAdd() {
   const [additionalInfo, setAdditionalInfo] = useState("");
   const [regularPrice, setRegularPrice] = useState("");
   const [salePrice, setSalePrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [sleeveType, setSleeveType] = useState("");
-  const [sizes, setSizes] = useState({ S: "0", M: "0", L: "0", XL: "0" });
-  const [categories, setCategories] = useState([]);
 
+ console.log(productName,description,additionalInfo,regularPrice,salePrice);
  
 
   const handleSizeChange = (size, value) => {
@@ -69,7 +66,6 @@ export default function ProductAdd() {
                <div className="mb-4">
                       <h3 className="text-sm font-medium mb-2">Stocks Quantity</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {/* Repeat for each size */}
                         <div className="flex items-center">
                           <label className="mr-2">S</label>
                           <input
@@ -152,12 +148,6 @@ export default function ProductAdd() {
                 rows={4}
               />
               <div className="flex justify-end space-x-4">
-                <button
-                  type="button"
-                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition duration-300"
-                >
-                  Save to Draft
-                </button>
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"

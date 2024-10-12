@@ -18,4 +18,5 @@ const adminRoute = express.Router();
  adminRoute.put("/unlistcategory/:id",unListCategory);
  adminRoute.get("/fetchcategory/:id",fetchCategory);
  adminRoute.put("/updatecategory/:id",handleUpdate);
+ adminRoute.put("/updatecategory/:id",handleUpdate);
 module.exports = adminRoute; 
