@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { Link } from 'react-router-dom';
 import { Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button'
+import Cropper from 'react-easy-crop'
+import { getCroppedImg } from './ImageCropper';
+import axios from 'axios';
+
 
 export default function ProductAdd() {
+
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [additionalInfo, setAdditionalInfo] = useState("");
@@ -13,7 +19,11 @@ export default function ProductAdd() {
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sleeve, setsleeve] = useState("");
-  
+
+  const [product, setProduct] = useState({
+    images: Array(5).fill(null)  
+  })
+
   const [stock, setStock] = useState({
     S: 0,
     M: 0,
@@ -21,18 +31,18 @@ export default function ProductAdd() {
     XL: 0,
     XXL: 0,
   });
+  const [categories, setCategories] = useState([])
+  const [selectedImageIndex, setSelectedImageIndex] = useState(null) // Track which image is being cropped
+  const [image, setImage] = useState(null)  // Image for cropping
+  const [crop, setCrop] = useState({ x: 0, y: 0 })
+  const [zoom, setZoom] = useState(1)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
-  console.log(stock);
+  // console.log(stock);
   
   // console.log(productName,description,additionalInfo,regularPrice,salePrice,stock,selectedCategory);
   
-
-  // States for images and their previews
-  const [mainImage, setMainImage] = useState(null);
-  const [photo1, setPhoto1] = useState(null);
-  const [photo2, setPhoto2] = useState(null);
-  const [photo3, setPhoto3] = useState(null);
-  const [photo4, setPhoto4] = useState(null);
+// =========================GETTING CATEGORY DATA ===============================
 
   useEffect(() => {
     async function fetchData() {
@@ -42,13 +52,88 @@ export default function ProductAdd() {
     fetchData();
   }, []);
 
-  // Handle stock changes
+
+// =========================SENDING IMAGE TO CROPPER ===============================
+
+  const handleImageChange = (index, event) => {
+    const file = event.target.files[0]
+      if (file) {
+        setImage(URL.createObjectURL(file)) 
+        console.log("url of image",image);
+        setSelectedImageIndex(index) 
+    }
+  }
+ 
+// =========================ONCROP FUNCTION ===============================
+
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels)
+  }, [])
+
+// =========================SAVING IMAGE CROPPING ===============================
+
+  const saveCroppedImage = async () => {
+    try {
+      const croppedImageBlob = await getCroppedImg(image, croppedAreaPixels)
+      const croppedImageURL = URL.createObjectURL(croppedImageBlob)
+      
+      const newImages = [...product.images]
+      newImages[selectedImageIndex] = croppedImageBlob 
+      
+      setProduct({ ...product, images: newImages })
+      setImage(null)
+      setSelectedImageIndex(null)
+    } catch (error) {
+      console.error('Error cropping image:', error)
+    }
+  }
+
+// =========================CLOUDINARY ADD===============================
+
+  const uploadImagesToCloudinary = async () => {
+    const uploadPromises = product.images.map(async file => {
+      if (!file) return null
+
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('upload_preset', 'shopcom') 
+
+      try {
+        const response = await axios.post(
+          'https://api.cloudinary.com/v1_1/dxmoiixw3/image/upload',
+          formData
+        )
+        console.log(response.data.secure_url);
+        return response.data.secure_url
+      } catch (error) {
+        console.error('Error uploading image:', error)
+        return null
+      }
+    })
+
+    return await Promise.all(uploadPromises)
+  }
+
+// =========================STOCK HANDLE LOGIC===============================
+
   const handleChange = (size, value) => {
     setStock({ ...stock, [size]: value });
   };
 
+
+// =========================POSTING THE DATA TO DATABASE ===============================
+
   const handleAddProduct = async (e) => {
     e.preventDefault();
+    const imageUrls = await uploadImagesToCloudinary()
+    const filteredImages = imageUrls.filter(url => url !== null)
+
+    if (filteredImages.length === 0) {
+      toast('Error uploading images')
+      return
+    }
+    console.log("images sent",filteredImages);
+    
     const productData = {
       productName,
       description,
@@ -57,8 +142,10 @@ export default function ProductAdd() {
       salePrice,
       selectedCategory,
       sleeve,
-      stock
+      stock,
+      images: filteredImages
     };
+
     try {
       const response = await axiosInstance.post("/admin/addproduct",productData);
       console.log(response);
@@ -66,6 +153,7 @@ export default function ProductAdd() {
       console.error(error);
     }
   };
+
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -81,152 +169,34 @@ export default function ProductAdd() {
             <form onSubmit={handleAddProduct} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2">
-                  <div className="h-64 mb-4">
-                    {/* Main Image Preview and Upload */}
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-full flex flex-col items-center justify-center">
-                      {mainImage ? (
-                        <img
-                          src={URL.createObjectURL(mainImage)} // Preview selected image
-                          alt="Main Image"
-                          className="h-full w-full object-cover rounded-lg"
-                        />
-                      ) : (
-                        <>
-                          <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                          <p className="text-xs text-gray-600 mb-2">Main Image</p>
-                        </>
-                      )}
-                      <label className="cursor-pointer">
-                        <span className="bg-blue-500 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-600 transition-colors">
-                          Choose Image
-                        </span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => setMainImage(e.target.files[0])} // Save file in state
-                          className="hidden"
-                        />
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Additional Photos */}
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Photo 1 */}
-                    <div className="h-32">
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-full flex flex-col items-center justify-center">
-                        {photo1 ? (
-                          <img
-                            src={URL.createObjectURL(photo1)} // Preview selected image
-                            alt="Photo 1"
-                            className="h-full w-full object-cover rounded-lg"
-                          />
-                        ) : (
-                          <>
-                            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                            <p className="text-xs text-gray-600 mb-2">Photo 1</p>
-                          </>
-                        )}
-                        <label className="cursor-pointer">
-                          <span className="bg-blue-500 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-600 transition-colors">
-                            Choose Image
-                          </span>
+                    {Array.from({ length: 5 }, (_, index) => (
+                      <div key={index} className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">
+                          {index === 0 ? 'Main Image' : `Additional Image ${index}`}
+                        </label>
+                        <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-40 flex flex-col items-center justify-center">
+                          {product.images[index] ? (
+                            <img
+                              src={URL.createObjectURL(product.images[index])}
+                              alt={`preview-${index}`}
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          ) : (
+                            <>
+                              <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                              <p className="mt-1 text-sm text-gray-600">Click to upload</p>
+                            </>
+                          )}
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={(e) => setPhoto1(e.target.files[0])} // Save file in state
-                            className="hidden"
+                            onChange={(e) => handleImageChange(index, e)}
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                           />
-                        </label>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Photo 2 */}
-                    <div className="h-32">
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-full flex flex-col items-center justify-center">
-                        {photo2 ? (
-                          <img
-                            src={URL.createObjectURL(photo2)} // Preview selected image
-                            alt="Photo 2"
-                            className="h-full w-full object-cover rounded-lg"
-                          />
-                        ) : (
-                          <>
-                            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                            <p className="text-xs text-gray-600 mb-2">Photo 2</p>
-                          </>
-                        )}
-                        <label className="cursor-pointer">
-                          <span className="bg-blue-500 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-600 transition-colors">
-                            Choose Image
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setPhoto2(e.target.files[0])} // Save file in state
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Photo 3 */}
-                    <div className="h-32">
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-full flex flex-col items-center justify-center">
-                        {photo3 ? (
-                          <img
-                            src={URL.createObjectURL(photo3)} // Preview selected image
-                            alt="Photo 3"
-                            className="h-full w-full object-cover rounded-lg"
-                          />
-                        ) : (
-                          <>
-                            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                            <p className="text-xs text-gray-600 mb-2">Photo 3</p>
-                          </>
-                        )}
-                        <label className="cursor-pointer">
-                          <span className="bg-blue-500 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-600 transition-colors">
-                            Choose Image
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setPhoto3(e.target.files[0])} // Save file in state
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-                    </div>
-
-                    {/* Photo 4 */}
-                    <div className="h-32">
-                      <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-full flex flex-col items-center justify-center">
-                        {photo4 ? (
-                          <img
-                            src={URL.createObjectURL(photo4)} // Preview selected image
-                            alt="Photo 4"
-                            className="h-full w-full object-cover rounded-lg"
-                          />
-                        ) : (
-                          <>
-                            <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                            <p className="text-xs text-gray-600 mb-2">Photo 4</p>
-                          </>
-                        )}
-                        <label className="cursor-pointer">
-                          <span className="bg-blue-500 text-white text-xs py-1 px-2 rounded-full hover:bg-blue-600 transition-colors">
-                            Choose Image
-                          </span>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => setPhoto4(e.target.files[0])} // Save file in state
-                            className="hidden"
-                          />
-                        </label>
-                      </div>
-                    </div>
+                    ))}
                   </div>
                 </div>
 
@@ -242,28 +212,26 @@ export default function ProductAdd() {
                   />
 
                   {/* Product description */}
-                  
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Enter Product Description here..."
-                className="w-full p-2 border border-gray-300 rounded-md"
-                rows={3}
-                required
-              />
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Enter Product Description here..."
+                    className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                    rows={3}
+                    required
+                  />
 
-              {/* Additional product information */}
+                  {/* Additional product information */}
+                  <textarea
+                    value={additionalInfo}
+                    onChange={(e) => setAdditionalInfo(e.target.value)}
+                    placeholder="Enter Additional Information"
+                    className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                    rows={3}
+                  />
 
-              <textarea
-                value={additionalInfo}
-                onChange={(e) => setAdditionalInfo(e.target.value)}
-                placeholder="Enter Additional Information"
-                className="w-full p-2 border border-gray-300 rounded-md"
-                rows={3}
-              />
-
-                     {/* Pricing */}
-                     <input
+                  {/* Pricing */}
+                  <input
                     type="number"
                     value={regularPrice}
                     onChange={(e) => setRegularPrice(e.target.value)}
@@ -279,8 +247,8 @@ export default function ProductAdd() {
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                   />
 
-                   {/* Category selection */}
-                   <select
+                  {/* Category selection */}
+                  <select
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     required
@@ -294,7 +262,7 @@ export default function ProductAdd() {
                   </select>
 
                   {/* Sleeve selection */}
-                  <select onChange={(e)=>setsleeve(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md" required>
+                  <select onChange={(e)=>setsleeve(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md mb-4" required>
                     <option value="">Select Sleeve Type</option>
                     <option value="Full sleeve">Full sleeve</option>
                     <option value="Half sleeve">Half sleeve</option>
@@ -304,33 +272,59 @@ export default function ProductAdd() {
               </div>
 
               {/* Product Stock */}
-
-
               <div className="mb-4">
-                    <h3 className="text-sm font-medium mb-2">Stocks Quantity</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      {Object.keys(stock).map((size) => (
-                        <div className="flex items-center" key={size}>
-                          <label className="mr-2">{size}</label>
-                          <input
-                            type="number"
-                            placeholder="Enter quantity"
-                            className="w-full p-2 border border-gray-300 rounded-md"
-                            value={stock[size]}
-                            onChange={(e) => handleChange(size, parseInt(e.target.value) || 0)}
-                          />
-                        </div>
-                      ))}
+                <h3 className="text-sm font-medium mb-2">Stocks Quantity</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                  {Object.keys(stock).map((size) => (
+                    <div className="flex items-center" key={size}>
+                      <label className="mr-2">{size}</label>
+                      <input
+                        type="number"
+                        placeholder="Qty"
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={stock[size]}
+                        onChange={(e) => handleChange(size, parseInt(e.target.value) || 0)}
+                      />
                     </div>
-                  </div>
+                  ))}
+                </div>
+              </div>
 
               <button
                 type="submit"
-                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+                className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors w-full"
               >
                 Add Product
               </button>
             </form>
+            {image && (
+          <div className="modal">
+            <div className="modal-content">
+              <h3>Crop Image</h3>
+              <div
+                className="crop-container"
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  position: "relative",
+                }}
+              >
+                <Cropper
+                  image={image}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={2 / 3}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={onCropComplete}
+                />
+              </div>
+              <Button onClick={saveCroppedImage} className="mt-4">
+                Save Cropped Image
+              </Button>
+            </div>
+          </div>
+        )}
           </div>
         </div>
       </div>

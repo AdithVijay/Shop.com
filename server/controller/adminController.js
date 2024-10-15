@@ -33,6 +33,7 @@ const adminLogin = async (req, res) => {
     }
 };
 
+// ======================================CATEGORRY PAGE========================================
 
 // =======================================ADD CATEGORY=========================================
 
@@ -110,8 +111,8 @@ const getCategory = async(req,res)=>{
             return res.status(500).json({ success: false, message: "Server Error", error: error.message });
         }
     }    
-// =================================EDIT CATEGORRY PAGE========================================
-// ==============================GETTING DATA FOR UPDATION======================================
+// =====================================EDIT CATEGORRY PAGE========================================
+// ==============================GETTING DATA FOR UPDATION CATEGORRY======================================
     const fetchCategory = async (req,res)=>{
         try{
             const id = req.params.id
@@ -149,6 +150,7 @@ const getCategory = async(req,res)=>{
                 return res.status(500).json({ success: false, message: "Server Error", error: error.message });
             }
         }
+// ===================================PRODUCT PAGE=============================================
 
 // ===============================ADDING THE PRODUCT ==========================================
 
@@ -162,12 +164,12 @@ const getCategory = async(req,res)=>{
                     salePrice, 
                     selectedCategory, 
                     sleeve, 
-                    stock 
+                    stock ,
+                    images
                   } = req.body;
 
                   console.log(stock)
-                 
-                
+
                   const categoryDoc = await Category.findOne({ category: selectedCategory });
                   console.log(categoryDoc);
                   if (!categoryDoc) {
@@ -181,6 +183,7 @@ const getCategory = async(req,res)=>{
                     additionalInfo, 
                     regularPrice, 
                     salePrice, 
+                    images,
                     category: categoryId,
                     sleeveType: sleeve,
                     sizes:stock 
@@ -196,6 +199,7 @@ const getCategory = async(req,res)=>{
             }
         }
 
+// ==========================GETIING THE CATEGORY FOR PRODUCT PAGE===========================
 
         const getCatgoryData = async(req,res)=>{
             try{
@@ -211,7 +215,7 @@ const getCategory = async(req,res)=>{
                 return res.status(500).json({ success: false, message: "Server Error", error: error.message });
             }
         }
-
+// ====================================USERMANGEMENT========================================
 // ===============================FETCHING USER DATA USM====================================
 
         const fetchUser = async(req,res)=>{
@@ -229,7 +233,7 @@ const getCategory = async(req,res)=>{
             }
         }
 
-
+// ===============================LIST THE USER==========================================
 
         const listUser = async(req,res)=>{
             try{
@@ -245,10 +249,8 @@ const getCategory = async(req,res)=>{
                 return res.status(500).json({ success: false, message: "Server Error", error: error.message });
             }
         }
-
+// ===============================UNLIST THE USER==========================================
         const unlistUser = async(req,res)=>{
-
-            
             try{
                 const id = req.params.id
                 const user = await User.findByIdAndUpdate({_id:id},{isListed:false},{new:true})

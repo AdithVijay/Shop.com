@@ -10,6 +10,8 @@ import ProductAdd from './pages/adminpages/product/ProductAdd'
 import ProductList from './pages/adminpages/product/ProductList'
 import UserManagement from './pages/adminpages/usermanagement/UserManagement'
 
+
+
 const App = () => {
   return (
     <div>
@@ -24,6 +26,7 @@ const App = () => {
             <Route path='/productadd' element={<ProductAdd/>}></Route>
             <Route path='/productlist' element={<ProductList/>}></Route>
             <Route path='/usermanagement' element={<UserManagement/>}></Route>
+
           </Routes>
         </BrowserRouter>
     </div>

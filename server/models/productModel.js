@@ -39,10 +39,17 @@ const productSchema = new Schema({
     type: Number,
     required: true
   },
+  images: [
+    {
+        type: String,
+        required: true,
+    },
+],
+
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
 });
 const ProductData = mongoose.model('Product', productSchema);
 
