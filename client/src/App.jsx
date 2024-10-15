@@ -8,6 +8,7 @@ import Category from './pages/adminpages/category/Category'
 import CategoryEdit from './pages/adminpages/category/CategoryEdit'
 import ProductAdd from './pages/adminpages/product/ProductAdd'
 import ProductList from './pages/adminpages/product/ProductList'
+import UserManagement from './pages/adminpages/usermanagement/UserManagement'
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path='/categoryedit/:id' element={<CategoryEdit/>}></Route>
             <Route path='/productadd' element={<ProductAdd/>}></Route>
             <Route path='/productlist' element={<ProductList/>}></Route>
+            <Route path='/usermanagement' element={<UserManagement/>}></Route>
           </Routes>
         </BrowserRouter>
     </div>

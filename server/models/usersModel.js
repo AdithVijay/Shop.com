@@ -21,11 +21,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: false,
         trim: true 
-    }
-    // isBlocked: {
-    //     type: Boolean,
-    //     default: false
-    // }, 
+    },
+    isListed: {
+        type: Boolean,
+        default: true,
+    }, 
     // verified: {
     //     type: Boolean,
     //     default: false

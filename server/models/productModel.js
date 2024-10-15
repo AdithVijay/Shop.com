@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Schema = mongoose.Schema; 
 
 const productSchema = new Schema({
   productName: {
@@ -44,6 +44,6 @@ const productSchema = new Schema({
     default: Date.now
   }
 });
-const Product = mongoose.model('Product', productSchema);
+const ProductData = mongoose.model('Product', productSchema);
 
-module.exports= Product
+module.exports= ProductData

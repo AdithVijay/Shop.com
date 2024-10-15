@@ -1,11 +1,12 @@
 const bcrypt = require('bcrypt');
 const Admin = require("../models/adminModel")
 const Category = require("../models/category")
+const User = require("../models/usersModel");
+const ProductData = require('../models/productModel');
 
 
-// ============================================================================================
-// ============================================ADMINLOGIN================================================
-// ============================================================================================
+// ===================================ADMINLOGIN================================================
+
 
 const adminLogin = async (req, res) => {
     try {
@@ -32,9 +33,9 @@ const adminLogin = async (req, res) => {
     }
 };
 
-// ============================================================================================
-// ============================================ADD CATEGORY================================================
-// ============================================================================================
+
+// =======================================ADD CATEGORY=========================================
+
 
 const addCategory = async(req,res)=>{
     try{
@@ -56,9 +57,9 @@ const addCategory = async(req,res)=>{
     return res.status(500).json({ success: false, message: "Server Error", error: err.message})
     }
 }
-// ============================================================================================
-// ============================================GETCATEORY================================================
-// ============================================================================================
+
+// ============================================GETCATEORY=======================================
+
 
 const getCategory = async(req,res)=>{
     try { 
@@ -74,9 +75,8 @@ const getCategory = async(req,res)=>{
         return res.status(500).json({ success: false, message: "Server Error", error: err.message });
       }
 }
-// ============================================================================================
-// ================================================LISTCATEGORY============================================
-// ============================================================================================
+
+// ====================================LISTCATEGORY============================================
 
     const listCategory = async(req,res)=>{
         try{
@@ -93,10 +93,7 @@ const getCategory = async(req,res)=>{
         }
     }
 
-// ============================================================================================
-// ================================================UN LISTCATEGORY=============================
-// ============================================================================================
-
+// =========================================UN LISTCATEGORY====================================
 
     const unListCategory = async(req,res)=>{
         try{
@@ -113,8 +110,8 @@ const getCategory = async(req,res)=>{
             return res.status(500).json({ success: false, message: "Server Error", error: error.message });
         }
     }    
-
-
+// =================================EDIT CATEGORRY PAGE========================================
+// ==============================GETTING DATA FOR UPDATION======================================
     const fetchCategory = async (req,res)=>{
         try{
             const id = req.params.id
@@ -126,7 +123,10 @@ const getCategory = async(req,res)=>{
             }
         }catch(err){}
        console.log(err);
+       return res.status(500).json({ success: false, message: "Server Error", error: error.message });
     }
+
+// ===============================HANDLING CATEGORY UPDATE====================================
 
         const handleUpdate = async (req,res)=>{
             try{
@@ -146,9 +146,134 @@ const getCategory = async(req,res)=>{
                 }
             }catch(err){
                 console.log(err);
+                return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+            }
+        }
+
+// ===============================ADDING THE PRODUCT ==========================================
+
+        const addProduct = async(req,res)=>{
+            try {
+                const { 
+                    productName, 
+                    description, 
+                    additionalInfo, 
+                    regularPrice, 
+                    salePrice, 
+                    selectedCategory, 
+                    sleeve, 
+                    stock 
+                  } = req.body;
+
+                  console.log(stock)
+                 
+                
+                  const categoryDoc = await Category.findOne({ category: selectedCategory });
+                  console.log(categoryDoc);
+                  if (!categoryDoc) {
+                    return res.status(400).json({ success: false, message: "Invalid category" });
+                  }
+                  const categoryId = categoryDoc._id; 
+                  
+                  const Product = await ProductData.create({
+                    productName, 
+                    description, 
+                    additionalInfo, 
+                    regularPrice, 
+                    salePrice, 
+                    category: categoryId,
+                    sleeveType: sleeve,
+                    sizes:stock 
+                  });
+                
+                  if (Product) {
+                    return res.status(201).json({ success: true, message: "New Product Added Successfully", data: Product });
+                  } else {
+                    return res.status(500).json({ success: false, message: "Failed to create Product" });
+                  }
+            } catch (error) {
+                console.log(error);   
+            }
+        }
+
+
+        const getCatgoryData = async(req,res)=>{
+            try{
+                const response = Category.find()
+                console.log(response);
+            if(!response){
+                return res.status(404).json({success:false, message: "Category data not found" })
+            }else{
+                return res.status(200).json({success:true,message:"Category is being updated ",  data: category })
+            }
+            }catch(err){
+                console.log(err);
+                return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+            }
+        }
+
+// ===============================FETCHING USER DATA USM====================================
+
+        const fetchUser = async(req,res)=>{
+            try {
+                const users = await User.find()
+                // console.log(users);
+                if(!users){
+                    return res.status(404).json({success:false, message: "User data not found" })
+                }else{
+                    return res.status(200).json({success:true,message:"User is being found ",  data: users })
+                }
+            } catch (error) {
+                console.log(error);
+                return res.status(500).json({ success: false, message: "Server Error", error: error.message });
             }
         }
 
 
 
-module.exports = { adminLogin,addCategory,getCategory,listCategory,unListCategory,fetchCategory,handleUpdate}
+        const listUser = async(req,res)=>{
+            try{
+                const id = req.params.id
+                const user = await User.findByIdAndUpdate({_id:id},{isListed:true},{new:true})
+                if(!user){
+                    res.status(404).json({success:false,message:"user not found"})
+                }else{
+                    res.status(200).json({success:true,message:"user is listed "})
+                }
+            }catch(error){
+                console.log("serever error",error);
+                return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+            }
+        }
+
+        const unlistUser = async(req,res)=>{
+
+            
+            try{
+                const id = req.params.id
+                const user = await User.findByIdAndUpdate({_id:id},{isListed:false},{new:true})
+                if(!user){
+                    res.status(404).json({success:false,message:"user not found"})
+                }else{
+                    res.status(200).json({success:true,message:"user is listed "})
+                }
+            }catch(error){
+                console.log("serever error",error);
+                return res.status(500).json({ success: false, message: "Server Error", error: error.message });
+            }
+        }
+
+
+module.exports = { adminLogin
+    ,addCategory,
+    getCategory,
+    listCategory,
+    unListCategory,
+    fetchCategory,
+    handleUpdate,
+    getCatgoryData,
+    addProduct ,
+    fetchUser,
+    listUser,
+    unlistUser
+}
