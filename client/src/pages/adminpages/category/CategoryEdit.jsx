@@ -7,6 +7,7 @@ export default function CategoryEdit() {
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const { id } = useParams();
+
   const navigate = useNavigate();
 
   useEffect(() => {

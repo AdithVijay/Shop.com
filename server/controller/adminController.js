@@ -168,13 +168,19 @@ const getCategory = async(req,res)=>{
                     images
                   } = req.body;
 
-                  console.log(stock)
+                  console.log( stock );
 
+                  const count = Object.values(stock).reduce((acc,curr)=>{
+                       return acc+=curr
+                  },0)
+                  console.log(count);
+                  
                   const categoryDoc = await Category.findOne({ category: selectedCategory });
                   console.log(categoryDoc);
                   if (!categoryDoc) {
                     return res.status(400).json({ success: false, message: "Invalid category" });
                   }
+
                   const categoryId = categoryDoc._id; 
                   
                   const Product = await ProductData.create({
@@ -186,9 +192,12 @@ const getCategory = async(req,res)=>{
                     images,
                     category: categoryId,
                     sleeveType: sleeve,
-                    sizes:stock 
+                    sizes:stock ,
+                    totalStock:count
                   });
                 
+
+
                   if (Product) {
                     return res.status(201).json({ success: true, message: "New Product Added Successfully", data: Product });
                   } else {
@@ -204,11 +213,11 @@ const getCategory = async(req,res)=>{
         const getCatgoryData = async(req,res)=>{
             try{
                 const response = Category.find()
-                console.log(response);
+             console.log(response);
             if(!response){
                 return res.status(404).json({success:false, message: "Category data not found" })
             }else{
-                return res.status(200).json({success:true,message:"Category is being updated ",  data: category })
+                    return res.status(200).json({success:true,message:"Category is being updated ",  data: category })
             }
             }catch(err){
                 console.log(err);
@@ -265,6 +274,8 @@ const getCategory = async(req,res)=>{
             }
         }
 
+      
+
 
 module.exports = { adminLogin
     ,addCategory,
@@ -277,5 +288,6 @@ module.exports = { adminLogin
     addProduct ,
     fetchUser,
     listUser,
-    unlistUser
+    unlistUser,
+
 }

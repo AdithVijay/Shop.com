@@ -31,6 +31,10 @@ const productSchema = new Schema({
     XL: { type: Number, default: 0 },
     XXL: { type: Number, default: 0 }
   },
+  totalStock: {
+    type: Number,
+    required: true  
+  },
   regularPrice: {
     type: Number,
     required: true
@@ -45,11 +49,14 @@ const productSchema = new Schema({
         required: true,
     },
 ],
-
   createdAt: {
     type: Date,
     default: Date.now
   },
+  isListed: {
+    type: Boolean,
+    default: true,
+  }
 });
 const ProductData = mongoose.model('Product', productSchema);
 

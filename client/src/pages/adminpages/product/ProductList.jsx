@@ -10,35 +10,63 @@ export default function ProductList() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProducts();
-  }, [currentPage, searchTerm]);
+// ==================GETTING THE PRODUCT DATA =========================
 
-  const fetchProducts = async () => {
-    try {
-      const response = await axiosInstance.get('/admin/getproducts', {
-        params: { page: currentPage, search: searchTerm }
-      });
-      setProducts(response.data.data);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    }
-  };
-
-  const handleEdit = (id) => {
-    navigate(`/product/edit/${id}`);
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+  useEffect(()=>{
+    async function fetchProducts(){
       try {
-        await axiosInstance.delete(`/admin/deleteproduct/${id}`);
-        fetchProducts();
+        const response = await axiosInstance.get('/admin/getproducts')
+        console.log(response,"Data reciving");
+          setProducts(response.data.data);        
       } catch (error) {
-        console.error('Error deleting product:', error);
+        console.error('Error fetching products:', error);
       }
     }
+    fetchProducts()
+  },[])
+
+// ========================EDITTING THE PRODUCT=========================
+
+  const handleEdit = (id) => {
+    navigate(`/productedit/${id}`);
   };
+
+// ============================SOFT DELETE==============================
+
+const handleList = async (id) => {
+  console.log(id);
+  try {
+    const response = await axiosInstance.put(`/admin/listproduct/${id}`);
+    setProducts(products.map((x) => {
+      if (x._id == id) {
+        x.isListed = true
+      }
+      return x
+    }))
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+// ===================UNLIST CATGEORY=========================================================================
+
+const handleUnlist = async (id) => {
+  try {
+    const response = await axiosInstance.put(`/admin/unlistproduct/${id}`);
+    console.log(response);
+    setProducts(products.map((x) => {
+      if (x._id === id) {
+        x.isListed = false
+      }
+      return x;
+    })) 
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+// =====================================================================================================
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -69,35 +97,47 @@ export default function ProductList() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border p-2 text-left">Product Name</th>
-                    <th className="border p-2 text-left">Product ID</th>
+                    <th className="border p-2 text-center">Product Name</th>
+                    <th className="border p-2 text-center">Category</th>
                     <th className="border p-2 text-center">QTY</th>
-                    <th className="border p-2 text-right">Price</th>
-                    <th className="border p-2 text-left">Category</th>
+                    <th className="border p-2 text-center">Sale Price</th>
+                    <th className="border p-2 text-center">Sale price</th>
                     <th className="border p-2 text-center">Actions</th>
+                    <th>Edit</th>
                   </tr>
                 </thead>
-                <tbody>
+                 <tbody>
                   {products.map((product) => (
                     <tr key={product._id} className="border-b">
-                      <td className="border p-2">
-                        <div className="flex items-center">
-                          <img src={product.image} alt={product.name} className="w-10 h-10 rounded-full mr-3" />
-                          {product.name}
-                        </div>
-                      </td>
-                      <td className="border p-2">{product.productId}</td>
-                      <td className="border p-2 text-center">{product.quantity}</td>
-                      <td className="border p-2 text-right">INR {product.price.toFixed(2)}</td>
-                      <td className="border p-2">{product.category}</td>
+                      <td className="border p-2 text-center">{product. productName}</td>
+                      <td className="border p-2 text-center">{product.category ? product.category.category : "No category"}</td>
+                      <td className="border p-2 text-center">{product.totalStock}</td>
+                      {/* <td className="border p-2 text-right">INR {product.price.toFixed(2)}</td> */}
+                      <td className="border p-2 text-center">{product.salePrice}</td>
+                      <td className="border p-2 text-center">{product.regularPrice}</td>
                       <td className="border p-2 text-center">
-                        <button onClick={() => handleEdit(product._id)} className="text-blue-600 hover:text-blue-800 mr-2">
-                          <Edit2 size={18} />
+                        
+                      <button
+                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
+                          style={{ opacity: product.isListed ? "0.5" : "1" }}
+                          onClick={() => handleList(product._id)}
+                          disabled={product.isListed}
+                        >
+                          List
                         </button>
-                        <button onClick={() => handleDelete(product._id)} className="text-red-600 hover:text-red-800">
-                          <Trash2 size={18} />
+                        <button
+                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 ml-2"
+                          style={{ opacity: !product.isListed ? "0.5" : "1" }}
+                          onClick={() => handleUnlist(product._id)}
+                          disabled={!product.isListed}
+                        >
+                          Unlist
                         </button>
+
                       </td>
+                      <td><button onClick={() => handleEdit(product._id)} className="text-blue-600 pl-6 hover:text-blue-800 mr-2">
+                          <Edit2 size={18} />
+                        </button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -114,7 +154,7 @@ export default function ProductList() {
                   Next
                 </button>
               </div>
-              <Link to="/product/add" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">
+              <Link to="/productadd" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300">
                 + Add Product
               </Link>
             </div>

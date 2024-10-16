@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 // import { EyeIcon, EyeOffIcon } from 'lucide-react';
  //import { OTPVerification } from '../OTP/OTPVerification'; // Ensure this path is correct
 
-export default function SignUp() {
+export default function OtpSignup() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);

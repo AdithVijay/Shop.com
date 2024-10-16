@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button'
 import Cropper from 'react-easy-crop'
@@ -9,7 +9,9 @@ import { getCroppedImg } from './ImageCropper';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function ProductAdd() {
+export default function ProductEdit() {
+    const { id } = useParams();
+    console.log(id);
 
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -19,6 +21,8 @@ export default function ProductAdd() {
   const [categoryDetails, setCategoryDetails] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [sleeve, setsleeve] = useState("");
+
+    
 
   const [product, setProduct] = useState({
     images: Array(5).fill(null)  
@@ -39,10 +43,36 @@ export default function ProductAdd() {
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
 
-  // console.log(stock);
-  
-  // console.log(productName,description,additionalInfo,regularPrice,salePrice,stock,selectedCategory);
-  
+
+// =========================FETCHING THE PRODUCT DATA ===============================
+
+useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const response = await axiosInstance.get(`/admin/fetchproduct/${id}`);
+        console.log(response);
+        setProductName(response.data.data.productName)
+        setDescription(response.data.data.description)
+        setAdditionalInfo(response.data.data.additionalInfo)
+        setRegularPrice(response.data.data.regularPrice)
+        setSalePrice(response.data.data.salePrice)
+        setSelectedCategory(response.data.data.category.category)
+        setsleeve(response.data.data.sleeveType )
+        setStock(response.data.data.sizes)
+        
+      } catch (error) {
+        console.error("Error fetching category:", error);
+      }
+    }
+    fetchProduct();
+  }, [id]);
+
+
+  useEffect(()=>{
+    console.log("jjjj");
+  },[])
+
+
 // =========================GETTING CATEGORY DATA ===============================
 
 
@@ -53,7 +83,7 @@ export default function ProductAdd() {
     }
     fetchData();
   }, []);
-console.log(categoryDetails);
+// console.log(categoryDetails);
 
 
 // =========================SENDING IMAGE TO CROPPER ===============================
@@ -62,7 +92,7 @@ console.log(categoryDetails);
     const file = event.target.files[0]
       if (file) {
         setImage(URL.createObjectURL(file)) 
-        console.log("url of image",image);
+        // console.log("url of image",image);
         setSelectedImageIndex(index) 
     }
   }
@@ -132,6 +162,7 @@ console.log(categoryDetails);
     const filteredImages = imageUrls.filter(url => url !== null)
 
     if (filteredImages.length === 0) {
+        console.log("No image"); 
       return
     }
     console.log("images sent",filteredImages);
@@ -149,7 +180,7 @@ console.log(categoryDetails);
     };
 
     try {
-      const response = await axiosInstance.post("/admin/addproduct",productData);
+      const response = await axiosInstance.put(`/admin/updateproduct/${id}`,productData);
       console.log(response);
       navigate("/productlist")
     } catch (error) {
@@ -164,7 +195,7 @@ console.log(categoryDetails);
       <div className="flex-grow p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
-            <h2 className="text-2xl font-bold mb-2">Add Product</h2>
+            <h2 className="text-2xl font-bold mb-2">EDIT PRODUCT</h2>
             <div className="text-sm text-gray-500 mb-6">
               <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt; <Link to="/products" className="hover:underline">product</Link> &gt; add
             </div>
@@ -176,7 +207,7 @@ console.log(categoryDetails);
                     {Array.from({ length: 5 }, (_, index) => (
                       <div key={index} className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
-                          {index === 0 ? 'Main Image' : `Additional Image ${index}`}
+                          {index === 0 ? 'Main Image' : ` Image ${index}`}
                         </label>
                         <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-40 flex flex-col items-center justify-center">
                           {product.images[index] ? (
@@ -253,6 +284,7 @@ console.log(categoryDetails);
                   {/* Category selection */}
                   <select
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                    value={selectedCategory} 
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     required
                   >
@@ -268,7 +300,7 @@ console.log(categoryDetails);
                   </select>
 
                   {/* Sleeve selection */}
-                  <select onChange={(e)=>setsleeve(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md mb-4" required>
+                  <select value={sleeve} onChange={(e)=>setsleeve(e.target.value)} className="w-full p-2 border border-gray-300 rounded-md mb-4" required>
                     <option value="">Select Sleeve Type</option>
                     <option value="Full sleeve">Full sleeve</option>
                     <option value="Half sleeve">Half sleeve</option>
@@ -300,7 +332,7 @@ console.log(categoryDetails);
                 type="submit"
                 className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors w-full"
               >
-                Add Product
+                Edit Product
               </button>
             </form>
             {image && (

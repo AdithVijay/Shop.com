@@ -8,7 +8,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
-const SignupPage = () => {
+const UserSignup = () => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
@@ -260,4 +260,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default UserSignup;
