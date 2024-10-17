@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 
 export default function ProductEdit() {
     const { id } = useParams();
-    console.log(id);
 
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
@@ -46,32 +45,31 @@ export default function ProductEdit() {
 
 // =========================FETCHING THE PRODUCT DATA ===============================
 
-useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const response = await axiosInstance.get(`/admin/fetchproduct/${id}`);
-        console.log(response);
-        setProductName(response.data.data.productName)
-        setDescription(response.data.data.description)
-        setAdditionalInfo(response.data.data.additionalInfo)
-        setRegularPrice(response.data.data.regularPrice)
-        setSalePrice(response.data.data.salePrice)
-        setSelectedCategory(response.data.data.category.category)
-        setsleeve(response.data.data.sleeveType )
-        setStock(response.data.data.sizes)
-        
-      } catch (error) {
-        console.error("Error fetching category:", error);
-      }
-    }
-    fetchProduct();
-  }, [id]);
-
-
-  useEffect(()=>{
-    console.log("jjjj");
-  },[])
-
+    useEffect(() => {
+        async function fetchProduct() {
+        try {
+            const response = await axiosInstance.get(`/admin/fetchproduct/${id}`);
+            const productData = response.data.data
+            console.log(response);
+            setProductName(productData.productName)
+            setDescription(productData.description)
+            setAdditionalInfo(productData.additionalInfo)
+            setRegularPrice(productData.regularPrice)
+            setSalePrice(productData.salePrice)
+            setSelectedCategory(productData.category.category)
+            setsleeve(productData.sleeveType )
+            setStock(productData.sizes)
+            console.log(productData.images)
+            setProduct({
+                ...product,
+                images: productData.images && productData.images.length > 0 ? productData.images : Array(5).fill(null)
+              });
+        } catch (error) {
+            console.error("Error fetching category:", error);
+        }
+        }
+        fetchProduct();
+    }, [id]);
 
 // =========================GETTING CATEGORY DATA ===============================
 
@@ -212,8 +210,9 @@ useEffect(() => {
                         <div className="relative border-2 border-dashed border-gray-300 rounded-lg p-4 text-center h-40 flex flex-col items-center justify-center">
                           {product.images[index] ? (
                             <img
-                              src={URL.createObjectURL(product.images[index])}
-                              alt={`preview-${index}`}
+                            src={typeof product.images[index] === 'string' 
+                                ? product.images[index] 
+                                : URL.createObjectURL(product.images[index])}
                               className="max-h-full max-w-full object-contain"
                             />
                           ) : (

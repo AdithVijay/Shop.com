@@ -8,6 +8,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 
+import { Navbar } from "@nextui-org/navbar";
+
 const UserSignup = () => {
   const [name, setname] = useState("");
   const [email, setemail] = useState("");
@@ -49,6 +51,8 @@ const UserSignup = () => {
   };
 
   return (
+    <div>
+    
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
 
@@ -256,6 +260,7 @@ const UserSignup = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };
