@@ -7,6 +7,7 @@ import ProductAdd from '@/pages/adminpages/product/ProductAdd'
 import ProductList from '@/pages/adminpages/product/ProductList'
 import UserManagement from '@/pages/adminpages/usermanagement/UserManagement'
 import ProductEdit from '@/pages/adminpages/product/ProductEdit'
+import { Toaster } from '@/components/ui/sonner'
 
 const AdminRoute = () => {
   return (
@@ -22,6 +23,7 @@ const AdminRoute = () => {
             <Route path='/productedit/:id' element={<ProductEdit/>}></Route>
           </Routes>
         </BrowserRouter>
+        <Toaster/>
     </div>
   )
 }

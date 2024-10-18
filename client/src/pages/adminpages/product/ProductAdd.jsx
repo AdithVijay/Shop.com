@@ -49,7 +49,7 @@ export default function ProductAdd() {
   useEffect(() => {
     async function fetchData() {
       const response = await axiosInstance.get("/admin/getcategory");
-      setCategoryDetails(response.data.data);
+      setCategoryDetails(...categoryDetails,response.data.data);
     }
     fetchData();
   }, []);

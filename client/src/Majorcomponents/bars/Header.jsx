@@ -19,9 +19,9 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="/" className="flex items-center space-x-2">
-              <img style={{ width: '75%' }} src={shopco} />
-            </a>
+                <div className="font-bold text-xl tracking-wide px-4 py-2">
+            SHOP.CO
+            </div>
           </div>
 
           {/* Navigation Links - Hidden on mobile */}

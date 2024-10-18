@@ -4,6 +4,7 @@ import UserLogin from '@/pages/userpages/UserLogin'
 import UserSignup from '@/pages/userpages/UserSignup'
 import OtpSignup from '@/Majorcomponents/OtpSignup'
 import Home from '@/pages/userpages/Home'
+import { Toaster } from '@/components/ui/sonner'
 
 const UserRoute = () => {
   return (
@@ -16,6 +17,7 @@ const UserRoute = () => {
             <Route path='/login' element={<UserLogin/>}></Route>
           </Routes>
         </BrowserRouter>
+        <Toaster/>
     </div>
   )
 }

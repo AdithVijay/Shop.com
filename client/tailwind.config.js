@@ -16,6 +16,7 @@ module.exports = {
   					'20%,50%': {
   						opacity: '0'
   					}
+					
   				}
   			},
   			animation: {
@@ -74,4 +75,5 @@ module.exports = {
   	}
   },
   plugins: [require("tailwindcss-animate")],
+  
 };

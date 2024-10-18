@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../config/axiosInstance";
-import { FaGoogle, FaTwitter } from "react-icons/fa";
 import dp4 from "../../assets/dp4.jpg";
 import logo from "../../assets/logo.png";
 import { OTPVerification } from "@/components/ui/OTPVerification";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-import { Navbar } from "@nextui-org/navbar";
 
 const UserSignup = () => {
   const [name, setname] = useState("");
@@ -42,7 +41,7 @@ const UserSignup = () => {
       const response = await axiosInstance.post("/user/create",{name,email,password,phonenumber,otp});
       console.log(response.data);
       navigate("/login")
-      alert(response.data.message)
+      toast(response.data.message)
     } catch (error) {
       console.log("Error da response:", error.response);
       alert( error.response.data.message); // Access the error message

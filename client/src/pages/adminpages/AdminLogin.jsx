@@ -22,7 +22,6 @@ const AdminLogin = () => {
   return (
     
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <Sidebar/>
       <div className="bg-white rounded-lg shadow-md max-w-md w-full p-6">
         <div className="flex flex-col items-center mb-6">
           <h2 className="text-2xl font-bold">Admin Login</h2>

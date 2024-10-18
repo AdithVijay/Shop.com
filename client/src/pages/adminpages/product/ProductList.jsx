@@ -3,6 +3,8 @@ import { Edit2, Trash2, Search } from 'lucide-react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from "sonner";
+
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
@@ -60,6 +62,7 @@ const handleUnlist = async (id) => {
       }
       return x;
     })) 
+    toast.success("unlisted")
   } catch (error) {
     console.error(error);
   }
