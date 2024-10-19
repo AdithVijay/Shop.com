@@ -11,8 +11,9 @@ export default function Card3({productData}) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold mb-6">Top Selling</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {productData.slice(0,4).map((product) => (
-            <div
+          {productData.slice(0,4).map((product) => {
+             if(product.isListed){
+           return <div
               key={product.id}
               className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
               style={{ maxWidth: '290px', maxHeight: '850px' }}
@@ -29,7 +30,7 @@ export default function Card3({productData}) {
                 {console.log(product.sizes)}
               </div>
             </div>
-          ))}
+            }})}
         </div>
       </div>
     </section>

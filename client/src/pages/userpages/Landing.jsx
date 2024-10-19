@@ -8,11 +8,11 @@ import Footer from '@/Majorcomponents/footer/Footer'
 import axiosInstance from '@/config/axiosInstance'
 import React, { useEffect, useState } from 'react'
 
+// =================THIS ITHE FIRST THIJNG THATS USER GONNA SEEE============
 
-const Home = () => {
+const Landing = () => {
   const [productData, setproductData] = useState([]);
-  console.log("home");
-  
+
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
@@ -35,4 +35,4 @@ const Home = () => {
     </div>
   )
 }
-export default Home
+export default Landing

@@ -4,13 +4,22 @@ import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Search, User } from "lucide-react"
 import shopco from "../../assets/shopco.png"
-
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 const Header = () => {
+
+
   const [isSearchVisible, setSearchVisible] = useState(false)
-
-
+  const navigate = useNavigate();
+  const userData = useSelector((state)=>state.user.users)
+  console.log("userdata from redux at navbar",userData);
+  
   const toggleSearch = () => {
     setSearchVisible(!isSearchVisible)
+  }
+  function loginButton(){
+    navigate("/login");
+    console.log("hii");
   }
 
   return (
@@ -56,10 +65,16 @@ const Header = () => {
             </button>
 
             {/* Login Button - Hidden on mobile */}
-          
-            <Button className="hidden md:inline-flex">Login</Button>
-            
-            
+         
+           
+            {!userData? <button 
+              className="w-full bg-black text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105"
+              onClick={loginButton}
+            >
+               Login
+            </button>:""
+          }
+                       
 
             {/* Mobile Menu */}
             <Sheet>
@@ -75,7 +90,13 @@ const Header = () => {
                   <a href="/shop" className="text-sm font-medium hover:text-primary">Shop</a>
                   <a href="/our-story" className="text-sm font-medium hover:text-primary">Our Story</a>
                   <a href="/contact-us" className="text-sm font-medium hover:text-primary">Contact Us</a>
-                  <Button className="w-full">Login</Button>
+                  <button 
+                    className="w-full bg-black text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105"
+                  onClick={loginButton}
+                >
+                  Login
+                </button>
+                  
                 </nav>
               </SheetContent>
             </Sheet>

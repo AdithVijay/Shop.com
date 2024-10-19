@@ -174,6 +174,12 @@ const login = async(req,res)=>{
     const {email,password}= req.body
     const user = await User.findOne({email})
 
+    console.log(user)
+  if (user.isListed==false) {
+    return res.status(403).json({ message: "Your account is blocked. Contact support." });
+  }
+
+
     if(user){
         if(await bcrypt.compare(password, user.password)){
 

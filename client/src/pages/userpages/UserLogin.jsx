@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addUser } from "@/redux/Userslice";
 import { Navigate, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const UserLogin = () => {
  
   const [email, setemail] = useState("");
@@ -25,12 +26,11 @@ const UserLogin = () => {
     console.log("Submitting:", {  email, password }); 
     try {
       const response = await axiosInstance.post("/user/login",{ email, password });
-      navigate("/login")
       console.log("response from server", response.data);
+      navigate("/")
       dispatch(addUser(response.data))
-     
     } catch (error) {
-      console.error(error);
+      toast.error(error.response.data.message);
     }
   };
 
