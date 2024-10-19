@@ -3,6 +3,25 @@ const User = require("../models/usersModel")
 const OTP = require('../models/otp')
 const otpGenerator = require("otp-generator");
 const { OAuth2Client } = require("google-auth-library");
+const jwt = require('jsonwebtoken');
+
+const user = []; // In-memory storage for demonstration
+let refreshTokens = [];
+
+
+//====================TOKEN GENERATION FUNCTION============================
+
+function generateAccessToken(user) {
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+}
+
+function generateRefreshToken(user) {
+  const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
+  refreshTokens.push(refreshToken);
+  return refreshToken;
+}
+
+//============================PASSWORD HASHING================================
 
 const securePassword = async (password) => {
     try {
@@ -12,11 +31,11 @@ const securePassword = async (password) => {
     }
   };
 
+//=================================SIGNUP================================
+
 const signup = async(req,res)=>{
     try{
         const {name,email,password,phonenumber,otp} = req.body
-        // console.log("signup info :", name,email,password,phonenumber); user info in body
-
         const isEmailExists = await User.findOne({email})
         if(isEmailExists){
            return res.status(401).json({message: "email already exists"});
@@ -38,8 +57,6 @@ const signup = async(req,res)=>{
               message: "The OTP is not valid",
             });
           }
-         
-          
             const passwordhash =await securePassword(password)
             const user = await User.create({
                 name:name,
@@ -49,8 +66,6 @@ const signup = async(req,res)=>{
             })
             console.log(res.json);
             return res.status(200).json({ message: "User is registered", user });
-        
-
     }catch(err){
         console.log(err.message);
         return res.status(500).json({
@@ -60,6 +75,7 @@ const signup = async(req,res)=>{
     }
 }
 
+//=================================OTP SENDING================================
 
 
 const sendotp = async (req, res) => {
@@ -106,7 +122,7 @@ const sendotp = async (req, res) => {
 	}
 };
 
-
+//============================GOOGLE SIGIN================================
 
 const googleSignIn = async(req,res)=>{
 
@@ -151,6 +167,7 @@ const googleSignIn = async(req,res)=>{
     }
 }
 
+//=================================LOGIN================================
 
 const login = async(req,res)=>{
   try{
@@ -160,12 +177,20 @@ const login = async(req,res)=>{
     if(user){
         if(await bcrypt.compare(password, user.password)){
 
+          const accessToken = generateAccessToken({ users: user._id });
+          const refreshToken = generateRefreshToken({ users: user._id  });
+
+          res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
+          res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+          console.log('Cookies:', req.cookies);
+
         return res.status(200).json({
             message: "Login successful",
             id: user._id,
             name: user.name,
             email: user.email,
-          });
+          })
+
         }else{
             res.status(401).json({message: "Invalid email or password"})
         }
@@ -177,6 +202,10 @@ const login = async(req,res)=>{
 }
 }
 
+
+
+
+//=================================GOOGLELOGIN================================
 
 const googleLogin = async(req,res)=>{
 

@@ -6,6 +6,8 @@ const path = require('path');
 const mongoose = require( 'mongoose')
 const userRoute = require("./routes/userRoutes");
 const adminRoute = require("./routes/adminRoute");
+const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
 app.use(cors({
     origin: ' http://localhost:5173', // Change this to your frontend's URL if different
@@ -13,6 +15,7 @@ app.use(cors({
   }));
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('Connected to MongoDB'))

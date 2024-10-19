@@ -5,20 +5,30 @@ import dp2 from "../../assets/dp2.jpg";
 import logo from "../../assets/logo.png";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
-
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { addUser } from "@/redux/Userslice";
+import { Navigate, useNavigate } from "react-router-dom";
 const UserLogin = () => {
  
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const data = useSelector((state)=>state.user.users)
+  console.log("data from the redux ",data);
 
-
+// ======================Login========================
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting:", {  email, password }); 
     try {
       const response = await axiosInstance.post("/user/login",{ email, password });
-      console.log(response.data);
+      navigate("/login")
+      console.log("response from server", response.data);
+      dispatch(addUser(response.data))
+     
     } catch (error) {
       console.error(error);
     }
@@ -91,7 +101,7 @@ const UserLogin = () => {
                   .then(response => {
                     console.log("Google sign-in successful:", response.data);
                     alert(response.data.message)
-                    // navigate("/login")
+                    navigate("/login")
                   })
                   .catch(error => {
                     console.error("Google sign-in error:", error.response);

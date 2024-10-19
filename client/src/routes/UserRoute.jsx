@@ -6,6 +6,7 @@ import OtpSignup from '@/Majorcomponents/OtpSignup'
 import Home from '@/pages/userpages/Home'
 import { Toaster } from '@/components/ui/sonner'
 
+
 const UserRoute = () => {
   return (
     <div>
