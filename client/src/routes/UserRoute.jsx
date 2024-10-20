@@ -9,6 +9,7 @@ import { Toaster } from '@/components/ui/sonner'
 import ProtecHome from '@/protect/ProtectedHome'
 import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
+import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
 const UserRoute = () => {
   return (
     <div>
@@ -29,7 +30,12 @@ const UserRoute = () => {
             <Route path='/signup' element={<UserSignup/>}></Route>
             <Route path='/otp' element={<OtpSignup/>}></Route>
             <Route path='/login' element={<UserLogin/>}></Route>
-            <Route path='/shop' element={<ShoppingPage/>}></Route>
+            <Route path='/shop' element={
+              <ProtecHome>
+              <ShoppingPage/>
+              </ProtecHome>
+              }></Route>
+              <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
           </Routes>
         </BrowserRouter>
         <Toaster/>

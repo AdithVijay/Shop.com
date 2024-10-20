@@ -3,14 +3,15 @@ import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import { Link } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutUser } from '@/redux/Userslice';
 export default function UserManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterBy, setFilterBy] = useState('all');
   const [userData, setuserData] = useState([]);
     const [listUser, setlistUser] = useState([]);
-    
-
+  const userDataInState = useSelector((state)=>state.user.users)
+  const dispatch = useDispatch()
   useEffect(() => {
     async function fetUser(){
         try{
@@ -50,8 +51,14 @@ export default function UserManagement() {
         if (x._id === id) {
           return { ...x, isListed: false };  // Set to false when unlisting
         }
+        if(x?.isListed==false){
+          console.log(x);
+          console.log("hhh",x.isListed);
+          dispatch(logoutUser())
+      }
         return x;
-      }));
+      }));  
+ 
     } catch (error) {
       console.error(error);
     }

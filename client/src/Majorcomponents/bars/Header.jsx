@@ -6,20 +6,19 @@ import { Menu, Search, User } from "lucide-react"
 import shopco from "../../assets/shopco.png"
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+import UserMenuDropdown from './Dropdow'
 const Header = () => {
 
 
   const [isSearchVisible, setSearchVisible] = useState(false)
   const navigate = useNavigate();
   const userData = useSelector((state)=>state.user.users)
-  console.log("userdata from redux at navbar",userData);
   
   const toggleSearch = () => {
     setSearchVisible(!isSearchVisible)
   }
   function loginButton(){
     navigate("/login");
-    console.log("hii");
   }
 
   return (
@@ -61,7 +60,8 @@ const Header = () => {
 
             {/* User Icon */}
             <button className="text-muted-foreground hover:text-primary">
-              <User className="h-5 w-5" />
+
+              <UserMenuDropdown/>
             </button>
 
             {/* Login Button - Hidden on mobile */}

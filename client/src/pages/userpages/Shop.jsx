@@ -20,6 +20,11 @@ import { Checkbox } from '@/components/ui/checkbox'
 import Header from '@/Majorcomponents/bars/Header'
 import Card3 from '@/Majorcomponents/cards/Card3'
 import axiosInstance from '@/config/axiosInstance'
+import { useDispatch, useSelector } from 'react-redux'
+import { toast } from 'sonner'
+import { logoutUser } from '@/redux/Userslice'
+import { useNavigate,Link } from 'react-router-dom'
+
 
 const products = [
   {
@@ -82,6 +87,12 @@ const FilterSidebar = ({ className }) => (
                                                 // SHOPPING PAGE
 // ==========================================================================================================================
 const ShoppingPage = () => {
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const data = useSelector((state)=>state.user.users)
+    
+    
+  
 
   const [sortBy, setSortBy] = useState("featured");
   const [currentPage, setCurrentPage] = useState(1)
@@ -95,15 +106,17 @@ const ShoppingPage = () => {
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
-      console.log("card3", response)
       var productData = response.data.data
       setproductData(productData)
-      console.log(productData);
+
     }
     fetchData()
   }, []);
 
-  
+  if(data?.isListed==false){
+    navigate("/login")
+    toast.error("user blocked")
+}
 
 
   
@@ -152,9 +165,11 @@ const ShoppingPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {productData.map((product) => {
                if(product.isListed){
-            
+         
                 
-              return  <Card key={product._id} className="overflow-hidden flex flex-col bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300">
+              return(
+                <Link key={product._id} to={`/display/${product._id}`} className="no-underline">
+                <Card key={product._id} className="overflow-hidden flex flex-col bg-white rounded-lg shadow-md hover:shadow-xl hover:scale-105 transition-transform duration-300">
                 <div className="relative pt-[100%]">
                     <img
                     src={product.images[0]}
@@ -186,7 +201,8 @@ const ShoppingPage = () => {
                     )}
                 </CardFooter>
                 </Card>
-                  }})}
+                 </Link>
+                 ) }})}
             </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-const express = require("express");
+ const express = require("express");
 const userRoute = express.Router();
 const { signup,
     sendotp,
@@ -6,7 +6,8 @@ const { signup,
     login,
     googleLogin,
     } = require("../controller/userController");
-const {authenticateToken} = require("../middleware/authenticateToken")
+const {authenticateToken} = require("../middleware/authenticateToken");
+const { fetchProduct } = require("../controller/admin2Control");
 
 
 
@@ -17,6 +18,7 @@ userRoute.post("/otp", sendotp);
 userRoute.post("/googlesignin", googleSignIn);
 userRoute.post("/login", login);
 userRoute.post("/googleLogin", googleLogin);
+userRoute.get("/getproduct/:id", fetchProduct);
 
 
 
