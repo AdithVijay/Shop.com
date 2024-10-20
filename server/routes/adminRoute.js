@@ -16,12 +16,12 @@ const adminRoute = express.Router();
 
 
 const {gettingProducts,ListingProducts,unListingProducts,fetchProduct,updateProduct} = require("../controller/admin2Control")
-  
+const verifyAdmin = require( "../middleware/adminAuth");
 
 
  adminRoute.post("/login",adminLogin);
 //==================CATEGORY SIDE=============================
- adminRoute.post("/addcategory",addCategory);
+ adminRoute.post("/addcategory",verifyAdmin,addCategory);
  adminRoute.get("/getcategory",getCategory);
  adminRoute.put("/listcategory/:id",listCategory);
  adminRoute.put("/unlistcategory/:id",unListCategory);

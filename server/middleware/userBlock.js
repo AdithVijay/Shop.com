@@ -8,7 +8,6 @@ const checkUserStatus = async (req, res, next) => {
     if (!user || !user.isListed) {
       return res.status(403).json({ message: "Account is blocked. You cannot access this resource." });
     }
-  
     next();
   };
 

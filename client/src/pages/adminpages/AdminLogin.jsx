@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
 import axiosInstance from '@/config/axiosInstance';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import { useNavigate } from 'react-router-dom';
+import { addAdmin } from '@/redux/Adminslice';
+import { useDispatch } from 'react-redux';
 
 const AdminLogin = () => {
 
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
-
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting:", {  email, password }); 
     try {
       const response = await axiosInstance.post("/admin/login",{ email, password });
+      addAdmin
       console.log(response.data);
+      dispatch(addAdmin(response))
+      navigate("/category")
     } catch (error) {
       console.error("ther is ",error);
     }

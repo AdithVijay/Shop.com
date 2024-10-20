@@ -23,6 +23,7 @@ const product = {
 };
 
 const ProductDetail = () => {
+
   
   const { id } = useParams();
   

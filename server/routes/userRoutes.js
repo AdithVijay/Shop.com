@@ -6,7 +6,7 @@ const { signup,
     login,
     googleLogin,
     } = require("../controller/userController");
-const {authenticateToken} = require("../middleware/authenticateToken");
+
 const { fetchProduct } = require("../controller/admin2Control");
 
 
