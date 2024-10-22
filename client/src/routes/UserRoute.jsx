@@ -10,6 +10,8 @@ import ProtecHome from '@/protect/ProtectedHome'
 import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
+import ProductReview from '@/Majorcomponents/productDisplay/Review'
+
 const UserRoute = () => {
   return (
     <div>
@@ -36,6 +38,7 @@ const UserRoute = () => {
               </ProtecHome>
               }></Route>
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
+
           </Routes>
         </BrowserRouter>
         <Toaster/>

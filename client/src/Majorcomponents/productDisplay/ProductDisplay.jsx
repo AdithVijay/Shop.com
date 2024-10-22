@@ -35,7 +35,7 @@ const ProductDetail = () => {
     async function fetchProduct(){
       try {
         const response = await axiosInstance.get(`/user/getproduct/${id}`)
-        console.log(response);
+        // console.log(response);
         const SingleproductData = response.data.data
         setproductData(SingleproductData)
 
@@ -50,7 +50,7 @@ const ProductDetail = () => {
     fetchProduct()
   }, [id]);
   
-  console.log(productData)
+  // console.log(productData)
 
 
   return (

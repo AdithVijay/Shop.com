@@ -7,6 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import axiosInstance from '@/config/axiosInstance';
+import { toast } from 'sonner';
 
 export function OTPVerification({ isOpen, onClose, onVerify, email }) {
   const [otp, setOtp] = useState(['', '', '', '', '','']);
@@ -37,10 +39,18 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
     onVerify(otp.join(''));
   };
 
-  const handleResend = () => {
+   const handleResend =async () => {
     setTimer(20);
-    // Add logic to resend OTP
+    try {
+      const response  = await axiosInstance.post("/user/resendotp",{email})
+      // toast.success(response.message)
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -67,7 +77,8 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
         </div>
         <div className="text-center mb-4">
           {timer > 0 ? (
-            <p>Send code again {timer.toString().padStart(2, '0')}:{timer.toString().padStart(2, '0')}</p>
+            <p>Send code again {Math.floor(timer / 60).toString().padStart(2, '0')}:
+                  {(timer % 60).toString().padStart(2, '0')}</p>
           ) : (
             <Button variant="link" onClick={handleResend}>Resend</Button>
           )}

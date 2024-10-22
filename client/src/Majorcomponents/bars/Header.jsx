@@ -7,9 +7,11 @@ import shopco from "../../assets/shopco.png"
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import UserMenuDropdown from './Dropdow'
+import { useDispatch } from "react-redux"
+import { logoutUser } from '@/redux/Userslice'
 const Header = () => {
 
-
+  const dispatch = useDispatch()
   const [isSearchVisible, setSearchVisible] = useState(false)
   const navigate = useNavigate();
   const userData = useSelector((state)=>state.user.users)
@@ -19,6 +21,11 @@ const Header = () => {
   }
   function loginButton(){
     navigate("/login");
+  }
+  function logoutButton(){
+
+    dispatch(logoutUser())
+    navigate("/home")
   }
 
   return (
@@ -72,7 +79,12 @@ const Header = () => {
               onClick={loginButton}
             >
                Login
-            </button>:""
+            </button>:<button 
+              className="w-full bg-black text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105"
+              onClick={logoutButton}
+            >
+               LogOut
+            </button>
           }
                        
 

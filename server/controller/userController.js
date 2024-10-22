@@ -31,7 +31,7 @@ const securePassword = async (password) => {
     }
   };
 
-//=================================SIGNUP================================
+//=================================SIGNUP===================================
 
 const signup = async(req,res)=>{
     try{
@@ -86,14 +86,13 @@ const sendotp = async (req, res) => {
 		const checkUserPresent = await User.findOne({ email });
 		
 		if (checkUserPresent) {
-
 			return res.status(401).json({
 				success: false,
 				message: `User is Already Registered`,
 			});
 		}
 
-		var otp = otpGenerator.generate(6, {
+		var otp = otpGenerator.generate(6,{
 			upperCaseAlphabets: false,
 			lowerCaseAlphabets: false,
 			specialChars: false,
@@ -109,6 +108,7 @@ const sendotp = async (req, res) => {
 			});
 		}
 		const otpPayload = { email, otp };
+
 		const otpBody = await OTP.create(otpPayload);
 		console.log("OTP Body", otpBody);
 		res.status(200).json({
@@ -121,6 +121,40 @@ const sendotp = async (req, res) => {
 		return res.status(500).json({ success: false, error: error.message });
 	}
 };
+
+
+const resendOtp = async (req,res)=>{
+    try {
+      const {email} = req.body
+      console.log(email)
+      const checkuser = await User.findOne({email})
+
+      if(checkuser){
+        return res.status(401).json({
+          success: false,
+          message: `User is Already Registered`,
+        });
+      }
+      var otp = otpGenerator.generate(6, {
+        upperCaseAlphabets: false,
+        lowerCaseAlphabets: false,
+        specialChars: false,
+      });
+      await OTP.deleteMany({email})
+      const otpPayload = { email, otp };
+      const otpBody = await OTP.create(otpPayload)
+
+      await sendVerificationEmail(email, otp);
+
+      res.status(200).json({
+        success: true,
+        message: "OTP resent successfully",
+        otp, // For testing purposes, you can remove this in production
+      });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 //============================GOOGLE SIGIN================================
 
@@ -175,17 +209,19 @@ const login = async(req,res)=>{
     const user = await User.findOne({email})
 
     console.log(user)
-  if (user.isListed==false) {
-    return res.status(403).json({ message: "Your account is blocked. Contact support." });
-  }
+    if(!user){
+      res.status(401).json({message: "Invalid email or password"})
+    }
+
+    if (user?.isListed==false) {
+      return res.status(403).json({ message: "Your account is blocked. Contact support." });
+    }
 
 
     if(user){
         if(await bcrypt.compare(password, user.password)){
-
           const accessToken = generateAccessToken({ users: user._id });
           const refreshToken = generateRefreshToken({ users: user._id  });
-
           res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
           res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
           console.log('Cookies:', req.cookies);
@@ -198,8 +234,6 @@ const login = async(req,res)=>{
             isListed:user.isListed
           })
 
-        }else{
-            res.status(401).json({message: "Invalid email or password"})
         }
     }else{
         return res.status(500).json({ message: "Invalid email or password" });
@@ -212,7 +246,7 @@ const login = async(req,res)=>{
 
 
 
-//=================================GOOGLELOGIN================================
+//=====================================GOOGLELOGIN================================
 
 const googleLogin = async(req,res)=>{
 
@@ -238,6 +272,9 @@ const googleLogin = async(req,res)=>{
       });
       await user.create();
     }
+    if (user?.isListed==false) {
+      return res.status(403).json({ message: "Your account is blocked. Contact support." });
+    }
 
     res.status(200).json({
       success: true,
@@ -256,7 +293,7 @@ const googleLogin = async(req,res)=>{
 }
 
 
-module.exports = {signup,sendotp,googleSignIn,login,googleLogin}
+module.exports = {signup,sendotp,googleSignIn,login,googleLogin,resendOtp}
 
 
 

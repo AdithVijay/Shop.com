@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux"
 export default function UserMenuDropdown() {
     const dispatch = useDispatch()
     function logout(){
+        console.log("logot pressed");
         dispatch(logoutUser())
     }
 

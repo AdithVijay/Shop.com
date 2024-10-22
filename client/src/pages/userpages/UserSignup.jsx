@@ -7,6 +7,8 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { addUser } from "@/redux/Userslice";
 
 
 const UserSignup = () => {
@@ -15,19 +17,23 @@ const UserSignup = () => {
   const [password, setpassword] = useState("");
   const [phonenumber, setphonenumber] = useState("");
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
+  const dispatch = useDispatch()
+
 
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {  
     e.preventDefault();
-    setIsOTPDialogOpen(true);
+    toast(".....verifying")
     console.log("Submitting at front end :", { name, email, password, phonenumber }); 
     try {
       const response = await axiosInstance.post("/user/otp",{ email });
       console.log(response.data);
       console.log(response.message);
-   
+       setIsOTPDialogOpen(true);
+       toast.success("...enter the otp sent")
     } catch (error) {
+       toast.error(error.response.data.message);
         console.error("Error da response:", error.response);
          console.log("Message:", error.response.data.message); // Access the error message
     }
@@ -35,13 +41,14 @@ const UserSignup = () => {
 
 
   const handleOTPVerify =async (otp) => {
-
     console.log('OTP verified:', otp);
     try {
       const response = await axiosInstance.post("/user/create",{name,email,password,phonenumber,otp});
       console.log(response.data);
-      navigate("/login")
+      navigate("/home")
       toast(response.data.message)
+      dispatch( addUser(response.data.user._id))
+
     } catch (error) {
       console.log("Error da response:", error.response);
       alert( error.response.data.message); // Access the error message
@@ -166,21 +173,15 @@ const UserSignup = () => {
               />
             </div>
 
-{/* 
-            <button className="flex items-center justify-center w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-              <FaTwitter className="mr-2 text-blue-400" />
-              Sign in with Twitter
-            </button> */}
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="#" className="font-medium text-black hover:text-gray-800">
+            <a href="/login" className="font-medium text-black hover:text-gray-800">
               Log in
             </a>
           </p>
         </div>
-
 
 
         <OTPVerification 
@@ -193,6 +194,8 @@ const UserSignup = () => {
 
 
         {/* Right Section - Image */}
+
+
         <div className="flex-1 relative overflow-hidden">
           <div className="absolute inset-0 md:rounded-l-2xl overflow-hidden">
             <img

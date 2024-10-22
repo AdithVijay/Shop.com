@@ -16,22 +16,23 @@ const Home = () => {
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
-      console.log("card3", response)
-      var productData = response.data.data
-      setproductData(productData)
-      console.log(productData);
+      const data = response.data.data
+      setproductData(data)
     }
     fetchData()
   }, []);
 
+console.log("home",productData);    
+
   return (
+    
     <div>
       <Header/>
       <HeroSection/>
-      <Card1/>
+      <Card1 productData={productData}/>
       <Card2/>
       <Card3 productData ={productData}  />
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   )
 }

@@ -5,6 +5,7 @@ const { signup,
     googleSignIn,
     login,
     googleLogin,
+    resendOtp
     } = require("../controller/userController");
 
 const { fetchProduct } = require("../controller/admin2Control");
@@ -15,6 +16,7 @@ const { fetchProduct } = require("../controller/admin2Control");
 
 userRoute.post("/create", signup);
 userRoute.post("/otp", sendotp);
+userRoute.post("/resendotp",resendOtp)
 userRoute.post("/googlesignin", googleSignIn);
 userRoute.post("/login", login);
 userRoute.post("/googleLogin", googleLogin);

@@ -27,6 +27,7 @@ const UserLogin = () => {
     try {
       const response = await axiosInstance.post("/user/login",{ email, password });
       console.log("response from server", response.data);
+      toast.success(response.data.message)
       navigate("/")
       dispatch(addUser(response.data))
     } catch (error) {
@@ -84,7 +85,7 @@ const UserLogin = () => {
             //   onClick={handleSubmit}
               className="w-full mt-6 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
-              Create account
+              Login
             </button>
           </form>
 
@@ -100,8 +101,9 @@ const UserLogin = () => {
                   axiosInstance.post("/user/googleLogin", { token: googleToken })
                   .then(response => {
                     console.log("Google sign-in successful:", response.data);
-                    alert(response.data.message)
-                    navigate("/login")
+                    dispatch(addUser(response.data))
+                    toast.success(response.data.message)
+                    navigate("/home")
                   })
                   .catch(error => {
                     console.error("Google sign-in error:", error.response);
@@ -117,9 +119,9 @@ const UserLogin = () => {
           </div>
 
           <p className="mt-6 text-center text-sm text-gray-600">
-            Already have an account?{" "}
-            <a href="#" className="font-medium text-black hover:text-gray-800">
-              Log in
+            Don't have an account?{" "}
+            <a href="/signup" className="font-medium text-black hover:text-gray-800">
+              Sign in
             </a>
           </p>
         </div>
