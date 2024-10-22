@@ -29,7 +29,7 @@ console.log("home",productData);
     <div>
       <Header/>
       <HeroSection/>
-      <Card1 productData={productData}/>
+      <Card1 productData={productData} name={"Related Category"}/>
       <Card2/>
       <Card3 productData ={productData}  />
       <Footer/>

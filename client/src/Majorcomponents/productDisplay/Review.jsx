@@ -26,7 +26,6 @@ export default function ProductReview() {
     async function fetchProduct(){
       try {
         const response = await axiosInstance.get(`/user/getproduct/${id}`)
-        console.log(response);
         const SingleproductData = response.data.data
         setproductData(SingleproductData)
 
@@ -36,8 +35,6 @@ export default function ProductReview() {
     }
     fetchProduct()
   }, [id]);
-
-  console.log("data in review",productData);
   
 
   const handleSubmitReview = (e) => {
@@ -103,7 +100,14 @@ export default function ProductReview() {
                 <li>Iron on low heat, avoiding the print</li>
               </ul>
             </div>
+            <div>
+              <h4 className="text-lg font-medium">Adiitional Info</h4>
+              <ul className="list-disc list-inside text-muted-foreground">
+                <li>{productData.additionalInfo}</li>
+              </ul>
+            </div>
           </div>
+          
         </TabsContent>
         <TabsContent value="reviews">
           <div className="space-y-8">

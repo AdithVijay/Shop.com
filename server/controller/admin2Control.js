@@ -5,7 +5,6 @@ const ProductData = require("../models/productModel")
 const gettingProducts = async(req,res)=>{
     try {
         const response = await ProductData.find().populate('category');
-        console.log(response)
         if(!response){
             return res.status(404).json({success:false, message: "Product data not found" })
         }else{
@@ -67,9 +66,7 @@ const fetchProduct = async(req,res)=>{
             return res.status(200).json({success:true,message:"Product is sent",  data: product })
         }
     }catch(err){}
-   console.log(err);
-   return res.status(500).json({ success: false, message: "Server Error", error: error.message });
-
+   return res.status(500).json({ success: false, message: "Server Error",});
 }
 
 
@@ -93,7 +90,6 @@ const updateProduct = async(req,res)=>{
        console.log(count);
        
        const categoryDoc = await Category.findOne({ category: selectedCategory });
-       console.log(categoryDoc);
        if (!categoryDoc) {
          return res.status(400).json({ success: false, message: "Invalid category" });
        }

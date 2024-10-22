@@ -9,6 +9,7 @@ const { signup,
     } = require("../controller/userController");
 
 const { fetchProduct } = require("../controller/admin2Control");
+const { relatedProducts } = require("../controller/user2Controller");
 
 
 
@@ -21,6 +22,7 @@ userRoute.post("/googlesignin", googleSignIn);
 userRoute.post("/login", login);
 userRoute.post("/googleLogin", googleLogin);
 userRoute.get("/getproduct/:id", fetchProduct);
+userRoute.get("/relatedproducts/:id", relatedProducts);
 
 
 

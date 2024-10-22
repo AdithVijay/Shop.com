@@ -4,12 +4,15 @@ import Header from '../../Majorcomponents/bars/Header'
 import Review from '@/Majorcomponents/productDisplay/Review'
 import Footer from '@/Majorcomponents/footer/Footer'
 import Card1 from '@/Majorcomponents/cards/Card1'
-import Card2 from '@/Majorcomponents/cards/Card2'
-import axios from 'axios'
 import axiosInstance from '@/config/axiosInstance'
+import { Link, useParams } from 'react-router-dom'
 
 const DisplayPoductMain = () => {
+  const {id}= useParams()
   const [productData, setproductData] = useState([]);
+  const [relatedProducts, setrelatedProducts] = useState([]);
+
+  //=========================DATA FOR PRODUCT DISPLAY=======================
 
   useEffect(() => {
     async function fetchData(){
@@ -18,7 +21,23 @@ const DisplayPoductMain = () => {
       setproductData(data)
     }
     fetchData()
-  }, []);
+  }, [])
+//=========================RELATED PRODUCTS FOR CARDS=======================
+  useEffect(() => {
+    console.log(id);
+    
+    async function fetchData(){
+      try {
+        const response = await axiosInstance.get(`user/relatedproducts/${id}`)
+        const data = response.data.data
+        setrelatedProducts(data)
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData()
+  }, [id])
 
   return (
     <div>
@@ -28,7 +47,9 @@ const DisplayPoductMain = () => {
         <hr className="border-t border-gray-300 my-4 w-2/4  " />
         </div>
         <Review/>
-        <Card1 productData={productData} name={"Related Products"}/>
+        <Link to={"/display/:id"}>
+        <Card1 productData={relatedProducts} name={"Related Products"}/>
+        </Link>
         <Footer/>
     </div>
   )
