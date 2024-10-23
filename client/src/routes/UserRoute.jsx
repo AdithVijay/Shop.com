@@ -10,7 +10,8 @@ import ProtecHome from '@/protect/ProtectedHome'
 import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
-import ProductReview from '@/Majorcomponents/productDisplay/Review'
+import UserAddress from '@/pages/userprofile/adress/UserAddress'
+import UserProfile from '@/pages/userprofile/UserProfile'
 
 const UserRoute = () => {
   return (
@@ -38,6 +39,11 @@ const UserRoute = () => {
               </ProtecHome>
               }></Route>
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
+
+              <Route path='/profile' element={<UserProfile/>}></Route>
+
+              <Route path='/address' element={<UserAddress/>}></Route>
+
 
           </Routes>
         </BrowserRouter>
