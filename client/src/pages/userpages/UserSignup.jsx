@@ -229,12 +229,14 @@ const UserSignup = () => {
 
                   axiosInstance.post("/user/googlesignin", { token: googleToken })
                   .then(response => {
-                    console.log("Google sign-in successful:", response.data);
-                    navigate("/login")
+                    toast.success(response.data.message);
+                    navigate("/home")
+                    dispatch(addUser(response.data))
                   })
+                  
                   .catch(error => {
-                    console.error("Google sign-in error:", error.response);
-                    alert(error.response.data.message)
+                    // toast.error( error.response)
+                    toast.error(error.response.data.message)
                   });
                
                 }}

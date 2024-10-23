@@ -3,6 +3,7 @@ import { Edit2 } from 'lucide-react';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export default function CategoryManagement() {
   const [category, setCategories] = useState("");
@@ -10,6 +11,33 @@ export default function CategoryManagement() {
   const [recieveCategory, setrecieveCategory] = useState([]);
 
   const navigate = useNavigate()
+  const [errors, setErrors] = useState({});
+  const letterRegex = /^[A-Za-z\s]+$/;
+// ===================VALIDATE FORM===================================================
+      
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!category.trim()){
+        newErrors.category = "Category is required.";
+      }
+      else if (category.length < 5) {
+        newErrors.category = "Category must be at least 5 characters.";
+      } else if (!letterRegex.test(category)) {
+        newErrors.category = "Category can only contain letters.";
+      }
+
+
+    if (!description.trim()){
+       newErrors.description = "Category is required."
+    }else if (description.length < 5) {
+      newErrors.description = "description must be at least 5 characters.";
+    }else if (!letterRegex.test(description)) {
+        newErrors.description = "description can only contain letters.";
+      }
+    return newErrors;
+  };
+
   
 // ===================FETCHING DAT TO LIST IN TABLES=========================================================================
 
@@ -29,16 +57,25 @@ export default function CategoryManagement() {
 
   const addCategory = async (e) => {
     e.preventDefault();
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     console.log("Submitting:", { category, description }); 
     try {
       const response = await axiosInstance.post("/admin/addcategory", { category, description });
       console.log(response.data);
       if (response.data.success) {
-        alert(response.data.message);
+        toast.success(response.data.message);
         setrecieveCategory([...recieveCategory, response.data.data]);
       }
     } catch (error) {
-      console.error(error);
+      toast.error(error);
+      console.error("Error updating category:", error);
     }
     setCategories("")
     setdescription("")
@@ -109,6 +146,7 @@ export default function CategoryManagement() {
                     className="w-full p-2 border border-gray-300 rounded-md"
                     required
                   />
+                   {errors.category && <span className="text-red-500 text-sm mt-1">{errors.category}</span>}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category Description</label>
@@ -120,6 +158,7 @@ export default function CategoryManagement() {
                     className="w-full p-2 border border-gray-300 rounded-md h-24"
                     required
                   />
+                    {errors.description && <span className="text-red-500 text-sm mt-1">{errors.description}</span>}
                 </div>
                 <div>
                   <button

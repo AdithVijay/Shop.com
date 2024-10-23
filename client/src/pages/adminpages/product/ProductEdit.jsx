@@ -24,7 +24,7 @@ export default function ProductEdit() {
     
 
   const [product, setProduct] = useState({
-    images: Array(5).fill(null)  
+    images: Array(4).fill(null)  
   })
   const navigate = useNavigate()
 
@@ -81,7 +81,65 @@ export default function ProductEdit() {
     }
     fetchData();
   }, []);
-// console.log(categoryDetails);
+
+
+// ===================VALIDATE FORM===================================================
+
+const [errors, setErrors] = useState({});
+const letterRegex = /^[A-Za-z\s]+$/;
+
+const validateForm = () => {
+      const newErrors = {};
+      if (!productName.trim()) {
+        newErrors.productName = "ProductName is required.";
+      } else if (productName.length < 5) {
+        newErrors.productName = "ProductName must be at least 5 characters.";
+      } else if (!letterRegex.test(productName)) {
+        newErrors.productName = "Category can only contain letters.";
+      }
+      if (!description.trim()) {
+        newErrors.description = "description is required.";
+      } else if (description.length < 5) {
+        newErrors.description = "description must be at least 5 characters.";
+      } else if (!letterRegex.test(description)) {
+        newErrors.description = "description can only contain letters.";
+      }
+
+      if (!additionalInfo.trim()) {
+        newErrors.additionalInfo = "additionalInfo is required.";
+      } else if (additionalInfo.length < 5) {
+        newErrors.additionalInfo =
+          "additionalInfo must be at least 5 characters.";
+      } else if (!letterRegex.test(additionalInfo)) {
+        newErrors.additionalInfo = "additionalInfo can only contain letters.";
+      }
+
+      if (regularPrice === "" || isNaN(regularPrice)) {
+        newErrors.regularPrice =
+          "Regular Price is required and must be a number.";
+      } else if (regularPrice < 0) {
+        newErrors.regularPrice = "Regular Price cannot be negative.";
+      }
+
+      // Sale Price validation (must be a positive number)
+      if (salePrice === "" || isNaN(salePrice)) {
+        newErrors.salePrice = "Sale Price is required and must be a number.";
+      } else if (salePrice < 0) {
+        newErrors.salePrice = "Sale Price cannot be negative.";
+      }
+
+      const stockErrors = {};
+      Object.keys(stock).forEach((size) => {
+        if (stock[size] < 0) {
+          stockErrors[size] = `${size} stock cannot be negative.`;
+        }
+      });
+      if (Object.keys(stockErrors).length > 0) {
+        newErrors.stock = stockErrors;
+      }
+
+      return newErrors;
+};
 
 
 // =========================SENDING IMAGE TO CROPPER ===============================
@@ -156,6 +214,19 @@ export default function ProductEdit() {
 
   const handleAddProduct = async (e) => {
     e.preventDefault();
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    if (product.images.filter((image) => image !== null).length < 4) {
+      toast.error("Please add exactly 4 images before submitting.");
+      return; // Prevent form submission
+    }
+
     const imageUrls = await uploadImagesToCloudinary()
     const filteredImages = imageUrls.filter(url => url !== null)
 
@@ -202,7 +273,7 @@ export default function ProductEdit() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2">
                   <div className="grid grid-cols-2 gap-4">
-                    {Array.from({ length: 5 }, (_, index) => (
+                    {Array.from({ length: 4 }, (_, index) => (
                       <div key={index} className="space-y-2">
                         <label className="block text-sm font-medium text-gray-700">
                           {index === 0 ? 'Main Image' : ` Image ${index}`}
@@ -243,6 +314,11 @@ export default function ProductEdit() {
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                     required
                   />
+                    {errors.productName && (
+                    <span className="text-red-500 text-sm ">
+                      {errors.productName}
+                    </span>
+                  )}
 
                   {/* Product description */}
                   <textarea
@@ -253,6 +329,11 @@ export default function ProductEdit() {
                     rows={3}
                     required
                   />
+                   {errors.description && (
+                    <span className="text-red-500 text-sm pb-5 ">
+                      {errors.description}
+                    </span>
+                  )}
 
                   {/* Additional product information */}
                   <textarea
@@ -262,7 +343,11 @@ export default function ProductEdit() {
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                     rows={3}
                   />
-
+                      {errors.additionalInfo && (
+                    <span className="text-red-500 text-sm pb-5 ">
+                      {errors.additionalInfo}
+                    </span>
+                  )}
                   {/* Pricing */}
                   <input
                     type="number"
@@ -272,6 +357,11 @@ export default function ProductEdit() {
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                     required
                   />
+                  {errors.regularPrice && (
+                    <span className="text-red-500 text-sm pb-5 ">
+                      {errors.regularPrice}
+                    </span>
+                  )}
                   <input
                     type="number"
                     value={salePrice}
@@ -279,6 +369,11 @@ export default function ProductEdit() {
                     placeholder="Enter Sale Price here..."
                     className="w-full p-2 border border-gray-300 rounded-md mb-4"
                   />
+                    {errors.salePrice && (
+                    <span className="text-red-500 text-sm pb-5 ">
+                      {errors.salePrice}
+                    </span>
+                  )}
 
                   {/* Category selection */}
                   <select
@@ -322,6 +417,11 @@ export default function ProductEdit() {
                         value={stock[size]}
                         onChange={(e) => handleChange(size, parseInt(e.target.value) || 0)}
                       />
+                      {errors.stock && errors.stock[size] && (
+                        <span className="text-red-500 text-sm">
+                          {errors.stock[size]}
+                        </span>
+                      )}
                     </div>
                   ))}
                 </div>

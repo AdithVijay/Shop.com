@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import Sidebar from '@/Majorcomponents/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
+import { toast } from 'sonner';
 
 export default function CategoryEdit() {
   const [category, setCategory] = useState("");
@@ -9,6 +10,33 @@ export default function CategoryEdit() {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
+  const [errors, setErrors] = useState({});
+  const letterRegex = /^[A-Za-z\s]+$/;
+// ===================VALIDATE FORM===================================================
+      
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!category.trim()){
+        newErrors.category = "Category is required.";
+      }
+      else if (category.length < 5) {
+        newErrors.category = "Category must be at least 5 characters.";
+      } else if (!letterRegex.test(category)) {
+        newErrors.category = "Category can only contain letters.";
+      }
+
+
+    if (!description.trim()){
+       newErrors.description = "Category is required."
+    }else if (description.length < 5) {
+      newErrors.description = "description must be at least 5 characters.";
+    }else if (!letterRegex.test(description)) {
+        newErrors.description = "description can only contain letters.";
+      }
+    return newErrors;
+  };
 
   useEffect(() => {
     async function fetchCategory() {
@@ -27,13 +55,24 @@ export default function CategoryEdit() {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+
     try {
       const response = await axiosInstance.put(`/admin/updatecategory/${id}`, { category, description });
       if (response.data.success) {
-        alert(response.data.message);
+        toast.success(response.data.message);
         navigate('/category'); // Assuming you have a route for listing all categories
       }
     } catch (error) {
+      toast.error("Error updating category:", error);
       console.error("Error updating category:", error);
     }
   };
@@ -61,6 +100,7 @@ export default function CategoryEdit() {
                   className="w-full p-2 border border-gray-300 rounded-md"
                   required
                 />
+                 {errors.category && <span className="text-red-500 text-sm mt-1">{errors.category}</span>}
               </div>
               <div>
                 <label htmlFor="categoryDescription" className="block text-sm font-medium text-gray-700 mb-1">Category Description</label>
@@ -72,6 +112,7 @@ export default function CategoryEdit() {
                   className="w-full p-2 border border-gray-300 rounded-md h-32"
                   required
                 />
+                 {errors.description && <span className="text-red-500 text-sm mt-1">{errors.description}</span>}
               </div>
               <div className="flex justify-end">
                 <button
