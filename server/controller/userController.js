@@ -270,7 +270,7 @@ const googleLogin = async(req,res)=>{
         name: name,
         email: email,
       });
-      await user.create();
+      await user.save();
     }
     if (user?.isListed==false) {
       return res.status(403).json({ message: "Your account is blocked. Contact support." });

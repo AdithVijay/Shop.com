@@ -12,6 +12,8 @@ import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
 import UserAddress from '@/pages/userprofile/adress/UserAddress'
 import UserProfile from '@/pages/userprofile/UserProfile'
+import EditAddress from '@/pages/userprofile/adress/EditAddress'
+import Orders from '@/pages/userprofile/order/Orders'
 
 const UserRoute = () => {
   return (
@@ -44,6 +46,8 @@ const UserRoute = () => {
 
               <Route path='/address' element={<UserAddress/>}></Route>
 
+              <Route path='/edit' element={<EditAddress/>}></Route>
+              <Route path='/orders' element={<Orders/>}></Route>
 
           </Routes>
         </BrowserRouter>
