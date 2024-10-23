@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import axiosInstance from "@/config/axiosInstance";
 
 export default function UserAddress() {
   const [addresses, setAddresses] = useState([
@@ -23,12 +24,6 @@ export default function UserAddress() {
     pincode: ""
   });
 
-  const handleSetPrimary = (id) => {
-    setAddresses(addresses.map(addr => ({
-      ...addr,
-      isPrimary: addr.id === id
-    })));
-  };
 
   const handleEdit = (id) => {
     console.log("Edit address with id:", id);
@@ -49,18 +44,18 @@ export default function UserAddress() {
 
   const handleSubmitNewAddress = (e) => {
     e.preventDefault();
-    // Add logic to submit the new address
+    const response = axiosInstance.post("/user/useraddress",{})
     console.log("New address submitted:", newAddress);
     setShowAddForm(false);
-    setNewAddress({
-      name: "",
-      email: "",
-      address: "",
-      district: "",
-      state: "",
-      landmark: "",
-      pincode: ""
-    });
+    // setNewAddress({
+    //   name: "",
+    //   email: "",
+    //   address: "",
+    //   district: "",
+    //   state: "",
+    //   landmark: "",
+    //   pincode: ""
+    // });
   };
 
   return (
@@ -81,13 +76,6 @@ export default function UserAddress() {
                     <p className="text-gray-600">Contact: {address.contact}</p>
                   </div>
                   <div className="flex sm:flex-col space-x-4 sm:space-x-0 sm:space-y-2">
-                    {address.isPrimary ? (
-                      <span className="text-sm text-gray-500">Primary</span>
-                    ) : (
-                      <Button variant="outline" size="sm" onClick={() => handleSetPrimary(address.id)} className="border-black text-black">
-                        Set as Primary
-                      </Button>
-                    )}
                     <Button variant="outline" size="sm" onClick={() => handleEdit(address.id)} className="border-black text-black">
                       Edit
                     </Button>

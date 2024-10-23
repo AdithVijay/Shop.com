@@ -10,10 +10,7 @@ import ProtecHome from '@/protect/ProtectedHome'
 import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
-import UserAddress from '@/pages/userprofile/adress/UserAddress'
-import UserProfile from '@/pages/userprofile/UserProfile'
-import EditAddress from '@/pages/userprofile/adress/EditAddress'
-import Orders from '@/pages/userprofile/order/Orders'
+
 
 const UserRoute = () => {
   return (
@@ -35,20 +32,14 @@ const UserRoute = () => {
             <Route path='/signup' element={<UserSignup/>}></Route>
             <Route path='/otp' element={<OtpSignup/>}></Route>
             <Route path='/login' element={<UserLogin/>}></Route>
+
             <Route path='/shop' element={
               <ProtecHome>
-              <ShoppingPage/>
+              <ShoppingPage/> 
               </ProtecHome>
               }></Route>
+
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
-
-              <Route path='/profile' element={<UserProfile/>}></Route>
-
-              <Route path='/address' element={<UserAddress/>}></Route>
-
-              <Route path='/edit' element={<EditAddress/>}></Route>
-              <Route path='/orders' element={<Orders/>}></Route>
-
           </Routes>
         </BrowserRouter>
         <Toaster/>

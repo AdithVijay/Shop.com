@@ -1,21 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import { useSelector } from "react-redux";
+import axiosInstance from "@/config/axiosInstance";
 
 export default function UserProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [phoneNumber, setphoneNumber] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
+  const data = useSelector(state=>state.user.users)
+  const id = data.user._id
+  console.log(id);
+  
   const navigate = useNavigate();
 
+//==================FORM VALIDATION=============
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -28,17 +34,30 @@ export default function UserProfile() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = "Email is invalid.";
     }
-    if (!dateOfBirth.trim()) {
-      newErrors.dateOfBirth = "Date of Birth is required.";
-    }
-    if (newPassword && newPassword !== confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match.";
-    }
-    return newErrors;
   };
+
+
+  useEffect(() => {
+    async function fetchProduct(){
+      try {
+        const response = await axiosInstance.get(`user/userdetails/${id}`) 
+        console.log(response);
+        
+        setName(response.data.name)
+        setEmail(response.data.email)
+        setphoneNumber(response.data. phoneNumber||null)
+      } catch (error) {
+        console.log(error);
+      }
+      
+    }
+    fetchProduct()
+  }, [id]);
+  
 
   const handleUpdatePersonalInfo = async (e) => {
     e.preventDefault();
+
     toast.success("Updating personal information, please wait");
     const validationErrors = validateForm();
 
@@ -56,8 +75,7 @@ export default function UserProfile() {
     };
 
     try {
-      // Replace this with your actual API call
-      // const response = await axiosInstance.post("/user/update", personalData);
+      const response = await axiosInstance.post("/user/update", personalData);
       console.log("Personal data to be sent:", personalData);
       toast.success("Personal information updated successfully");
       navigate("/profile");
@@ -65,6 +83,7 @@ export default function UserProfile() {
       console.error(error);
       toast.error("Failed to update personal information");
     }
+
   };
 
   return (
@@ -103,25 +122,22 @@ export default function UserProfile() {
                   />
                   {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
                 </div>
+              {
 
+                phoneNumber?<div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">PhoneNumber</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={phoneNumber}
+                  onChange={(e) => setphoneNumber(e.target.value)}
+                  className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                />
+                {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+              </div>:""
+              }
+                
                 {/* <div>
-                  <label htmlFor="dateOfBirth" className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                  <div className="mt-1 relative rounded-md shadow-sm">
-                    <input
-                      type="date"
-                      id="dateOfBirth"
-                      value={dateOfBirth}
-                      onChange={(e) => setDateOfBirth(e.target.value)}
-                      className="block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    />
-                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <Calendar className="h-5 w-5 text-gray-400" />
-                    </div>
-                  </div>
-                  {errors.dateOfBirth && <span className="text-red-500 text-sm">{errors.dateOfBirth}</span>}
-                </div> */}
-
-                <div>
                   <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Current Password</label>
                   <input
                     type="password"
@@ -153,7 +169,7 @@ export default function UserProfile() {
                     className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   {errors.confirmPassword && <span className="text-red-500 text-sm">{errors.confirmPassword}</span>}
-                </div>
+                </div> */}
               </div>
 
               <div className="flex justify-end">

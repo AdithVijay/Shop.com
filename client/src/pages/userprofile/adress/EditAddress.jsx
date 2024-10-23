@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
 
-export default function UserProfile() {
+export default function EditAddress() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
