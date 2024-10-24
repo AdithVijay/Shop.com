@@ -282,7 +282,8 @@ const getCategory = async(req,res)=>{
       
 
 
-module.exports = { adminLogin
+module.exports = {
+     adminLogin
     ,addCategory,
     getCategory,
     listCategory,

@@ -19,28 +19,36 @@ const {gettingProducts,ListingProducts,unListingProducts,fetchProduct,updateProd
 const verifyAdmin = require( "../middleware/adminAuth");
 
 
- adminRoute.post("/login",adminLogin);
-//==================CATEGORY SIDE=============================
- adminRoute.post("/addcategory",verifyAdmin,addCategory);
- adminRoute.get("/getcategory",getCategory);
- adminRoute.put("/listcategory/:id",listCategory);
- adminRoute.put("/unlistcategory/:id",unListCategory);
- adminRoute.get("/fetchcategory/:id",fetchCategory);
- adminRoute.put("/updatecategory/:id",handleUpdate);
+const adminController = require("../controller/admin/adminController")
+const categoryController = require("../controller/admin/categoryController")
+const productController = require("../controller/admin/productController")
+
+
+
+//==================ADMIN LOGIN===========================
+ adminRoute.post("/login", adminController.adminLogin);
+
+//==================CATEGORY SIDE==========================
+ adminRoute.post("/addcategory",verifyAdmin,categoryController.addCategory);
+ adminRoute.get("/getcategory",categoryController.getCategory);
+ adminRoute.put("/listcategory/:id",categoryController.listCategory);
+ adminRoute.put("/unlistcategory/:id",categoryController.unListCategory);
+ adminRoute.get("/fetchcategory/:id",categoryController.fetchCategory);
+ adminRoute.put("/updatecategory/:id",categoryController.handleUpdate);
 
 //==================PRODUCT SIDE=============================
- adminRoute.post("/addproduct",addProduct)
- adminRoute.get("/getcategory",getCatgoryData)
+ adminRoute.post("/addproduct",productController.addProduct)
+ adminRoute.get("/getcategory",productController.getCatgoryData)
 
 //==================PRODUCT EDIT=============================
-adminRoute.get("/fetchproduct/:id",fetchProduct);
-adminRoute.put("/updateproduct/:id",updateProduct);
+adminRoute.get("/fetchproduct/:id",productController.fetchProduct);
+adminRoute.put("/updateproduct/:id",productController.updateProduct);
 
 
 //==================PRODUCT LIST PAGE=========================
-adminRoute.get("/getproducts",gettingProducts)
-adminRoute.put("/listproduct/:id",ListingProducts)
-adminRoute.put("/unlistproduct/:id",unListingProducts)
+adminRoute.get("/getproducts",productController.gettingProducts)
+adminRoute.put("/listproduct/:id",productController.ListingProducts)
+adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
 
  //==================USERMANGMENT SIDE========================
  adminRoute.get("/fetchuserdata",fetchUser)
