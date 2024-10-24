@@ -2,7 +2,7 @@ import React from 'react'
 import {BrowserRouter, Routes,Route} from "react-router-dom"
 import UserLogin from '@/pages/userpages/UserLogin'
 import UserSignup from '@/pages/userpages/UserSignup'
-import OtpSignup from '@/Majorcomponents/OtpSignup'
+import OtpSignup from '@/shared/OtpSignup'
 import Home from '@/pages/userpages/Home'
 import Landing from '@/pages/userpages/Landing'
 import { Toaster } from '@/components/ui/sonner'

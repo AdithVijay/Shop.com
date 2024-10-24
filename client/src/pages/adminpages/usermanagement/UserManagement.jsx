@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, ChevronDown } from 'lucide-react';
-import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import Sidebar from '@/shared/bars/Sidebar';
 import { Link } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import { useDispatch, useSelector } from 'react-redux';

@@ -4,7 +4,7 @@ import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import UserSideBar from "@/shared/bars/UserSideBar";
 import { useSelector } from "react-redux";
 import axiosInstance from "@/config/axiosInstance";
 
@@ -16,7 +16,7 @@ export default function UserProfile() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const data = useSelector(state=>state.user.users)
-  const id = data.user._id
+  const id = data.id
   console.log(id);
   
   const navigate = useNavigate();

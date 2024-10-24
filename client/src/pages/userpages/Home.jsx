@@ -1,10 +1,10 @@
 
-import Header from '@/Majorcomponents/bars/Header'
-import HeroSection from '@/Majorcomponents/banner/HeroSection'
-import Card1 from '@/Majorcomponents/cards/Card1'
-import Card2 from '@/Majorcomponents/cards/Card2'
-import Card3 from '@/Majorcomponents/cards/Card3'
-import Footer from '@/Majorcomponents/footer/Footer'
+import Header from '@/shared/bars/Header'
+import HeroSection from '@/shared/banner/HeroSection'
+import Card1 from '@/shared/cards/Card1'
+import Card2 from '@/shared/cards/Card2'
+import Card3 from '@/shared/cards/Card3'
+import Footer from '@/shared/footer/Footer'
 import axiosInstance from '@/config/axiosInstance'
 import React, { useEffect, useState } from 'react'
 

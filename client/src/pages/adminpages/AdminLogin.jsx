@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axiosInstance from '@/config/axiosInstance';
-import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import Sidebar from '@/shared/bars/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { addAdmin } from '@/redux/Adminslice';
 import { useDispatch } from 'react-redux';

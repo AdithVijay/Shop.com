@@ -1,16 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import UserSideBar from "@/shared/bars/UserSideBar";
 import axiosInstance from "@/config/axiosInstance";
+import { useSelector } from "react-redux";
 
 export default function UserAddress() {
-  const [addresses, setAddresses] = useState([
-    { id: 1, name: "Name, House", place: "Place, Kerala", pincode: "689201", contact: "+91 98765 86265", isPrimary: true },
-    { id: 2, name: "Name, House", place: "Place, Kerala", pincode: "689201", contact: "+91 98765 86265", isPrimary: false },
-    { id: 3, name: "Name, House", place: "Place, Kerala", pincode: "689201", contact: "+91 98765 86265", isPrimary: false },
-  ]);
 
-  console.log("this is edit componernt");
+  const data = useSelector(state=>state.user.users)
+  const id = data.id
+  const [addresses, setAddresses] = useState([]);
+
   
 
   const [showAddForm, setShowAddForm] = useState(false);
@@ -42,20 +41,27 @@ export default function UserAddress() {
     setNewAddress(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmitNewAddress = (e) => {
+  useEffect(() => {
+   async function fetchUserAddresses(){
+    try {
+        const response = await axiosInstance.get(`user/fetchuseraddress/${id}`)
+        console.log("fetching the data",response);
+        setAddresses(response.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUserAddresses()
+  }, [id]);
+  
+
+  const handleSubmitNewAddress =async (e) => {
     e.preventDefault();
-    const response = axiosInstance.post("/user/useraddress",{})
-    console.log("New address submitted:", newAddress);
+    const response =await axiosInstance.post("/user/useraddress",{id,newAddress})
     setShowAddForm(false);
-    // setNewAddress({
-    //   name: "",
-    //   email: "",
-    //   address: "",
-    //   district: "",
-    //   state: "",
-    //   landmark: "",
-    //   pincode: ""
-    // });
+     setAddresses([...addresses, response.data.address])
+     setNewAddress("")
+    console.log("New address submitted:", response);
   };
 
   return (
@@ -68,12 +74,13 @@ export default function UserAddress() {
             
             <div className="space-y-4">
               {addresses.map((address) => (
-                <div key={address.id} className="border rounded-lg p-4 sm:flex justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div key={address._id} className="border rounded-lg p-4 sm:flex justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                   <div>
-                    <p className="font-semibold text-gray-700">{address.name}</p>
-                    <p className="text-gray-600">{address.place}</p>
+                    <p className="font-semibold text-gray-700">{address.address}</p>
+                    <p className="text-gray-600">{address.district}</p>
                     <p className="text-gray-600">{address.pincode}</p>
-                    <p className="text-gray-600">Contact: {address.contact}</p>
+                    <p className="text-gray-600">Contact: {address.landmark}</p>
+                    <p className="font-semibold text-gray-700">{address.state}</p>
                   </div>
                   <div className="flex sm:flex-col space-x-4 sm:space-x-0 sm:space-y-2">
                     <Button variant="outline" size="sm" onClick={() => handleEdit(address.id)} className="border-black text-black">

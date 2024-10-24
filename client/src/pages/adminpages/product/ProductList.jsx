@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Edit2, Trash2, Search } from 'lucide-react';
-import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import Sidebar from '@/shared/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "sonner";

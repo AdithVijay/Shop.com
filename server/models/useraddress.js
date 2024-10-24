@@ -35,10 +35,10 @@ const AddressSchema = new Schema({
     type: String,
     required: true,
   },
-  isPrimary: {
-    type: Boolean,
-    default: false,
-  },
+  // isPrimary: {
+  //   type: Boolean,
+  //   default: false,
+  // },
 });
 
 const Address = mongoose.model('Address', AddressSchema);

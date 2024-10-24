@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Sidebar from "@/Majorcomponents/bars/Sidebar";
+import Sidebar from "@/shared/bars/Sidebar";
 import axiosInstance from "@/config/axiosInstance";
 import { Link } from "react-router-dom";
 import { Upload } from "lucide-react";

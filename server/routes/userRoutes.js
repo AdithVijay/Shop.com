@@ -10,7 +10,7 @@ const { signup,
 
 const { fetchProduct } = require("../controller/admin2Control");
 const { relatedProducts } = require("../controller/user2Controller");
-const { retrieveUserData, createUserAddress } = require("../controller/userProfileController");
+const { retrieveUserData, createUserAddress , fetchUserAddresses} = require("../controller/userProfileController");
 
 userRoute.post("/create", signup);
 userRoute.post("/otp", sendotp);
@@ -25,6 +25,8 @@ userRoute.get("/relatedproducts/:id", relatedProducts);
 userRoute.get("/userdetails/:id",retrieveUserData)
 
 userRoute.post("/useraddress",createUserAddress)
+userRoute.get("/fetchuseraddress/:id",fetchUserAddresses)
+
 
 
 module.exports = userRoute; 

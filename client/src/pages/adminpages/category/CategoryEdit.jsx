@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Sidebar from '@/Majorcomponents/bars/Sidebar';
+import Sidebar from '@/shared/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { toast } from 'sonner';
 

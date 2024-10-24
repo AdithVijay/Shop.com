@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import UserSideBar from "@/shared/bars/UserSideBar";
 
 const orders = [
   {

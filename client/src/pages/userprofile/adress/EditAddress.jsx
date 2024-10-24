@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import UserSideBar from "@/Majorcomponents/bars/UserSideBar";
+import UserSideBar from "@/shared/bars/UserSideBar";
 
 export default function EditAddress() {
   const [name, setName] = useState("");
