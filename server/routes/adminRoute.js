@@ -1,19 +1,5 @@
 const express = require("express");
 const adminRoute = express.Router();
- const { adminLogin,
-        addCategory,
-        getCategory,
-        listCategory,
-        unListCategory,
-        fetchCategory,
-        handleUpdate,
-        getCatgoryData,
-        addProduct,
-        fetchUser,
-        listUser,
-        unlistUser,
-        } = require("../controller/adminController");
-
 
 const {gettingProducts,ListingProducts,unListingProducts,fetchProduct,updateProduct} = require("../controller/admin2Control")
 const verifyAdmin = require( "../middleware/adminAuth");
@@ -22,6 +8,7 @@ const verifyAdmin = require( "../middleware/adminAuth");
 const adminController = require("../controller/admin/adminController")
 const categoryController = require("../controller/admin/categoryController")
 const productController = require("../controller/admin/productController")
+const userController = require("../controller/admin/userController")
 
 
 
@@ -51,9 +38,9 @@ adminRoute.put("/listproduct/:id",productController.ListingProducts)
 adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
 
  //==================USERMANGMENT SIDE========================
- adminRoute.get("/fetchuserdata",fetchUser)
- adminRoute.put("/listuser/:id",listUser)
- adminRoute.put("/unlistuser/:id",unlistUser)
+ adminRoute.get("/fetchuserdata",userController.fetchUser)
+ adminRoute.put("/listuser/:id",userController.listUser)
+ adminRoute.put("/unlistuser/:id",userController.unlistUser)
 
 
 
