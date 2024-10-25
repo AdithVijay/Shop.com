@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import dp2 from "../../assets/dp2.jpg";
+import { useParams } from "react-router-dom";
 
 const initialProduct = {
   id: 1,
@@ -10,18 +11,18 @@ const initialProduct = {
   variation: "brown leather",
   size: "5 = 5.5 US",
 };
-const initialProduct1 = { ...initialProduct };
-const initialProduct2 = { ...initialProduct };
 
 export default function Cart() {
   const [products, setProducts] = useState([
     initialProduct,
-    initialProduct1,
-    initialProduct2,
   ]);
+  const id = useParams()
+  console.log(id);
   const [quantity, setQuantity] = useState(1);
-
   const subtotal = products.reduce((sum, product) => sum + product.price, 0);
+
+  
+  
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">

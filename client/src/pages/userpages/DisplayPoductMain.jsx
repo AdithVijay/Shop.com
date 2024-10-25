@@ -24,14 +24,13 @@ const DisplayPoductMain = () => {
   }, [])
 //=========================RELATED PRODUCTS FOR CARDS=======================
   useEffect(() => {
-    console.log(id);
-    
+    console.log(id)
     async function fetchData(){
       try {
         const response = await axiosInstance.get(`user/relatedproducts/${id}`)
         const data = response.data.data
         setrelatedProducts(data)
-        console.log(response);
+        // console.log(response);
       } catch (error) {
         console.log(error);
       }

@@ -1,6 +1,6 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const product = {
   name: "One Life Graphic T-shirt",
@@ -24,9 +24,8 @@ const product = {
 
 const ProductDetail = () => {
 
-  
   const { id } = useParams();
-  
+  const navigate = useNavigate()
   const [mainImage, setMainImage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
@@ -38,20 +37,26 @@ const ProductDetail = () => {
         // console.log(response);
         const SingleproductData = response.data.data
         setproductData(SingleproductData)
-
         if (SingleproductData?.images?.length > 0) {
           setMainImage(SingleproductData.images[0]);
         }
-
       } catch (error) {
         console.log(error);
       }
     }
     fetchProduct()
   }, [id]);
-  
-  // console.log(productData)
+  console.log("size", productData.sizes)
 
+   const data =productData.sizes?Object.keys( productData?.sizes).map((x)=>{
+        return x
+    }):[]
+
+    function addtocart(){
+      console.log(id);
+      navigate(`/addtocart/${id}`)
+    }
+  
 
   return (
     <div className="flex flex-col md:flex-row p-4 max-w-screen-lg mx-auto">
@@ -117,7 +122,7 @@ const ProductDetail = () => {
         <div className="mt-4">
           <p className="font-bold text-sm lg:text-base">Choose Size:</p>
           <div className="flex mt-1">
-            {product.sizes.map((size) => (
+            {data.map((size) => (
               <button 
                 key={size} 
                 className="mr-2 px-3 py-1 border rounded text-sm lg:text-base lg:px-4 lg:py-2"
@@ -129,7 +134,7 @@ const ProductDetail = () => {
         </div>
 
         {/* Add to Cart Button */}
-        <button className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3">
+        <button onClick={()=>addtocart(id)} className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3">
           Add to Cart
         </button>
       </div>
