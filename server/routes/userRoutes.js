@@ -1,38 +1,30 @@
- const express = require("express");
+const express = require("express");
 const userRoute = express.Router();
-const { signup,
-    sendotp,
-    googleSignIn,
-    login,
-    googleLogin,
-    resendOtp
-    } = require("../controller/userController");
 
-const { fetchProduct } = require("../controller/admin2Control");
-const { relatedProducts } = require("../controller/user2Controller");
-const { retrieveUserData, createUserAddress , fetchUserAddresses} = require("../controller/userProfileController");
 
 const userController = require("../controller/user/userController")
+const productController = require("../controller/user/productController")
+const addressController = require("../controller/user/addressController")
 
 
-
-
+//=================USERLOGIN AND SIGNUP=============
 userRoute.post("/create",userController.signup );
 userRoute.post("/otp",userController.sendotp);
 userRoute.post("/resendotp",userController.resendOtp)
 userRoute.post("/googlesignin",userController.googleSignIn);
-userRoute.post("/login", login);
-userRoute.post("/googleLogin", googleLogin);
+userRoute.post("/login",userController.login);
+userRoute.post("/googleLogin",userController.googleLogin);
+
+//======================DATA TO BE DISPLAYED IN CARDS===========
+userRoute.get("/getproduct/:id",productController.fetchProduct);
+userRoute.get("/relatedproducts/:id",productController.relatedProducts);
 
 
-userRoute.get("/getproduct/:id", fetchProduct);
-userRoute.get("/relatedproducts/:id", relatedProducts);
+userRoute.get("/userdetails/:id",userController.retrieveUserData)
 
-
-userRoute.get("/userdetails/:id",retrieveUserData)
-
-userRoute.post("/useraddress",createUserAddress)
-userRoute.get("/fetchuseraddress/:id",fetchUserAddresses)
+//==============================ADDRESS==========================
+userRoute.post("/useraddress",addressController.createUserAddress)//CREATING NEW ADDRESS
+userRoute.get("/fetchuseraddress/:id",addressController.fetchUserAddresses)//ADRESS TO DISPLAY IN ADREES PAGE
 
 
 

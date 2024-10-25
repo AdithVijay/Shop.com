@@ -38,9 +38,10 @@ export default function UserMenuDropdown() {
           <UserCircle className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem callback={logout}>
           <LogOut className="mr-2 h-4 w-4" />
-           <span onClick={logout}>Logout</span>
+           {/* <span onClick={logout}>Logout</span> */}
+                      <span >Logout</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

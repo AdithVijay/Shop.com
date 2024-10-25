@@ -2,9 +2,12 @@ const OTP = require("../../models/otp")
 const User = require("../../models/usersModel")
 const otpGenerator = require("otp-generator");
 const { OAuth2Client } = require('google-auth-library');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const user = []; // In-memory storage for demonstration
+let refreshTokens = [];
 
 //====================TOKEN GENERATION FUNCTION============================
-
 function generateAccessToken(user) {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
   }
@@ -17,7 +20,6 @@ function generateAccessToken(user) {
 
 
 //============================PASSWORD HASHING================================
-
 const securePassword = async (password) => {
     try {
       return await bcrypt.hash(password, 10);
@@ -27,7 +29,6 @@ const securePassword = async (password) => {
   };
 
 //=================================SIGNUP===================================
-
 const signup = async(req,res)=>{
     try{
         const {name,email,password,phonenumber,otp} = req.body
@@ -71,8 +72,6 @@ const signup = async(req,res)=>{
 }
 
 //=================================OTP SENDING================================
-
-
 const sendotp = async (req, res) => {
 	try {
 		const { email } = req.body;
@@ -117,6 +116,7 @@ const sendotp = async (req, res) => {
 	}
 };
 
+//=================================RESEND OTP================================
 const resendOtp = async (req,res)=>{
     try {
       const {email} = req.body
@@ -194,10 +194,107 @@ const googleSignIn = async(req,res)=>{
     }
 }
 
+//=================================LOGIN================================
+const login = async(req,res)=>{
+    try{
+      const {email,password}= req.body
+      const user = await User.findOne({email})
+  
+      console.log(user)
+      if(!user){
+        res.status(401).json({message: "Invalid email or password"})
+      }
+  
+      if (user?.isListed==false) {
+        return res.status(403).json({ message: "Your account is blocked. Contact support." });
+      }
+  
+  
+      if(user){
+          if(await bcrypt.compare(password, user.password)){
+            const accessToken = generateAccessToken({ users: user._id });
+            const refreshToken = generateRefreshToken({ users: user._id  });
+            res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
+            res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
+            console.log('Cookies:', req.cookies);
+  
+          return res.status(200).json({
+              message: "Login successful",
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              isListed:user.isListed
+            })
+  
+          }
+      }else{
+          return res.status(500).json({ message: "Invalid email or password" });
+      }
+  }catch(err){
+      console.log(err);
+  }
+}
+
+//=====================================GOOGLELOGIN================================
+const googleLogin = async(req,res)=>{
+
+    try {
+      const { token } = req.body;
+  
+      const client = new OAuth2Client("968461199722-dm742j8g4qiv880kq96s9bcomg13vmfd.apps.googleusercontent.com");
+  
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: "968461199722-dm742j8g4qiv880kq96s9bcomg13vmfd.apps.googleusercontent.com", 
+      });
+  
+      const { email, name } = ticket.getPayload(); 
+  
+  
+      let user = await User.findOne({ email });
+  
+      if (!user) {
+        user = new User({
+          name: name,
+          email: email,
+        });
+        await user.save();
+      }
+      if (user?.isListed==false) {
+        return res.status(403).json({ message: "Your account is blocked. Contact support." });
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: "Google login successful",
+        user: user,
+    });
+  
+    } catch (error) {
+      console.error('Google sign-in error:', error);
+      res.status(500).json({
+        message: 'Google sign-in failed',
+        error: error.message,
+      });
+    }
+  
+  }
+
+//========================DATA DISPLAY IN USERPROFILE===================
+  const retrieveUserData = async(req,res)=>{
+    const id = req.params.id
+    const user =await User.findById(id)
+    return res.status(200).json(user)
+}
+  
+
 
 module.exports={
     signup,
     sendotp,
     resendOtp,
-    googleSignIn
+    googleSignIn,
+    login,
+    googleLogin,
+    retrieveUserData
 }

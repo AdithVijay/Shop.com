@@ -1,10 +1,8 @@
 const express = require("express");
 const adminRoute = express.Router();
 
-const {gettingProducts,ListingProducts,unListingProducts,fetchProduct,updateProduct} = require("../controller/admin2Control")
+
 const verifyAdmin = require( "../middleware/adminAuth");
-
-
 const adminController = require("../controller/admin/adminController")
 const categoryController = require("../controller/admin/categoryController")
 const productController = require("../controller/admin/productController")
