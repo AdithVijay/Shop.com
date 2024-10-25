@@ -10,6 +10,7 @@ import ProtecHome from '@/protect/ProtectedHome'
 import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
+import AddToCart from '@/pages/userpages/AddToCart'
 
 
 const UserRoute = () => {
@@ -40,6 +41,7 @@ const UserRoute = () => {
               }></Route>
 
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
+              <Route path='/addtocart' element={<AddToCart/>}></Route>
           </Routes>
 
         <Toaster/>
