@@ -13,7 +13,7 @@ import AdminReturnLogin from '@/protect/AdminReturnLogin'
 const AdminRoute = () => {
   return (
     <div>
-         <BrowserRouter>
+
           <Routes>
             <Route path='/admin' element={
               <AdminReturnLogin>
@@ -55,7 +55,7 @@ const AdminRoute = () => {
               </AdminHome>
               }></Route>
           </Routes>
-        </BrowserRouter>
+
         <Toaster/>
     </div>
   )

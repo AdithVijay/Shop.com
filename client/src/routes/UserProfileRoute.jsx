@@ -7,14 +7,14 @@ import Orders from '../pages/userprofile/order/Orders'
 const UserProfileRoute = () => {
   return (
     <div>
-      <BrowserRouter>
+
           <Routes>
             <Route path='/profile' element={<UserProfile/>}></Route>
             <Route path='/address' element={<UserAddress/>}></Route>
-            <Route path='/edit' element={<EditAddress/>}></Route>
+            <Route path='/edit/:id' element={<EditAddress/>}></Route>
             <Route path='/orders' element={<Orders/>}></Route>
           </Routes>
-        </BrowserRouter>
+
     </div>
   )
 }

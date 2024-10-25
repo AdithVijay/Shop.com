@@ -15,11 +15,11 @@ import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
 const UserRoute = () => {
   return (
     <div>
-        <BrowserRouter>
+
           <Routes>
           <Route path='/' element={
             <ProtectLanding>
-            <Landing/>
+            <Landing/> this is the landing page
             </ProtectLanding>
             }></Route>
 
@@ -41,7 +41,7 @@ const UserRoute = () => {
 
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
           </Routes>
-        </BrowserRouter>
+
         <Toaster/>
     </div>
   )

@@ -11,7 +11,7 @@ const AddressSchema = new Schema({
     type: String,
     required: true,
   },
-  email: {
+  phonenumber: {
     type: String,
     required: true,
   },

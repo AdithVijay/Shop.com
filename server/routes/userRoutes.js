@@ -25,7 +25,9 @@ userRoute.get("/userdetails/:id",userController.retrieveUserData)
 //==============================ADDRESS==========================
 userRoute.post("/useraddress",addressController.createUserAddress)//CREATING NEW ADDRESS
 userRoute.get("/fetchuseraddress/:id",addressController.fetchUserAddresses)//ADRESS TO DISPLAY IN ADREES PAGE
-
+userRoute.get("/fetchadresstoedit/:id",addressController.editUserAddress)//ADRESS DATA TO EDIT 
+userRoute.patch("/edituseraddress/:id",addressController.updateUserAddress)//ADDRESS UPDATING
+userRoute.delete("/deleteAdress/:id",addressController.deleteUserAddress)//ADDRESS UPDATING
 
 
 module.exports = userRoute; 

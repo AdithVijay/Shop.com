@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import UserMenuDropdown from './Dropdow'
 import { useDispatch } from "react-redux"
 import { logoutUser } from '@/redux/Userslice'
+import DropdownMenu from './Dropdow'
 const Header = () => {
 
   const dispatch = useDispatch()
@@ -67,8 +68,7 @@ const Header = () => {
 
             {/* User Icon */}
             <button className="text-muted-foreground hover:text-primary">
-
-              <UserMenuDropdown/>
+            <DropdownMenu/>
             </button>
 
             {/* Login Button - Hidden on mobile */}

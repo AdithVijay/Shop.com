@@ -1,31 +1,34 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import UserSideBar from "@/shared/bars/UserSideBar";
+import axiosInstance from "@/config/axiosInstance";
 
 export default function EditAddress() {
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [phonenumber, setphonenumber] = useState("");
   const [address, setAddress] = useState("");
   const [district, setDistrict] = useState("");
   const [state, setState] = useState("");
   const [landmark, setLandmark] = useState("");
   const [pinCode, setPinCode] = useState("");
 
+
   const navigate = useNavigate();
-
   const [errors, setErrors] = useState({});
-
+  const id = useParams()
+  const adressId =  id.id
+//======================FORM VALIDATION==========================
   const validateForm = () => {
     const newErrors = {};
     if (!name.trim()) newErrors.name = "Name is required.";
-    if (!email.trim()) {
-      newErrors.email = "Email is required.";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Email is invalid.";
-    }
+    // if (!phonenumber.trim()) {
+    //   newErrors.phonenumber = "phonenumber is required.";
+    // } else if (!/\S+@\S+\.\S+/.test(phonenumber)) {
+    //   newErrors.phonenumber = "phonenumber is invalid.";
+    // }
     if (!address.trim()) newErrors.address = "Address is required.";
     if (!district.trim()) newErrors.district = "District/Town is required.";
     if (!state.trim()) newErrors.state = "State is required.";
@@ -33,32 +36,43 @@ export default function EditAddress() {
     return newErrors;
   };
 
+  //======================FETCHING THE DATA==========================
+  useEffect(()=>{
+    async function fetchUserAdress(){
+     try {
+       const resposne =await axiosInstance.get(`user/fetchadresstoedit/${adressId}`)
+       const addressData =  resposne.data[0]
+       console.log(resposne);
+       setName(addressData.name)
+       setphonenumber(addressData.phonenumber)
+       setAddress(addressData.address)
+       setDistrict(addressData.district)
+       setState(addressData.state)
+       setPinCode(addressData.pincode)
+       setLandmark(addressData.landmark)
+     } catch (error) {
+       console.log(error);
+       }
+     }
+     fetchUserAdress()
+   },[id])
+
+//======================UPDATING THE ADRESS==========================
   const handleUpdateAddress = async (e) => {
-    e.preventDefault();
-    toast.success("Updating address, please wait");
-    const validationErrors = validateForm();
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-
-    const addressData = {
-      name,
-      email,
-      address,
-      district,
-      state,
-      landmark,
-      pinCode,
-    };
-
+    e.preventDefault();    
+    // const validationErrors = validateForm();
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
+    const addressData = {name,phonenumber,address,district,state,landmark,pinCode};
+    console.log(addressData);
+    
     try {
-      // Replace this with your actual API call
-      // const response = await axiosInstance.post("/user/update-address", addressData);
-      console.log("Address data to be sent:", addressData);
+      const response = await axiosInstance.patch(`/user/edituseraddress/${adressId}`,{addressData});
+      // console.log(response);
       toast.success("Address updated successfully");
-      navigate("/addresses");
+      // navigate("/addresses");
     } catch (error) {
       console.error(error);
       toast.error("Failed to update address");
@@ -99,16 +113,16 @@ export default function EditAddress() {
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                  <label htmlFor="phonenumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
                   <input
-                    type="email"
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    id="phonenumber"
+                    value={phonenumber}
+                    onChange={(e) => setphonenumber(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    placeholder="example@gmail.com"
+                    placeholder="9447271122"
                   />
-                  {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
+                  {errors.phonenumber && <span className="text-red-500 text-sm">{errors.phonenumber}</span>}
                 </div>
 
                 <div>
@@ -180,7 +194,7 @@ export default function EditAddress() {
 
               <div className="flex justify-end">
                 <Button type="submit" className="bg-black text-white">
-                  Add Address
+                  Edit Address
                 </Button>
               </div>
             </form>

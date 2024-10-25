@@ -3,19 +3,19 @@ import { Button } from "@/components/ui/button";
 import UserSideBar from "@/shared/bars/UserSideBar";
 import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export default function UserAddress() {
 
   const data = useSelector(state=>state.user.users)
   const id = data.id
+  const navigate = useNavigate()
   const [addresses, setAddresses] = useState([]);
-
-  
-
   const [showAddForm, setShowAddForm] = useState(false);
   const [newAddress, setNewAddress] = useState({
     name: "",
-    email: "",
+    phonenumber: "",
     address: "",
     district: "",
     state: "",
@@ -24,12 +24,25 @@ export default function UserAddress() {
   });
 
 
-  const handleEdit = (id) => {
-    console.log("Edit address with id:", id);
+console.log(addresses);
+
+  const handleEdit =async (id) => {
+    console.log(id);
+    navigate(`/edit/${id}`)
   };
 
-  const handleDelete = (id) => {
-    setAddresses(addresses.filter(addr => addr.id !== id));
+//====================HANDLING THE DELETE ==============================
+  const handleDelete =async (id) => {
+    console.log(id);
+    
+    try {
+      const response =  await axiosInstance.delete(`user/deleteAdress/${id}`)
+      setAddresses(addresses.filter(addresse=>addresse._id !== id))
+      toast.success("adress deleted")
+      console.log(response)
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAddNewAddress = () => {
@@ -41,6 +54,7 @@ export default function UserAddress() {
     setNewAddress(prev => ({ ...prev, [name]: value }));
   };
 
+  //====================FETCHING THE ENTIRE ADRESS OF ONE USER==================
   useEffect(() => {
    async function fetchUserAddresses(){
     try {
@@ -54,14 +68,19 @@ export default function UserAddress() {
     fetchUserAddresses()
   }, [id]);
   
-
+//==============================ADDING THE NEW ADDRESS============================
   const handleSubmitNewAddress =async (e) => {
     e.preventDefault();
-    const response =await axiosInstance.post("/user/useraddress",{id,newAddress})
-    setShowAddForm(false);
-     setAddresses([...addresses, response.data.address])
-     setNewAddress("")
-    console.log("New address submitted:", response);
+    try {
+      const response =await axiosInstance.post("/user/useraddress",{id,newAddress})
+      setShowAddForm(false);
+       setAddresses([...addresses, response.data.address])
+       setNewAddress("")
+       toast.success("Adress added")
+      console.log("New address submitted:", response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -76,17 +95,19 @@ export default function UserAddress() {
               {addresses.map((address) => (
                 <div key={address._id} className="border rounded-lg p-4 sm:flex justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                   <div>
-                    <p className="font-semibold text-gray-700">{address.address}</p>
+                  <p className="font-semibold text-gray-700">{address.name}</p>
+                    <p className=" text-gray-700">{address.address}</p>
                     <p className="text-gray-600">{address.district}</p>
                     <p className="text-gray-600">{address.pincode}</p>
-                    <p className="text-gray-600">Contact: {address.landmark}</p>
+                    <p className=" text-gray-600">Contact: {address.phonenumber}</p>
+                    <p className=" text-gray-600">LandMark: {address.landmark}</p>
                     <p className="font-semibold text-gray-700">{address.state}</p>
                   </div>
                   <div className="flex sm:flex-col space-x-4 sm:space-x-0 sm:space-y-2">
-                    <Button variant="outline" size="sm" onClick={() => handleEdit(address.id)} className="border-black text-black">
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(address._id)} className="border-black text-black">
                       Edit
                     </Button>
-                    <Button variant="destructive" size="sm" onClick={() => handleDelete(address.id)} className="bg-black text-white hover:bg-gray-800">
+                    <Button variant="destructive" size="sm" onClick={() => handleDelete(address._id)} className="bg-black text-white hover:bg-gray-800">
                       Delete
                     </Button>
                   </div>
@@ -121,15 +142,15 @@ export default function UserAddress() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Phone Number</label>
                     <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={newAddress.email}
+                      type="text"
+                      id="phonenumber"
+                      name="phonenumber"
+                      value={newAddress.phonenumber}
                       onChange={handleInputChange}
                       className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black"
-                      placeholder="example@gmail.com"
+                      placeholder="7736401120"
                       required
                     />
                   </div>

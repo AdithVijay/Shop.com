@@ -99,7 +99,6 @@ const updateProduct = async(req,res)=>{
             sleeve, 
             stock ,
             images}=req.body 
-        console.log(req.body );
 
         const count = Object.values(stock).reduce((acc,curr)=>{
             return acc+=curr
