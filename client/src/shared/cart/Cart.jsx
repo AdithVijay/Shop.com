@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import dp2 from "../../assets/dp2.jpg";
 import { useParams } from "react-router-dom";
+import axiosInstance from "@/config/axiosInstance";
 
 const initialProduct = {
   id: 1,
@@ -13,17 +14,36 @@ const initialProduct = {
 };
 
 export default function Cart() {
-  const [products, setProducts] = useState([
-    initialProduct,
-  ]);
+  const [products, setProducts] = useState(null);
   const id = useParams()
-  console.log(id);
+  const productId =  id.id
+  console.log(productId);
   const [quantity, setQuantity] = useState(1);
-  const subtotal = products.reduce((sum, product) => sum + product.price, 0);
+  // const subtotal = products.reduce((sum, product) => sum + product.price, 0)
 
-  
+  useEffect(() => {
+
+    async function fetchProduct(){
+      try {
+        const response =await axiosInstance.get(`admin/fetchproduct/${productId}`)
+
+        setProducts(response.data.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+   fetchProduct()
+  }, [id]);
+
+  if (!products || !products.images || products.images.length === 0) {
+    return <p>Loading...</p>;
+  }
   
 
+  console.log(products);
+  const firstImage = products.images[0];
+console.log(firstImage);
+  
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
       <div className="lg:w-2/3">
@@ -31,25 +51,25 @@ export default function Cart() {
           <h1 className="text-lg font-semibold">YOUR SELECTIONS</h1>
           <button className="text-sm underline">Print</button>
         </div>
-        {products.map((product) => (
+
           <div
-            key={product.id}
+            key={products._id}
             className="flex flex-col sm:flex-row gap-6 mb-6 pb-6 border-b border-gray-200 text-center sm:text-left"
           >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-40 h-auto object-cover mx-auto sm:mx-0"
-            />
+              <img
+                src={firstImage}
+                alt={products.productName}
+                className="w-40 h-auto object-cover mx-auto sm:mx-0"
+              />
             <div className="flex-grow">
-              <h2 className="font-medium text-lg mb-1">{product.name}</h2>
-              <p className="text-sm text-gray-600 mb-1">
+              <h2 className="font-medium text-lg mb-1">{products.productName}</h2>
+              {/* <p className="text-sm text-gray-600 mb-1">
                 Style# {product.style}
               </p>
               <p className="text-sm text-gray-600 mb-1">
                 Variation: {product.variation}
-              </p>
-              <p className="text-sm text-gray-600 mb-3">Size: {product.size}</p>
+              </p> */}
+              {/* <p className="text-sm text-gray-600 mb-3">Size: {product.size}</p> */}
               <p className="font-medium mb-1">AVAILABLE</p>
               <p className="text-sm text-gray-600 mb-3">
                 Enjoy complimentary delivery or Collect In Store.
@@ -77,7 +97,8 @@ export default function Cart() {
               </div>
             </div>
             <div className="flex flex-col items-center sm:items-start">
-              <select
+            {/* quantity showing */}
+              {/* <select
                 value={quantity}
                 onChange={(e) => setQuantity(parseInt(e.target.value))}
                 className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm w-20 text-center"
@@ -87,11 +108,10 @@ export default function Cart() {
                     QTY: {num}
                   </option>
                 ))}
-              </select>
-              <p className="font-medium text-center">${product.price}</p>
+              </select> */}
+              <p className="font-medium text-center">${products.salePrice}</p>
             </div>
           </div>
-        ))}
       </div>
       <div className="lg:w-1/3 mx-auto lg:mx-0 lg:self-start">
         <div className="border border-gray-200 p-4 sm:p-6 max-w-lg mx-auto lg:max-w-none">
@@ -99,7 +119,8 @@ export default function Cart() {
           <p className="text-sm text-gray-600 mb-4">USCART403358471</p>
           <div className="flex justify-between mb-2 text-sm">
             <span>Subtotal</span>
-            <span>${subtotal}</span>
+            {/* price subtotal */}
+            {/* <span>${subtotal}</span>  */}
           </div>
           <div className="flex justify-between mb-2 text-sm">
             <span>Shipping</span>
@@ -111,7 +132,8 @@ export default function Cart() {
           </div>
           <div className="flex justify-between font-medium mb-6">
             <span>Estimated Total</span>
-            <span>${subtotal}</span>
+            {/* subtotal */}
+            {/* <span>${subtotal}</span> */}
           </div>
           <button className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
             CHECKOUT

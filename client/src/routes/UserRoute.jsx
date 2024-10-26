@@ -11,6 +11,7 @@ import ProtectLanding from '@/protect/ProtectLanding'
 import ShoppingPage from '@/pages/userpages/Shop'
 import DisplayPoductMain from '@/pages/userpages/DisplayPoductMain'
 import AddToCart from '@/pages/userpages/AddToCart'
+import Wishlist from '@/shared/wishlist/Wishlist'
 
 
 const UserRoute = () => {
@@ -42,6 +43,7 @@ const UserRoute = () => {
 
               <Route path='/display/:id' element={<DisplayPoductMain/>}></Route>
               <Route path='/addtocart/:id' element={<AddToCart/>}></Route>
+              <Route path='/wishlist' element={<Wishlist/>}></Route>
           </Routes>
 
         <Toaster/>

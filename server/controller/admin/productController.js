@@ -76,6 +76,7 @@ const fetchProduct = async(req,res)=>{
 
     try{
         const id = req.params.id
+        console.log("product id",id);
         const product  =await ProductData.findById({_id:id}).populate('category')
         if(!product){
             return res.status(404).json({success:false, message: "Product not found" })
@@ -83,7 +84,7 @@ const fetchProduct = async(req,res)=>{
             return res.status(200).json({success:true,message:"Product is sent",  data: product })
         }
     }catch(err){}
-   return res.status(500).json({ success: false, message: "Server Error",});
+//    return res.status(500).json({ success: false, message: "Server Error",});
 }
 
 // ==========================UPDATING PRODUCT DATA=======================================
