@@ -7,7 +7,7 @@ import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/redux/Userslice";
 
 
@@ -19,6 +19,9 @@ const UserSignup = () => {
   const [phonenumber, setphonenumber] = useState("");
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
   const dispatch = useDispatch()
+  const data = useSelector((state)=>state.user.users)
+  console.log("data from the redux ",data);
+
 
   const [errors, setErrors] = useState({});
 
@@ -97,7 +100,6 @@ const UserSignup = () => {
       navigate("/home")
       toast(response.data.message)
       dispatch( addUser(response.data.user._id))
-
     } catch (error) {
       console.log("Error da response:", error.response);
       alert( error.response.data.message); // Access the error message
@@ -230,8 +232,9 @@ const UserSignup = () => {
                   axiosInstance.post("/user/googlesignin", { token: googleToken })
                   .then(response => {
                     toast.success(response.data.message);
+                    console.log(response.data);
                     navigate("/home")
-                    dispatch(addUser(response.data))
+                    dispatch(addUser(response.data.user.id))
                   })
                   
                   .catch(error => {

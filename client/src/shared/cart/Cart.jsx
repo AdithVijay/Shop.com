@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import dp2 from "../../assets/dp2.jpg";
 import { useParams } from "react-router-dom";
 import axiosInstance from "@/config/axiosInstance";
+import { useSelector } from "react-redux";
 
 const initialProduct = {
   id: 1,
@@ -15,18 +16,18 @@ const initialProduct = {
 
 export default function Cart() {
   const [products, setProducts] = useState(null);
+  const userId =  useSelector(state=>state.user.users)
   const id = useParams()
   const productId =  id.id
-  console.log(productId);
+  // console.log(productId);
   const [quantity, setQuantity] = useState(1);
   // const subtotal = products.reduce((sum, product) => sum + product.price, 0)
 
   useEffect(() => {
-
     async function fetchProduct(){
       try {
         const response =await axiosInstance.get(`admin/fetchproduct/${productId}`)
-
+        // console.log(response);
         setProducts(response.data.data)
       } catch (error) {
         console.log(error);
@@ -35,14 +36,28 @@ export default function Cart() {
    fetchProduct()
   }, [id]);
 
+  useEffect(() => {
+    async function fetchProduct(){
+      try {
+        const response =await axiosInstance.get(`user/cartdata/${userId}`)
+        console.log(response);
+        setProducts(response.data.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+   fetchProduct()
+  }, [id]);
+
+
   if (!products || !products.images || products.images.length === 0) {
     return <p>Loading...</p>;
   }
   
 
-  console.log(products);
+  // console.log(products);
   const firstImage = products.images[0];
-console.log(firstImage);
+// console.log(firstImage);
   
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">

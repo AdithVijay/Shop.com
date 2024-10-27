@@ -1,6 +1,8 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const product = {
   name: "One Life Graphic T-shirt",
@@ -30,7 +32,10 @@ const ProductDetail = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
   const[size,setsize]=useState('')
-
+  const userId =  useSelector(state=>state.user.users)
+  console.log("userid", userId);
+  console.log("product id",id);
+  
 // ============================FETCHING THE PRODUCT FOR THE DISPLAY========================
   useEffect(() => {
     async function fetchProduct(){
@@ -48,18 +53,32 @@ const ProductDetail = () => {
     }
     fetchProduct()
   }, [id]);
-
+  console.log("sales price",productData.salePrice);
+  
 // ======================LOGIC TO DISPLAY THE SIZE OF THE PRODUCT ========================
    const data =productData.sizes?Object.keys( productData?.sizes).map((x)=>{
         return x
     }):[]
+    console.log(size)
 
-    function addtocart(){
-      console.log(id);
-      navigate(`/addtocart/${id}`)
+// ===================================ADD TO CART==============================
+    const price = productData.salePrice
+    async function addtocart(){
+      try {
+        console.log(id);
+        const response = await axiosInstance.post("user/cartadd",{
+            productId:id,
+            userId,
+            selectedSize:size,
+            price,
+            quantity: 1}
+          )
+        console.log(response)
+        toast.success("product added to cart")
+      } catch (error) {
+        console.log(error)
+      }
     }
-  
-    console.log(size);
     
 // ======================================================================================================================================================================================================
   return (
@@ -82,7 +101,7 @@ const ProductDetail = () => {
       <div className="md:w-5/12 px-2 flex-shrink-0 mb-4 md:mb-0">
         <img 
           src={mainImage} 
-          alt={product.name} 
+          alt={productData.productName} 
           className="w-full cursor-pointer rounded-md shadow-md lg:max-w-lg"  // Larger image for large screens
           onClick={() => setModalOpen(true)} 
         />
@@ -106,7 +125,7 @@ const ProductDetail = () => {
         </div>
 
         {/* Price */}
-        <p className="text-xl lg:text-2xl font-bold mt-2">₹{productData.regularPrice}</p>  {/* Larger price text */}
+        <p className="text-xl lg:text-2xl font-bold mt-2">₹{productData.salePrice}</p>  {/* Larger price text */}
         
         {/* Description */}
         <p className="mt-2 text-sm lg:text-base">{productData.description}</p>  {/* Larger description text */}

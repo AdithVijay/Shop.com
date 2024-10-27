@@ -30,8 +30,8 @@ userRoute.patch("/edituseraddress/:id",addressController.updateUserAddress)//ADD
 userRoute.delete("/deleteAdress/:id",addressController.deleteUserAddress)//ADDRESS UPDATING
 
 //==========================CART=================================
-
-userRoute.post('/cart/add',cartController.addItemToCart);
+userRoute.post('/cartadd',cartController.addItemToCart);//adding items to the cart 
+userRoute.get("/cartdata/:id",cartController.getCartItems)
 
 
 module.exports = userRoute; 

@@ -29,7 +29,7 @@ const UserLogin = () => {
       console.log("response from server", response.data);
       toast.success(response.data.message)
       navigate("/")
-      dispatch(addUser(response.data))
+      dispatch(addUser(response.data.id))
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -101,7 +101,7 @@ const UserLogin = () => {
                   axiosInstance.post("/user/googleLogin", { token: googleToken })
                   .then(response => {
                     console.log("Google sign-in successful:", response.data);
-                    dispatch(addUser(response.data))
+                    dispatch(addUser(response.data.user._id))
                     toast.success(response.data.message)
                     navigate("/home")
                   })
