@@ -29,12 +29,14 @@ const ProductDetail = () => {
   const [mainImage, setMainImage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
+  const[size,setsize]=useState('')
 
+// ============================FETCHING THE PRODUCT FOR THE DISPLAY========================
   useEffect(() => {
     async function fetchProduct(){
       try {
         const response = await axiosInstance.get(`/user/getproduct/${id}`)
-        // console.log(response);
+        console.log(response);
         const SingleproductData = response.data.data
         setproductData(SingleproductData)
         if (SingleproductData?.images?.length > 0) {
@@ -46,8 +48,8 @@ const ProductDetail = () => {
     }
     fetchProduct()
   }, [id]);
-  console.log("size", productData.sizes)
 
+// ======================LOGIC TO DISPLAY THE SIZE OF THE PRODUCT ========================
    const data =productData.sizes?Object.keys( productData?.sizes).map((x)=>{
         return x
     }):[]
@@ -57,7 +59,9 @@ const ProductDetail = () => {
       navigate(`/addtocart/${id}`)
     }
   
-
+    console.log(size);
+    
+// ======================================================================================================================================================================================================
   return (
     <div className="flex flex-col md:flex-row p-4 max-w-screen-lg mx-auto">
       
@@ -102,8 +106,7 @@ const ProductDetail = () => {
         </div>
 
         {/* Price */}
-        <p className="text-xl lg:text-2xl font-bold mt-2">₹{productData.regularPrice
-        }</p>  {/* Larger price text */}
+        <p className="text-xl lg:text-2xl font-bold mt-2">₹{productData.regularPrice}</p>  {/* Larger price text */}
         
         {/* Description */}
         <p className="mt-2 text-sm lg:text-base">{productData.description}</p>  {/* Larger description text */}
@@ -122,14 +125,17 @@ const ProductDetail = () => {
         <div className="mt-4">
           <p className="font-bold text-sm lg:text-base">Choose Size:</p>
           <div className="flex mt-1">
+          <select onChange={(e)=>setsize(e.target.value)} name="" id="">
             {data.map((size) => (
-              <button 
-                key={size} 
-                className="mr-2 px-3 py-1 border rounded text-sm lg:text-base lg:px-4 lg:py-2"
-              >
-                {size}
-              </button>
+              // <button 
+              //   key={size} 
+              //   className="mr-2 px-3 py-1 border rounded text-sm lg:text-base lg:px-4 lg:py-2"
+              // >
+              //   {size}
+              // </button>
+              <option value={size}>{size}</option>
             ))}
+            </select>
           </div>
         </div>
 

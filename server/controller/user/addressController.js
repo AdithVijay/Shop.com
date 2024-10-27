@@ -1,4 +1,4 @@
-const Address = require( "../../models/useraddress")
+const Address = require( "../../models/address")
 
 
 // =====================CREATING THE NEW ADDRESSS=====================

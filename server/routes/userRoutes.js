@@ -5,6 +5,7 @@ const userRoute = express.Router();
 const userController = require("../controller/user/userController")
 const productController = require("../controller/user/productController")
 const addressController = require("../controller/user/addressController")
+const cartController = require("../controller/user/cartController")
 
 
 //=================USERLOGIN AND SIGNUP=============
@@ -19,7 +20,6 @@ userRoute.post("/googleLogin",userController.googleLogin);
 userRoute.get("/getproduct/:id",productController.fetchProduct);
 userRoute.get("/relatedproducts/:id",productController.relatedProducts);
 
-
 userRoute.get("/userdetails/:id",userController.retrieveUserData)
 
 //==============================ADDRESS==========================
@@ -28,6 +28,10 @@ userRoute.get("/fetchuseraddress/:id",addressController.fetchUserAddresses)//ADR
 userRoute.get("/fetchadresstoedit/:id",addressController.editUserAddress)//ADRESS DATA TO EDIT 
 userRoute.patch("/edituseraddress/:id",addressController.updateUserAddress)//ADDRESS UPDATING
 userRoute.delete("/deleteAdress/:id",addressController.deleteUserAddress)//ADDRESS UPDATING
+
+//==========================CART=================================
+
+userRoute.post('/cart/add',cartController.addItemToCart);
 
 
 module.exports = userRoute; 
