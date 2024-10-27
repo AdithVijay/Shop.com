@@ -20,7 +20,7 @@ const UserSignup = () => {
   const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
   const dispatch = useDispatch()
   const data = useSelector((state)=>state.user.users)
-  console.log("data from the redux ",data);
+
 
 
   const [errors, setErrors] = useState({});
@@ -76,11 +76,11 @@ const UserSignup = () => {
     }
 
     toast(".....verifying")
-    console.log("Submitting at front end :", { name, email, password, phonenumber }); 
+    // console.log("Submitting at front end :", { name, email, password, phonenumber }); 
     try {
       const response = await axiosInstance.post("/user/otp",{ email });
-      console.log(response.data);
-      console.log(response.message);
+      // console.log(response.data);
+      // console.log(response.message);
        setIsOTPDialogOpen(true);
        toast.success("...enter the otp sent")
     } catch (error) {
