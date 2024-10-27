@@ -15,8 +15,8 @@ export default function UserProfile() {
   const [phoneNumber, setphoneNumber] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const data = useSelector(state=>state.user.users)
-  const id = data.id
+  const data = useSelector(state=>state?.user?.users)
+  const id = data
   console.log(id);
   
   const navigate = useNavigate();

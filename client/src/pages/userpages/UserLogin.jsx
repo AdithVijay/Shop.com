@@ -16,8 +16,8 @@ const UserLogin = () => {
   const [password, setpassword] = useState("");
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const data = useSelector((state)=>state.user.users)
-  console.log("data from the redux ",data);
+  // const data = useSelector((state)=>state.user.users)
+  // console.log("data from the redux ",data);
 
 // ======================Login========================
 
@@ -97,7 +97,6 @@ const UserLogin = () => {
                 onSuccess={credentialResponse => {
                   var credentialResponseDecoded = jwtDecode(credentialResponse.credential);
                   const googleToken = credentialResponse.credential;
-
                   axiosInstance.post("/user/googleLogin", { token: googleToken })
                   .then(response => {
                     console.log("Google sign-in successful:", response.data);

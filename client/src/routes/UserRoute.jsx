@@ -53,7 +53,7 @@ const UserRoute = () => {
         ></Route>
 
         <Route path="/display/:id" element={<DisplayPoductMain />}></Route>
-        <Route path="/addtocart/:id" element={<AddToCart />}></Route>
+        <Route path="/addtocart" element={<AddToCart />}></Route>
         <Route path="/wishlist" element={<Wishlist />}></Route>
       </Routes>
 
