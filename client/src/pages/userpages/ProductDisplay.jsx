@@ -175,7 +175,7 @@ const ProductDisplay = () => {
                 </div>
               </CardContent>
               <CardFooter className="p-4 flex justify-between items-center">
-                <Button>Add to Cart</Button>
+                {/* <Button>Add to Cart</Button> */}
                 {product.stock <= 5 && (
                   <Badge variant="destructive" className="ml-2">
                     Only {product.stock} left!

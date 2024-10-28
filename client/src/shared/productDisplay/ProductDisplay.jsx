@@ -32,6 +32,7 @@ const ProductDetail = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
   const[size,setsize]=useState('')
+  const [selectedQuantity, setSelectedQuantity] = useState(0); 
   const userId =  useSelector(state=>state.user.users)
   console.log("userid", userId);
   console.log("product id",id);
@@ -59,7 +60,7 @@ const ProductDetail = () => {
    const data =productData.sizes?Object.keys( productData?.sizes).map((x)=>{
         return x
     }):[]
-    console.log(size)
+
 
 // ===================================ADD TO CART==============================
     const price = productData.salePrice
@@ -79,6 +80,18 @@ const ProductDetail = () => {
         console.log(error)
       }
     }
+
+   async function selectSize (size){
+      setsize(size)
+      setSelectedQuantity(productData.sizes[size]); 
+      const response = await axiosInstance.get("/user/checksizeexist",{
+        size,
+        productId:id
+        }
+      )
+      console.log(response)
+    }
+  
     
 // ======================================================================================================================================================================================================
   return (
@@ -144,18 +157,24 @@ const ProductDetail = () => {
         <div className="mt-4">
           <p className="font-bold text-sm lg:text-base">Choose Size:</p>
           <div className="flex mt-1">
-          <select onChange={(e)=>setsize(e.target.value)} name="" id="">
-            {data.map((size) => (
-              // <button 
-              //   key={size} 
-              //   className="mr-2 px-3 py-1 border rounded text-sm lg:text-base lg:px-4 lg:py-2"
-              // >
-              //   {size}
-              // </button>
-              <option value={size}>{size}</option>
-            ))}
-            </select>
-          </div>
+              {data.map((sizeOption) => {
+                const stockCount = productData.sizes[sizeOption];
+                const isOutOfStock = stockCount === 0;
+                  return (
+                  <button 
+                    key={sizeOption} 
+                    onClick={() => selectSize(sizeOption)} 
+                    disabled={isOutOfStock}
+                    className={`mr-2 px-3 py-1 border rounded text-sm lg:text-base lg:px-4 lg:py-2 ${
+                      size === sizeOption ? 'bg-black text-white' : 'bg-white text-black'
+                    } ${isOutOfStock ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : ''}`}
+                  >
+                    {sizeOption} 
+                    {isOutOfStock }
+                  </button>
+                );
+              })}
+        </div>
         </div>
 
         {/* Add to Cart Button */}
