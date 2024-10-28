@@ -34,5 +34,5 @@ userRoute.post('/cartadd',cartController.addItemToCart);//ADDING THE ITEMS TO CA
 userRoute.get("/cartdata/:id",cartController.getCartItems)//FETCHING THE DATA TO DISPLAY IN CART.JSX
 userRoute.post("/incrementproduct",cartController.incrementProductCount)//INCREASING THE COUNT OF PRODUCT 
 userRoute.post("/decrementproduct",cartController.decrementProductCount)//DECREASING THE COUNT OF PRODUCT 
-
+userRoute.post("/checksizeexist",cartController.checkSizeExist)//TO CHECK THE CART ITEM ALREADY IN CART PRODUCTDISPALY.JSX
 module.exports = userRoute; 

@@ -110,4 +110,17 @@ const decrementProductCount = async(req,res)=>{
   }
 }
 
-  module.exports = { addItemToCart,getCartItems,incrementProductCount,decrementProductCount};
+const checkSizeExist = async(req,res)=>{
+     const {productId,userId,selectedSize} = req.body
+     console.log(selectedSize);
+     
+     const cart = await Cart.findOne({userId})
+      const existingItem = cart.items.find((x)=>x.productId==productId && x.selectedSize == selectedSize)
+      if(existingItem){
+        return res.json({success:true})
+      }else{
+        return res.json({success:false})
+      }
+}
+
+  module.exports = { addItemToCart,getCartItems,incrementProductCount,decrementProductCount,checkSizeExist};
