@@ -30,8 +30,9 @@ userRoute.patch("/edituseraddress/:id",addressController.updateUserAddress)//ADD
 userRoute.delete("/deleteAdress/:id",addressController.deleteUserAddress)//ADDRESS UPDATING
 
 //==========================CART=================================
-userRoute.post('/cartadd',cartController.addItemToCart);//adding items to the cart 
-userRoute.get("/cartdata/:id",cartController.getCartItems)
-
+userRoute.post('/cartadd',cartController.addItemToCart);//ADDING THE ITEMS TO CART IN DISAPLAYPRODUCT.JSX
+userRoute.get("/cartdata/:id",cartController.getCartItems)//FETCHING THE DATA TO DISPLAY IN CART.JSX
+userRoute.post("/incrementproduct",cartController.incrementProductCount)//INCREASING THE COUNT OF PRODUCT 
+userRoute.post("/decrementproduct",cartController.decrementProductCount)//DECREASING THE COUNT OF PRODUCT 
 
 module.exports = userRoute; 

@@ -25,7 +25,7 @@ const DropdownMenu = () => {
       icon: <ShoppingCart size={18} />, 
       label: 'Cart',
       path: '/cart',
-      action: () => navigate('/cart')
+      action: () => navigate('/addtocart')
     },
     { 
       icon: <Heart size={18} />, 

@@ -1,40 +1,77 @@
 import React, { useEffect, useState } from "react";
-import dp2 from "../../assets/dp2.jpg";
 import { useParams } from "react-router-dom";
 import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
+import { toast } from "sonner";
+import { Construction } from "lucide-react";
+
 
 export default function Cart() {
   const [productDetails, setproductDetails] = useState(null);
+  const [subtotal, setSubtotal] = useState(0); 
   const userId = useSelector((state) => state.user.users);
-  const { id } = useParams();
-  const productId = id;
   const [quantity, setQuantity] = useState(1);
+  const [relaod, setrelaod] = useState(false);
+  
 
   //=====================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE ===================
-
+  async function fetchProduct() {
+    try {
+      const response = await axiosInstance.get(`/user/cartdata/${userId}`);
+      console.log("response from the server", response.data.items);
+      setproductDetails(response.data.items);
+      const calculatedSubtotal = response.data.items.reduce(
+        (acc, item) => acc + item.totalItemPrice,
+        0
+      );
+      setSubtotal(calculatedSubtotal); 
+      setrelaod(false)
+    } catch (error) {
+      console.log(error);
+      toast.error("cart is empty")
+    }
+  }
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        const response = await axiosInstance.get(`/user/cartdata/${userId}`);
-        console.log("response from the server", response.data.items);
-        setproductDetails(response.data.items);
-      } catch (error) {
-        console.log(error);
+    fetchProduct();
+  }, [relaod]);
+
+  //=====================IF SCREEN NOT LOADING===================
+  if (!productDetails) {
+    return <p>Cart is empty</p>;
+  }
+ console.log(productDetails);
+
+   //=====================INCREASE AND DECREASE THE COUNT===================
+
+    async function plus(productId,selectedSize,qty){
+      if(qty<5){
+        try {
+          const response = await axiosInstance.post("user/incrementproduct",{productId,userId,selectedSize,}) 
+          console.log(response)
+          setrelaod(true)
+        } catch (error) {
+            console.log(error)
+        }
       }
     }
-    fetchProduct();
-  }, [userId]);
 
-  useEffect(() => {
-    console.log("data vannu==>", productDetails);
-  }, [productDetails]);
 
-  if (!productDetails) {
-    return <p>Loading...</p>;
+   async function minus(productId,selectedSize,qty){
+    if(qty>=1){
+      try {
+        console.log('minus calll.......')
+        const response = await axiosInstance.post("user/decrementproduct",{productId,userId,selectedSize}) 
+        console.log(response);
+        setrelaod(true)
+      } catch (error) {
+          console.log(error)
+      }
+    }
   }
-  console.log(productDetails);
+  //========================================================================
+ 
 
+  
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
       <div className="lg:w-2/3">
@@ -58,12 +95,12 @@ export default function Cart() {
                 <h2 className="font-medium text-lg mb-1">
                   {product.productId.productName}
                 </h2>
-                {/* <p className="text-sm text-gray-600 mb-1">
-                Style# {product.style}
+                <p className="text-sm text-gray-600 mb-1">
+                Style# 
               </p>
               <p className="text-sm text-gray-600 mb-1">
-                Variation: {product.variation}
-              </p> */}
+                Variation:
+              </p>
                 <p className="text-sm text-gray-600 mb-3">
                   Size: {product.selectedSize}
                 </p>
@@ -94,18 +131,19 @@ export default function Cart() {
                 </div>
               </div>
               <div className="flex flex-col items-center sm:items-start">
-                <select
-                  value={quantity}
-                  onChange={(e) => setQuantity(parseInt(e.target.value))}
-                  className="border border-gray-300 rounded px-2 py-1 mb-2 text-sm w-20 text-center"
-                >
-                  {[1, 2, 3, 4, 5].map((num) => (
-                    <option key={num} value={num}>
-                      QTY: {num}
-                    </option>
-                  ))}
-                </select>
-                <p className="font-medium text-center">
+              <div className="flex items-center space-x-2 justify-center">
+                      <button onClick={()=>plus(product.productId._id,product.selectedSize,product.quantity)} className="border border-gray-300 rounded  text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100">
+                        +
+                      </button>
+                      <p >{product.quantity}</p>
+                      <button onClick={()=>{
+                        console.log('minus button click..')
+                        minus(product.productId._id,product.selectedSize, product.quantity)
+                      }}  className="border border-gray-300 rounded text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100">
+                        -
+                      </button>
+                    </div>
+                <p className="font-medium text-lg text-center pt-3">
                   ${product.totalItemPrice}
                 </p>
               </div>
@@ -114,7 +152,6 @@ export default function Cart() {
 
         {/*  */}
       </div>
-       ̰
       <div className="lg:w-1/3 mx-auto lg:mx-0 lg:self-start">
         <div className="border border-gray-200 p-4 sm:p-6 max-w-lg mx-auto lg:max-w-none">
           <h2 className="text-lg font-medium mb-4">ORDER SUMMARY</h2>
@@ -122,7 +159,7 @@ export default function Cart() {
           <div className="flex justify-between mb-2 text-sm">
             <span>Subtotal</span>
             {/* price subtotal */}
-            {/* <span>${subtotal}</span>  */}
+            <span>${subtotal}</span> 
           </div>
           <div className="flex justify-between mb-2 text-sm">
             <span>Shipping</span>
@@ -135,7 +172,7 @@ export default function Cart() {
           <div className="flex justify-between font-medium mb-6">
             <span>Estimated Total</span>
             {/* subtotal */}
-            {/* <span>${subtotal}</span> */}
+            <span>${subtotal}</span>
           </div>
           <button className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
             CHECKOUT

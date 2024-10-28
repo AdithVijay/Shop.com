@@ -37,13 +37,77 @@ const addItemToCart = async (req, res) => {
   
 // ==========================ADDING DATA TO CART============================
 const getCartItems = async(req,res)=>{
-  const id = req.params.id
-  const cart = await Cart.findOne({userId:id}).populate('items.productId')
-  if(cart){
-    return res.status(200).json(cart)
-  }else{
-    return res.status(404).json({messagee:"Not Found"})
+  try {
+    const id = req.params.id
+    const cart = await Cart.findOne({userId:id}).populate('items.productId')
+    if(cart){
+      return res.status(200).json(cart)
+    }else{
+      return res.status(404).json({messagee:"Not Found"})
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
-  module.exports = { addItemToCart,getCartItems};
+// ==========================INCREMENTING PRODUCT COUNT============================
+const incrementProductCount = async(req,res)=>{
+  const { productId, userId ,selectedSize} = req.body;
+  console.log(productId);
+  
+  try {
+    const cart = await Cart.findOne({userId})
+    console.log(cart);
+    
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    const existingProduct = cart.items.find((x) => x.productId == productId && x.selectedSize==selectedSize);
+    console.log(existingProduct);
+    if (existingProduct) {
+      existingProduct.quantity += 1;
+      existingProduct.totalItemPrice += existingProduct.price; 
+    } else {
+      return res.status(404).json({ message: "Product not found in cart" });
+    }
+
+    await cart.save();
+
+    res.status(200).json({ message: "Product count incremented", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating product count" });
+  }
+}
+
+// ==========================INCREMENTING PRODUCT COUNT============================
+1
+const decrementProductCount = async(req,res)=>{
+  const { productId, userId,selectedSize } = req.body;
+  try {
+    const cart = await Cart.findOne({userId})
+    console.log(cart);
+    
+    if (!cart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+    const existingProduct = cart.items.find((x) => x.productId == productId && x.selectedSize==selectedSize);
+    console.log(existingProduct);
+    if (existingProduct) {
+      existingProduct.quantity -= 1;
+      existingProduct.totalItemPrice -= existingProduct.price; 
+    } else {
+      return res.status(404).json({message: "Product not found in cart"});
+    }
+
+    await cart.save();
+
+    res.status(200).json({ message: "Product count incremented", cart });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error updating product count" });
+  }
+}
+
+  module.exports = { addItemToCart,getCartItems,incrementProductCount,decrementProductCount};
