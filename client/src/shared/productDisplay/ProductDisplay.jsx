@@ -26,24 +26,25 @@ const product = {
 
 const ProductDetail = () => {
 
-  const { id } = useParams();
+  const { id } = useParams()
   const navigate = useNavigate()
+  const [outOfStck, setoutOfStck] = useState(false)
   const [mainImage, setMainImage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
   const[size,setsize]=useState('')
   const[displayCart,setdisplayCart]=useState(false)
   const [selectedQuantity, setSelectedQuantity] = useState(0); 
-  const [relaod, setrelaod] = useState(false);
   const userId =  useSelector(state=>state.user.users)
   console.log("userid", userId);
   console.log("product id",id);
+
   
 // ============================FETCHING THE PRODUCT FOR THE DISPLAY========================
 async function fetchProduct(){
   try {
     const response = await axiosInstance.get(`/user/getproduct/${id}`)
-    console.log(response);
+    console.log(response)
     const SingleproductData = response.data.data
     setproductData(SingleproductData)
     if (SingleproductData?.images?.length > 0) {
@@ -55,8 +56,7 @@ async function fetchProduct(){
 }
   useEffect(() => {
     fetchProduct()
-
-  }, [relaod]);
+  }, [id]);
   console.log("sales price",productData.salePrice);
   
 // ======================LOGIC TO DISPLAY THE SIZE OF THE PRODUCT ========================
@@ -64,13 +64,12 @@ async function fetchProduct(){
         return x
     }):[]
 
-
 // ===================================ADD TO CART==============================
     const price = productData.salePrice
     async function addtocart(){
       try {
-        console.log(id);
-        const response = await axiosInstance.post("user/cartadd",{
+        if(size){
+          const response = await axiosInstance.post("user/cartadd",{
             productId:id,
             userId,
             selectedSize:size,
@@ -78,25 +77,27 @@ async function fetchProduct(){
             quantity: 1}
           )
         console.log(response)
+        setdisplayCart(true)
         toast.success("product added to cart")
+        }
+        else{
+          toast.error("please select a size")
+        }
       } catch (error) {
         console.log(error)
       }
     }
     console.log(size);
-    
-console.log(displayCart);
 
-// ===============TO CHECK WHETHER THEE SIZE IS SELECTED OR NOT=============
+// ================TO CHECK WHETHER THE SIZE IS SELECTED OR NOT=============
    async function selectSize (size){
       setsize(size)
-      setSelectedQuantity(productData.sizes[size]); 
+      setSelectedQuantity(productData.sizes[size])
       try {
         const response = await axiosInstance.post("/user/checksizeexist",{selectedSize:size,productId:id,userId})
         console.log(response)
         if(response.data.success){
           setdisplayCart(true)
-          setrelaod(true)
         }else{
           setdisplayCart(false)
         }
@@ -105,7 +106,6 @@ console.log(displayCart);
       }
     }
   
-    
 // ======================================================================================================================================================================================================
   return (
     <div className="flex flex-col md:flex-row p-4 max-w-screen-lg mx-auto">
@@ -191,6 +191,7 @@ console.log(displayCart);
         </div>
 
         {/* Add to Cart Button */}
+
         <button 
             onClick={() => displayCart ? navigate('/addtocart') : addtocart(id)} 
             className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3"

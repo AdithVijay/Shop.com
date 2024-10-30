@@ -27,7 +27,6 @@ const addItemToCart = async (req, res) => {
   
       await cart.save();
       res.status(200).json({ message: 'Item added to cart successfully', cart });
-      console.log(cart);
       
     } catch (error) {
       console.error(error);
@@ -35,7 +34,7 @@ const addItemToCart = async (req, res) => {
     }
   };
   
-// ==========================ADDING DATA TO CART============================
+// ==========================FETCHING DATA TO CART============================
 const getCartItems = async(req,res)=>{
   try {
     const id = req.params.id
@@ -53,18 +52,16 @@ const getCartItems = async(req,res)=>{
 // ==========================INCREMENTING PRODUCT COUNT============================
 const incrementProductCount = async(req,res)=>{
   const { productId, userId ,selectedSize} = req.body;
-  console.log(productId);
   
   try {
     const cart = await Cart.findOne({userId})
-    console.log(cart);
-    
+
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
 
     const existingProduct = cart.items.find((x) => x.productId == productId && x.selectedSize==selectedSize);
-    console.log(existingProduct);
+
     if (existingProduct) {
       existingProduct.quantity += 1;
       existingProduct.totalItemPrice += existingProduct.price; 
@@ -82,18 +79,16 @@ const incrementProductCount = async(req,res)=>{
 }
 
 // ==========================INCREMENTING PRODUCT COUNT============================
-1
 const decrementProductCount = async(req,res)=>{
   const { productId, userId,selectedSize } = req.body;
   try {
     const cart = await Cart.findOne({userId})
-    console.log(cart);
-    
+
     if (!cart) {
       return res.status(404).json({ message: "Cart not found" });
     }
+
     const existingProduct = cart.items.find((x) => x.productId == productId && x.selectedSize==selectedSize);
-    console.log(existingProduct);
     if (existingProduct) {
       existingProduct.quantity -= 1;
       existingProduct.totalItemPrice -= existingProduct.price; 
@@ -110,17 +105,57 @@ const decrementProductCount = async(req,res)=>{
   }
 }
 
+// ==========================TO CHECK WHTEHTER THE SIZE EXISTS OR NOT============================
 const checkSizeExist = async(req,res)=>{
-     const {productId,userId,selectedSize} = req.body
-     console.log(selectedSize);
-     
-     const cart = await Cart.findOne({userId})
-      const existingItem = cart.items.find((x)=>x.productId==productId && x.selectedSize == selectedSize)
-      if(existingItem){
-        return res.json({success:true})
-      }else{
-        return res.json({success:false})
+  try {
+    const {productId,userId,selectedSize} = req.body
+    const cart = await Cart.findOne({userId})
+      if(cart){
+        const existingItem = cart.items.find((x)=>x.productId==productId && x.selectedSize == selectedSize)
+        if(existingItem){
+          return res.json({success:true})
+        }else{
+          return res.json({success:false})
+        }
       }
+  } catch (error) {
+    console.log(error);
+  }
+    
 }
 
-  module.exports = { addItemToCart,getCartItems,incrementProductCount,decrementProductCount,checkSizeExist};
+// ==========================TO DELETE THE ITEMS IN THE CART============================
+
+const delteCartItem = async (req, res) => {
+  const {userId, productId, selectedSize } = req.body;
+
+  try {
+    const updatedCart = await Cart.findOneAndUpdate(
+      {userId }, // Match the user's cart
+      {
+        $pull: {
+          items: {
+            productId: productId,
+            selectedSize: selectedSize,
+          },
+        },
+      },
+      { new: true } // Return the updated cart after deletion
+    );
+
+    if (updatedCart) {
+      res.status(200).json({ message: "Item successfully deleted from cart", cart: updatedCart });
+    } else {
+      res.status(404).json({ message: "Cart not found or item not in cart" });
+    }
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+  module.exports = { addItemToCart,
+    getCartItems,
+    incrementProductCount,
+    decrementProductCount,
+    checkSizeExist,
+    delteCartItem};

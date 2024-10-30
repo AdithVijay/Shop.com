@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export default function UserAddress() {
 
   const data = useSelector(state=>state.user.users)
-  const id = data.id
+  const id = data
   const navigate = useNavigate()
   const [addresses, setAddresses] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -23,7 +23,7 @@ export default function UserAddress() {
     pincode: ""
   });
 
-
+  console.log(data);
 console.log(addresses);
 
   const handleEdit =async (id) => {
@@ -34,7 +34,6 @@ console.log(addresses);
 //====================HANDLING THE DELETE ==============================
   const handleDelete =async (id) => {
     console.log(id);
-    
     try {
       const response =  await axiosInstance.delete(`user/deleteAdress/${id}`)
       setAddresses(addresses.filter(addresse=>addresse._id !== id))

@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { Construction } from "lucide-react";
 
-
 export default function Cart() {
   const [productDetails, setproductDetails] = useState(null);
-  const [subtotal, setSubtotal] = useState(0); 
+  const [subtotal, setSubtotal] = useState(0);
   const userId = useSelector((state) => state.user.users);
   const [quantity, setQuantity] = useState(1);
   const [relaod, setrelaod] = useState(false);
-  
 
-  //=====================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE ===================
+  //=================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE =================
   async function fetchProduct() {
     try {
       const response = await axiosInstance.get(`/user/cartdata/${userId}`);
+      console.log("resposnsss",response)
       console.log("response from the server", response.data.items);
       setproductDetails(response.data.items);
+
       const calculatedSubtotal = response.data.items.reduce(
         (acc, item) => acc + item.totalItemPrice,
         0
       );
-      setSubtotal(calculatedSubtotal); 
-      setrelaod(false)
+      setSubtotal(calculatedSubtotal);
+      setrelaod(false);
     } catch (error) {
-      console.log(error);
-      toast.error("cart is empty")
+      console.log(error)
+      toast.error("cart is empty");
     }
   }
   useEffect(() => {
@@ -36,42 +36,61 @@ export default function Cart() {
   }, [relaod]);
 
   //=====================IF SCREEN NOT LOADING===================
-  if (!productDetails) {
+  if (productDetails?.length == 0) {
     return <p>Cart is empty</p>;
   }
- console.log(productDetails);
 
-   //=====================INCREASE AND DECREASE THE COUNT===================
-
-    async function plus(productId,selectedSize,qty){
-      if(qty<5){
-        try {
-          const response = await axiosInstance.post("user/incrementproduct",{productId,userId,selectedSize,}) 
-          console.log(response)
-          setrelaod(true)
-        } catch (error) {
-            console.log(error)
-        }
-      }
-    }
-
-
-   async function minus(productId,selectedSize,qty){
-    if(qty>=1){
+  //=====================INCREASE THE COUNT===================
+  async function plus(productId, selectedSize, qty) {
+    const product = productDetails.find((x)=>x.productId._id==productId)
+    console.log(product);
+    const availableStock = product.productId.sizes[selectedSize]
+    console.log(availableStock);
+    if (qty < 5 && qty<availableStock ) {
       try {
-        console.log('minus calll.......')
-        const response = await axiosInstance.post("user/decrementproduct",{productId,userId,selectedSize}) 
+        const response = await axiosInstance.post("user/incrementproduct", {
+          productId,
+          userId,
+          selectedSize,
+        });
         console.log(response);
-        setrelaod(true)
+        setrelaod(true);
       } catch (error) {
-          console.log(error)
+        console.log(error);
       }
     }
   }
-  //========================================================================
- 
 
-  
+//=====================DECREASE THE COUNT===================
+  async function minus(productId, selectedSize, qty) {
+    if (qty > 1) {
+      try {
+        console.log("minus calll.......");
+        const response = await axiosInstance.post("user/decrementproduct", {
+          productId,
+          userId,
+          selectedSize,
+        });
+        console.log(response);
+        setrelaod(true);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+//=====================DELETING THE ITEM IN THE CART========================
+  async function deleteCartItem(productId,selectedSize){
+    try {
+      console.log(selectedSize);
+      const response = await axiosInstance.delete(`/user/deleteCart`, {data: { productId, selectedSize,userId }});
+      console.log("Item deleted:", response.data);
+      setrelaod(true)
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
+  }
+
+//========================================================================
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col lg:flex-row gap-8">
       <div className="lg:w-2/3">
@@ -95,12 +114,8 @@ export default function Cart() {
                 <h2 className="font-medium text-lg mb-1">
                   {product.productId.productName}
                 </h2>
-                <p className="text-sm text-gray-600 mb-1">
-                Style# 
-              </p>
-              <p className="text-sm text-gray-600 mb-1">
-                Variation:
-              </p>
+                <p className="text-sm text-gray-600 mb-1">Style#</p>
+                <p className="text-sm text-gray-600 mb-1">Variation:</p>
                 <p className="text-sm text-gray-600 mb-3">
                   Size: {product.selectedSize}
                 </p>
@@ -110,7 +125,7 @@ export default function Cart() {
                 </p>
                 <div className="flex flex-row justify-center sm:justify-start items-center gap-4 text-sm flex-wrap">
                   <button className="underline">EDIT</button>
-                  <button className="underline">REMOVE</button>
+                  <button onClick={()=>deleteCartItem( product.productId._id,product.selectedSize)} className="underline">REMOVE</button>
                   <button className="underline flex items-center">
                     <svg
                       className="w-4 h-4 mr-1"
@@ -131,18 +146,34 @@ export default function Cart() {
                 </div>
               </div>
               <div className="flex flex-col items-center sm:items-start">
-              <div className="flex items-center space-x-2 justify-center">
-                      <button onClick={()=>plus(product.productId._id,product.selectedSize,product.quantity)} className="border border-gray-300 rounded  text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100">
-                        +
-                      </button>
-                      <p >{product.quantity}</p>
-                      <button onClick={()=>{
-                        console.log('minus button click..')
-                        minus(product.productId._id,product.selectedSize, product.quantity)
-                      }}  className="border border-gray-300 rounded text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100">
-                        -
-                      </button>
-                    </div>
+                <div className="flex items-center space-x-2 justify-center">
+                  <button
+                    onClick={() =>
+                      plus(
+                        product.productId._id,
+                        product.selectedSize,
+                        product.quantity
+                      )
+                    }
+                    className="border border-gray-300 rounded  text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    +
+                  </button>
+                  <p>{product.quantity}</p>
+                  <button
+                    onClick={() => {
+                      console.log("minus button click..");
+                      minus(
+                        product.productId._id,
+                        product.selectedSize,
+                        product.quantity
+                      );
+                    }}
+                    className="border border-gray-300 rounded text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    -
+                  </button>
+                </div>
                 <p className="font-medium text-lg text-center pt-3">
                   ${product.totalItemPrice}
                 </p>
@@ -159,7 +190,7 @@ export default function Cart() {
           <div className="flex justify-between mb-2 text-sm">
             <span>Subtotal</span>
             {/* price subtotal */}
-            <span>${subtotal}</span> 
+            <span>${subtotal}</span>
           </div>
           <div className="flex justify-between mb-2 text-sm">
             <span>Shipping</span>
@@ -174,9 +205,11 @@ export default function Cart() {
             {/* subtotal */}
             <span>${subtotal}</span>
           </div>
-          <button className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
+          <Link to={"/checkout"}>
+          <button  className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
             CHECKOUT
           </button>
+          </Link>
           <p className="text-center mb-4 text-sm">OR</p>
           <button className="w-full border border-gray-300 py-2 mb-2 text-sm font-medium">
             PAY WITH PayPal

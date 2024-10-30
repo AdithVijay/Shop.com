@@ -20,7 +20,8 @@ userRoute.post("/googleLogin",userController.googleLogin);
 userRoute.get("/getproduct/:id",productController.fetchProduct);
 userRoute.get("/relatedproducts/:id",productController.relatedProducts);
 
-userRoute.get("/userdetails/:id",userController.retrieveUserData)
+//============================USERPROFILE========================
+userRoute.get("/userdetails/:id",userController.retrieveUserData)//TO DISPLAY DETAILS IN USERPROFILE
 
 //==============================ADDRESS==========================
 userRoute.post("/useraddress",addressController.createUserAddress)//CREATING NEW ADDRESS
@@ -35,4 +36,10 @@ userRoute.get("/cartdata/:id",cartController.getCartItems)//FETCHING THE DATA TO
 userRoute.post("/incrementproduct",cartController.incrementProductCount)//INCREASING THE COUNT OF PRODUCT 
 userRoute.post("/decrementproduct",cartController.decrementProductCount)//DECREASING THE COUNT OF PRODUCT 
 userRoute.post("/checksizeexist",cartController.checkSizeExist)//TO CHECK THE CART ITEM ALREADY IN CART PRODUCTDISPALY.JSX
+userRoute.delete("/deleteCart",cartController.delteCartItem)//TO DELTE THE ITEM IN THE CART
+
+//=============================CHECKOUT==============================
+//user address fetched using the route @line 21 addressController.fetchUserAddresses
+
+
 module.exports = userRoute; 
