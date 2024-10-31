@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserSideBar from "@/shared/bars/UserSideBar";
+import axiosInstance from "@/config/axiosInstance";
+import { useSelector } from "react-redux";
 
 const orders = [
   {
@@ -38,7 +40,19 @@ const orders = [
   },
 ];
 
+
 export default function Orders() {
+  const user = useSelector((state)=>state.user.users)
+  
+  useEffect(() => {
+    fetchOrderData()
+  }, []);
+  
+  async function fetchOrderData(){
+    const response = await axiosInstance.get(`user/retrieveorder/${user}`)
+    console.log(response);
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <UserSideBar />

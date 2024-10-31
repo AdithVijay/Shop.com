@@ -10,7 +10,7 @@ const addItemToCart = async (req, res) => {
       if (cart) {
         const existingItem = cart.items.find(
           (item) => item.productId.toString() === productId && item.selectedSize === selectedSize
-        );
+        )
   
         if (existingItem) {
           existingItem.quantity += quantity;

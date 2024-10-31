@@ -30,7 +30,6 @@ const submitCheckout = async(req,res)=>{
 
         const productIds = cartdata.map((x) => x.productId._id.toString());
         const selectedSizes = cartdata.map((x) => x.selectedSize);
-      
 
         await Cart.updateOne(
           { userId: user },
@@ -50,22 +49,26 @@ const submitCheckout = async(req,res)=>{
 
         for (let item of cartdata) {
             const { productId, selectedSize, quantity } = item;
-        
-            // Update the product's size stock in ProductData
             await ProductData.updateOne(
               { _id: productId },
-              { $inc: { [`sizes.${selectedSize}`]: -quantity } }  // Reduce stock by ordered quantity
+              { $inc: { [`sizes.${selectedSize}`]: -quantity } }  
             );
           }
         
           console.log("Order placed, cart items removed, and product stock updated successfully");
           res.status(201).json({ message: "Order placed and stock updated successfully" });
+}
+//========================TO FETCH THE ORDER DETAILS ========================
 
-
-
-        
+const getOrderDetails = async(req,res)=>{
+  const id = req.params.id
+  console.log(id);
+    const order = await Order.find({ user:id})
+    console.log(order);
+    return res.json(order)
 }
 
 module.exports = {
-    submitCheckout
+    submitCheckout,
+    getOrderDetails
 }

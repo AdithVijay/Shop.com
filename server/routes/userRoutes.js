@@ -42,6 +42,7 @@ userRoute.delete("/deleteCart",cartController.delteCartItem)//TO DELTE THE ITEM 
 //=============================CHECKOUT/ORDER==============================
 //user address fetched using the route @line 21 addressController.fetchUserAddresses
 userRoute.post("/checkout",orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
+userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)
 
 
 
