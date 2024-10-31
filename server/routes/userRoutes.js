@@ -6,6 +6,7 @@ const userController = require("../controller/user/userController")
 const productController = require("../controller/user/productController")
 const addressController = require("../controller/user/addressController")
 const cartController = require("../controller/user/cartController")
+const orderController = require("../controller/user/orderController")
 
 
 //=================USERLOGIN AND SIGNUP=============
@@ -38,8 +39,10 @@ userRoute.post("/decrementproduct",cartController.decrementProductCount)//DECREA
 userRoute.post("/checksizeexist",cartController.checkSizeExist)//TO CHECK THE CART ITEM ALREADY IN CART PRODUCTDISPALY.JSX
 userRoute.delete("/deleteCart",cartController.delteCartItem)//TO DELTE THE ITEM IN THE CART
 
-//=============================CHECKOUT==============================
+//=============================CHECKOUT/ORDER==============================
 //user address fetched using the route @line 21 addressController.fetchUserAddresses
+userRoute.post("/checkout",orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
+
 
 
 module.exports = userRoute; 

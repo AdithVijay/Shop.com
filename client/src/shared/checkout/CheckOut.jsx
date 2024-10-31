@@ -4,25 +4,19 @@ import dp1 from '../../assets/dp1.jpg'
 import axiosInstance from '@/config/axiosInstance';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import OrderSuccessModal from '../modal/OrderSuccessModal';
 
 const CheckOut = () => {
-  const [addresses] = useState([
-    { id: 1, name: 'Home House', place: 'Place Kerala', pincode: '689201', contact: '+91 98765 86265' },
-    { id: 2, name: 'Work House', place: 'Place Kerala', pincode: '689201', contact: '+91 98765 86265' },
-  ]);
-
-  const [products] = useState([
-    { id: 1, name: 'Nothing Phone 2a', price: 345, image: '/placeholder.svg' },
-    { id: 2, name: 'Nothing Phone 2a', price: 345, image: '/placeholder.svg' },
-    { id: 3, name: 'Nothing Phone 2a', price: 345, image: '/placeholder.svg' },
-  ])
   const user = useSelector((state) => state.user.users)//userId 
-  const [selectedAddress, setSelectedAddress] = useState(1);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('');
   const [adress, setadress] = useState([]);
-//   const [subtotal, setSubtotal] = useState(0);
-const [cartdata,setcartdata]=useState([])
-  const subtotal = products.reduce((sum, product) => sum + product.price, 0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [cartdata,setcartdata]=useState([])
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({});
+  const [relaod, setrelaod] = useState(false);
   const shipping = 'Free';
   const total = subtotal;
 
@@ -30,33 +24,73 @@ const [cartdata,setcartdata]=useState([])
     useEffect(() => {
         fetchAdress()
         fetchProduct() 
-    },[]);
+    },[relaod]);
 
+//=======================FETCHING ADRESS======================
     async function fetchAdress(){
         try {
             const response = await axiosInstance.get(`/user/fetchuseraddress/${user}`)
             console.log(response);
-            setadress(response.data)   
+            setadress(response.data) 
+            setrelaod(false)
         } catch (error) {
             console.log(error);
         }
     }
 
+//=======================FETCHING PRODUCT DATA FROM CART======================
     async function fetchProduct() {
         try {
           const response = await axiosInstance.get(`/user/cartdata/${user}`);
           console.log("resposnsss",response)
           console.log("response from the server", response.data.items);
-          setcartdata(response.data.items)
+          setcartdata(response.data.items)         
           const calculatedSubtotal = response.data.items.reduce(
             (acc, item) => acc + item.totalItemPrice,
             0
           );
-        //   setSubtotal(calculatedSubtotal)
+          setSubtotal(calculatedSubtotal)
+          setrelaod(false)
         } catch (error) {
           console.log(error)
         }
       }
+
+  //=======================SUBITING CHECKOUT DETAILS TO BACKEND==================
+    async function submitCheckout() {
+      if(!paymentMethod){
+        return toast.error("choose a payment method")
+       }
+      if(!selectedAddress){
+        return toast.error("choose an address")
+       }
+
+       try {
+        const response =await axiosInstance.post("/user/checkout",{
+          user,
+          subtotal,
+          payment_method:paymentMethod,
+          cartdata,
+          shipping_address:selectedAddress
+        })
+          console.log("order db scess",response);
+
+          // MODAL PROPS 
+          setOrderDetails({
+            orderId: response.data.orderId || `ORD${Date.now()}`,
+            date: new Date().toLocaleDateString(),
+            time: new Date().toLocaleTimeString(),
+            paymentMethod: paymentMethod,
+            amount: subtotal,
+            expectedDelivery: "27 - September - 2024" 
+          });
+         
+          setShowSuccessModal(true);
+          setrelaod(true)
+       } catch (error) {
+        console.log(error);
+       }
+    }
   
 
   return (
@@ -67,13 +101,13 @@ const [cartdata,setcartdata]=useState([])
           <div className="mb-6">
             <h3 className="font-semibold mb-2">Delivery Address</h3>
             {adress.map((address) => (
-              <div key={address.id} className="flex items-center mb-2">
+              <div key={address._id} className="flex items-center mb-2">
                 <input
                   type="radio"
                   id={`address-${address.id}`}
                   name="address"
-                  checked={selectedAddress === address.id}
-                  onChange={() => setSelectedAddress(address.id)}
+                  checked={selectedAddress === address._id}
+                  onChange={() => setSelectedAddress(address._id)}
                   className="mr-2"
                 />
                 <label htmlFor={`address-${address.id}`} className="flex-grow border p-2 rounded">
@@ -112,11 +146,13 @@ const [cartdata,setcartdata]=useState([])
         <div className="md:w-1/3">
           <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
           {cartdata.map((product) => (
-            <div key={product.id} className="flex items-center mb-4">
+            <div key={product._id} className="flex items-center mb-4">
               <img src={product.productId.images[0]} alt={product.name} className="w-16 h-18 object-cover mr-4" />
               <div>
                 <h3 className="font-semibold">{product.productId.productName}</h3>
-                <p>₹{product.price}</p>
+                <p className='text-sm text-gray-600 mb-1'>QTY : {product.quantity}</p>
+                <p className='text-sm text-gray-600 mb-1'>SIZE : {product.selectedSize}</p>
+                <p className=' text-sm font-semibold'>₹{product.price}</p>
               </div>
             </div>
           ))}
@@ -138,9 +174,14 @@ const [cartdata,setcartdata]=useState([])
             <input type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
             <button className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
           </div>
-          <button className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>
+          <button onClick={()=>submitCheckout()} className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>
         </div>
       </div>
+      <OrderSuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        orderDetails={orderDetails}
+      />
     </div>
   );
 };
