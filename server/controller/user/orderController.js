@@ -63,8 +63,10 @@ const submitCheckout = async(req,res)=>{
 const getOrderDetails = async(req,res)=>{
   const id = req.params.id
   console.log(id);
-    const order = await Order.find({ user:id})
-    console.log(order);
+  const order = await Order.find({ user: id }).populate({
+    path: 'order_items.product', 
+  }).populate('shipping_address')
+  console.log(order);
     return res.json(order)
 }
 
