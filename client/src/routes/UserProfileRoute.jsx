@@ -4,6 +4,7 @@ import UserProfile from '../pages/userprofile/profile/UserProfile'
 import UserAddress from '../pages/userprofile/adress/UserAddress'
 import EditAddress from '../pages/userprofile/adress/EditAddress'
 import Orders from '../pages/userprofile/order/Orders'
+import ViewOrder from '@/pages/userprofile/order/ViewOrder'
 const UserProfileRoute = () => {
   return (
     <div>
@@ -13,6 +14,7 @@ const UserProfileRoute = () => {
             <Route path='/address' element={<UserAddress/>}></Route>
             <Route path='/edit/:id' element={<EditAddress/>}></Route>
             <Route path='/orders' element={<Orders/>}></Route>
+            <Route path='/vieworders/:id' element={<ViewOrder/>}></Route>
           </Routes>
 
     </div>

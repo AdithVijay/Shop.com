@@ -42,8 +42,8 @@ userRoute.delete("/deleteCart",cartController.delteCartItem)//TO DELTE THE ITEM 
 //=============================CHECKOUT/ORDER==============================
 //user address fetched using the route @line 21 addressController.fetchUserAddresses
 userRoute.post("/checkout",orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
-userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)
-
-
+userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE DETAILS OF ORDER IN ORDER.JSX
+userRoute.get("/vieworder/:id",orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
+userRoute.post("/changestatus",orderController.changeOrderStatus)//TO CHANGE STAUS OF ORDER IN OREDR.JSX
 
 module.exports = userRoute; 

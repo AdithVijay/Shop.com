@@ -1,9 +1,13 @@
 import React from 'react'
 import { CheckCircle, X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
+  const navigate =  useNavigate()
   if (!isOpen) return null
-
+  function viewOrder(){
+    navigate("/orders")
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
@@ -44,14 +48,12 @@ export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 p-6 bg-gray-50 rounded-b-lg">
-          <button
-            onClick={onClose}
+          <button onClick={()=>viewOrder()}
             className="w-full sm:w-1/2 px-4 py-2 bg-white text-black border border-gray-300 rounded hover:bg-gray-100"
           >
             View Order
           </button>
           <button
-            onClick={onClose}
             className="w-full sm:w-1/2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
             Continue Shopping

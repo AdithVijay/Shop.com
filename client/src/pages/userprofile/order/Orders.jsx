@@ -1,23 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import UserSideBar from "@/shared/bars/UserSideBar";
 import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
+import ViewOrder from "./ViewOrder";
 
 export default function Orders() {
   const user = useSelector((state) => state.user.users);
   const [orderData, setOrderData] = useState([]);
+  const navigate = useNavigate();
 
+//=========================USEEFFECT======================
   useEffect(() => {
     fetchOrderData();
   }, []);
 
+  //=========================FETCHING THE DATA FROM BACKEND=======================
   async function fetchOrderData() {
     const response = await axiosInstance.get(`user/retrieveorder/${user}`);
     setOrderData(response.data);
   }
-console.log(orderData);
+  console.log(orderData)
+
+  //=========================FETCHING THE DATA FROM BACKEND=======================
+  function viewOrder(id){
+    navigate(`/vieworders/${id}`)
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -35,8 +44,7 @@ console.log(orderData);
                 >
                   {/* Order Header */}
                   <div className="flex justify-between items-center text-gray-600 text-sm">
-                    <p>Order Placed: {new Date(order.placed_at).toDateString()}</p>
-                    <p>Order # {order.id}</p>
+                    <p>Order # {order._id}</p>
                   </div>
 
                   {/* Order Products */}
@@ -46,7 +54,7 @@ console.log(orderData);
                         <img
                           src={item?.product?.images[0]}
                           alt={item?.product?.productName}
-                          className="w-20 h-20 object-cover rounded"
+                          className="w-20 h-28 object-cover rounded"
                         />
                         <div>
                           <p className="font-semibold text-gray-800">
@@ -66,18 +74,20 @@ console.log(orderData);
                   {/* Order Footer */}
                   <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-2 md:space-y-0">
                     <div className="text-sm text-gray-600">
+                      <p>Order Placed: {new Date(order.placed_at).toDateString()}</p>
+                      <p>Order delivered: {new Date(order.delivery_by).toDateString()}</p>
                       <p>Ship To: {order.shipping_address.address}</p>
                       <p>Total: {order.total_price_with_discount}</p>
+
                     </div>
 
                     <div className="flex space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-blue-600 border-blue-600"
-                      >
-                        View order
-                      </Button>
+
+                    <button onClick={()=>viewOrder(order._id)} className="text-blue-600 border border-blue-600 px-3 py-1 rounded-md hover:bg-blue-50">
+                      View order
+                    </button>
+                      
+
                       {order.status === "PROCESSING" ? (
                         <Button
                           variant="outline"
@@ -87,17 +97,17 @@ console.log(orderData);
                           Cancel Order
                         </Button>
                       ) : (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-600"
+                        <button 
+                        class="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-100 transition-colors"
+                      >
+                        Return
+                      </button>
+                      )}    
+                      <button 
+                          class="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
                         >
-                          Return
-                        </Button>
-                      )}
-                      <Button variant="outline" size="sm">
-                        Invoice
-                      </Button>
+                          Invoice
+                        </button>
                     </div>
                   </div>
 
