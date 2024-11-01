@@ -4,23 +4,27 @@ const ProductData = require("../../models/productModel");
 
 //======================CHECKOUT WHEN USER PRESS CHECKOUT========================
 const submitCheckout = async (req, res) => {
-  const { user, subtotal, payment_method, cartdata, shipping_address } =
+  const { user, subtotal, payment_method, cartdata, shipping_address} =
     req.body;
 
+    console.log(cartdata)
+    
+    
   try {
     const products = cartdata.map((item) => ({
       product: item.productId._id,
       qty: item.quantity,
+      size:item.selectedSize,
       price: item.price,
       discount: 0,
       total_price: item.price,
-      order_status: "Pending",
     }));
 
     // Create a new order
     const order = new Order({
       user,
       order_items: products,
+      order_status: "Pending",
       total_amount: subtotal,
       shipping_address,
       payment_method,
@@ -29,7 +33,7 @@ const submitCheckout = async (req, res) => {
     });
 
     await order.save();
-    console.log("Order created:", order);
+    // console.log("Order created:", order);
 
     // Update the cart to remove purchased items
     const productIds = cartdata.map((item) => item.productId._id.toString());
@@ -49,18 +53,23 @@ const submitCheckout = async (req, res) => {
       }
     );
 
-    console.log("Cart items removed successfully for user:", user);
+    // console.log("Cart items removed successfully for user:", user);
 
     // Update product stock based on purchased quantities and sizes
     for (let item of cartdata) {
       const { productId, selectedSize, quantity } = item;
       await ProductData.updateOne(
         { _id: productId },
-        { $inc: { [`sizes.${selectedSize}`]: -quantity } }
+        {
+          $inc: {
+            [`sizes.${selectedSize}`]: -quantity, // Reduce size-specific stock
+            totalStock: -quantity,                 // Reduce total stock
+          },
+        }
       );
     }
 
-    console.log("Product stock updated successfully.");
+    // console.log("Product stock updated successfully.");
 
     res
       .status(201)

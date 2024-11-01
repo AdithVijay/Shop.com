@@ -98,13 +98,13 @@ export default function Orders() {
                         </Button>
                       ) : (
                         <button 
-                        class="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-100 transition-colors"
+                        className="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-100 transition-colors"
                       >
                         Return
                       </button>
                       )}    
                       <button 
-                          class="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
+                          className="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
                         >
                           Invoice
                         </button>
@@ -118,7 +118,7 @@ export default function Orders() {
                         : "text-green-600"
                     }`}
                   >
-                    Status: {order.payment_status}
+                    Status: {order.order_status}
                   </p>
                 </div>
               ))}

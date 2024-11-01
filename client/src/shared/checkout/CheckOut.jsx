@@ -30,7 +30,7 @@ const CheckOut = () => {
     async function fetchAdress(){
         try {
             const response = await axiosInstance.get(`/user/fetchuseraddress/${user}`)
-            console.log(response);
+            // console.log(response);
             setadress(response.data) 
             setrelaod(false)
         } catch (error) {
@@ -43,7 +43,7 @@ const CheckOut = () => {
         try {
           const response = await axiosInstance.get(`/user/cartdata/${user}`);
           console.log("resposnsss",response)
-          console.log("response from the server", response.data.items);
+          console.log("response from the server", response.data.items)
           setcartdata(response.data.items)         
           const calculatedSubtotal = response.data.items.reduce(
             (acc, item) => acc + item.totalItemPrice,

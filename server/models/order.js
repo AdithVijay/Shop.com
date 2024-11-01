@@ -3,14 +3,21 @@ const mongoose = require("mongoose")
 const order_schema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user",
+    ref: "User",
     required: true,
+  },
+  order_id: {
+    type: String,
   },
   order_items: [
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
+        required: true,
+      },
+      size: {
+        type: String,
         required: true,
       },
       qty: {
@@ -33,14 +40,14 @@ const order_schema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-      order_status: {
-        type: String,
-        required: true,
-        enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
-        default: "Pending",
-      },
     },
   ],
+  order_status: {
+    type: String,
+    required: true,
+    enum: ["Pending", "Shipped", "Delivered", "Cancelled"],
+    default: "Pending",
+  },
   total_amount: {
     type: Number,
     required: true,
@@ -73,11 +80,11 @@ const order_schema = new mongoose.Schema({
     default: 0,
     min: [0, "Discount cannot be negative"],
     max: [100, "Discount cannot exceed 100%"],
-    default:0,
+    default: 0,
   },
   coupon_discount: {
     type: Number,
-    default:0,
+    default: 0,
   },
   shipping_fee: {
     type: Number,
@@ -106,6 +113,13 @@ order_schema.pre("save", function (next) {
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 7); // 7 days after order placement
     this.delivery_by = deliveryDate;
+  }
+  next();
+});
+order_schema.pre("save", function (next) {
+  if (!this.order_id) {
+    const uniqueId = `STC${Date.now()}${Math.floor(Math.random() * 1000)}`;
+    this.order_id = uniqueId;
   }
   next();
 });

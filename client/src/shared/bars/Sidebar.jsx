@@ -10,7 +10,7 @@ const Sidebar = () => {
   const menuItems = [
     { name: 'Dashboard', icon: <Home size={16} />, path: '/login' },
     { name: 'Products', icon: <Package size={16} />, path: '/productlist' },
-    { name: 'Order Lists', icon: <List size={16} />, path: '/orders' },
+    { name: 'Order Lists', icon: <List size={16} />, path: '/admin-orders' },
     { name: 'Users', icon: <Users size={16} />, path: '/usermanagement' },
     { name: 'Sales Report', icon: <BarChart2 size={16} />, path: '/sales' },
     { name: 'Coupons', icon: <Tag size={16} />, path: '/coupons' },
