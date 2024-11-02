@@ -10,6 +10,7 @@ import ProductEdit from '@/pages/adminpages/product/ProductEdit'
 import { Toaster } from '@/components/ui/sonner'
 import AdminHome from '@/protect/AdminHome'
 import AdminReturnLogin from '@/protect/AdminReturnLogin'
+import OrderListing from '@/pages/adminpages/orders/OrderListing'
 const AdminRoute = () => {
   return (
     <div>
@@ -54,8 +55,12 @@ const AdminRoute = () => {
               <ProductEdit/>
               </AdminHome>
               }></Route>
+            <Route path='/admin-orders' element={
+                    <AdminHome>
+              <OrderListing/>
+              </AdminHome>
+              }></Route>
           </Routes>
-
         <Toaster/>
     </div>
   )

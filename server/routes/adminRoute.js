@@ -7,6 +7,7 @@ const adminController = require("../controller/admin/adminController")
 const categoryController = require("../controller/admin/categoryController")
 const productController = require("../controller/admin/productController")
 const userController = require("../controller/admin/userController")
+const orderController = require("../controller/admin/orderController")
 
 
 
@@ -39,6 +40,9 @@ adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
  adminRoute.get("/fetchuserdata",userController.fetchUser)
  adminRoute.put("/listuser/:id",userController.listUser)
  adminRoute.put("/unlistuser/:id",userController.unlistUser)
+
+  //===================UPDATE ORDER STATUS================
+  adminRoute.patch("/change-status",orderController.updateOrderStatus)
 
 
 

@@ -93,9 +93,11 @@ const googleSignIn = async(req,res)=>{
     }
 }
 
+
+
 module.exports={
     fetchUser,
     listUser,
     unlistUser,
-    googleSignIn
+    googleSignIn,
 }

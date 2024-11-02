@@ -94,7 +94,8 @@ const getOrderDetails = async (req, res) => {
       .populate({
         path: "order_items.product",
       })
-      .populate("shipping_address");
+      .populate("shipping_address")
+      .populate("user")
 
     if (!order || order.length === 0) {
       return res
