@@ -326,6 +326,7 @@ const createPasswordResetOTP = async(req,res)=>{
 //=====================================CREATING OTP FOR PASSWORD RESET================================
 const verifyPasswordResetOTP = async(req,res)=>{
   const {email,otp} = req.body
+  const user = await User.find({email})
   const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
   console.log("the response is",response)
   if (response.length === 0) {
@@ -342,16 +343,39 @@ const verifyPasswordResetOTP = async(req,res)=>{
       message: "The OTP is not valid",
     });
   }
-  return res.json({message:"Otp is Verified"})
+  return res.json({message:"Otp is Verified",data:user})
+}
+
+//=====================================PASSWORD RESETING================================
+const resetPassword = async(req,res)=>{
+  try {
+    const { id, password } = req.body;
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const hashedPassword =await securePassword(password)
+
+    user.password = hashedPassword;
+    await user.save();
+
+    // Respond with a success message
+    res.status(200).json({ message: "Password has been successfully reset." });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "An error occurred while resetting the password. Please try again later." });
+  }
 }
 
 //========================DATA DISPLAY IN USERPROFILE===================
   const retrieveUserData = async(req,res)=>{
+    console.log(req.params.id);
     const id = req.params.id
     const user =await User.findById(id)
     return res.status(200).json(user)
 }
-  
 
 
 module.exports={
@@ -363,5 +387,6 @@ module.exports={
     googleLogin,
     retrieveUserData,
     createPasswordResetOTP,
-    verifyPasswordResetOTP
+    verifyPasswordResetOTP,
+    resetPassword
 }

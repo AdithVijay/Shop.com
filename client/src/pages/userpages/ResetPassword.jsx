@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axiosInstance from "../../config/axiosInstance";
 import { FaGoogle, FaTwitter } from "react-icons/fa";
 import dp2 from "../../assets/dp2.jpg";
@@ -8,45 +8,27 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addUser } from "@/redux/Userslice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { OTPVerification } from "@/components/ui/OTPVerification";
-const ForgotPass = () => {
- 
-  const [email, setemail] = useState("");
-  const [isOTPDialogOpen, setIsOTPDialogOpen] = useState(false);
+const ResetPassword = () => {
+  const [password, setpassword] = useState("");
+  const [newPassword, setnewPassword] = useState("");
   const navigate = useNavigate()
+  const {id} = useParams()
+  console.log(id);
 
 
-
-// ======================OTP SENDING========================
+// ======================Login========================
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting:", { email })
     try {
-      const response = await axiosInstance.post("/user/password-forgot-otp",{ email });
+      const response = await axiosInstance.post("/user/reset-password",{ id,password });
       console.log("response from server", response.data)
-      setIsOTPDialogOpen(true);
-      toast(response.data.message)
+      toast.success(response.data.message)
+      navigate("/login")
     } catch (error) {
       toast.error(error.response.data.message);
     }
-  };
-
-  //====================VERIFYING OTP============================
-  const handleOTPVerify =async (otp) => {
-    console.log('OTP verified:', otp);
-    try {
-      const response = await axiosInstance.post("/user/verify-otp",{email,otp});
-      console.log("resposnse after veryifyihng otp",response.data)
-      toast(response.message)
-      const id =  response.data.data[0]._id
-      navigate(`/password-reset/${id}`)
-    } catch (error) {
-        console.log(error);
-      console.log("Error da response:", error.response)
-    }
-    setIsOTPDialogOpen(false)
   };
 
   return (
@@ -58,7 +40,7 @@ const ForgotPass = () => {
             <img className="w-24" src={logo} alt="" />
           </div>
 
-          <h1 className="text-xl font-bold mb-2">Forgot password?</h1>
+          <h2 className="text-xl font-bold mb-2">Reset Your Password</h2>
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
          
@@ -67,14 +49,30 @@ const ForgotPass = () => {
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 mb-1"
                 >
-                  Email
+                  New Password
                 </label>
                 <input
-                  id="email"
-                  type="email"
+                  id="password"
+                  type="password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
-                  onChange={(e) => setemail(e.target.value)}
+                  onChange={(e) => setnewPassword(e.target.value)}
+                />
+              </div>
+         
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Confirm Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  required
+                  onChange={(e) => setpassword(e.target.value)}
                 />
               </div>
             </div>
@@ -83,15 +81,16 @@ const ForgotPass = () => {
             //   onClick={handleSubmit}
               className="w-full mt-6 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-black hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             >
-              Verify Email
+              Reset Password
             </button>
           </form>
-          <OTPVerification
-            isOpen={isOTPDialogOpen}
-            onClose={() => setIsOTPDialogOpen(false)}
-            onVerify={handleOTPVerify}
-            email={email} // Pass the email to the OTPVerification component
-            />
+
+
+            
+
+  
+
+        
         </div>
 
         {/* Right Section - Image */}
@@ -118,6 +117,11 @@ const ForgotPass = () => {
                   strokeLinejoin="round"
                 />
               </svg>
+              <blockquote className="text-lg font-medium mb-3">
+                "Untitled Labs were a breeze to work alongside, we can't
+                recommend them enough. We launched 6 months earlier than
+                expected and are growing 30% MoM."
+              </blockquote>
               <p className="font-semibold">Amélie Laurent</p>
               <p className="text-xs opacity-80">Founder, Sisyphus</p>
             </div>
@@ -160,4 +164,4 @@ const ForgotPass = () => {
   );
 };
 
-export default ForgotPass;
+export default ResetPassword;
