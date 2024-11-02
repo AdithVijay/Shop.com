@@ -1,4 +1,3 @@
-import axiosInstance from '@/config/axiosInstance'
 import React from 'react'
 import { Link } from 'react-router-dom'
 

@@ -85,17 +85,17 @@ export default function FilterBar() {
           </div>
         )}
       </div>
-    );
-  };
+    )
+  }
 
   return (
-    <>
+    <div className="">
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="md:hidden fixed bottom-4 right-4 bg-white p-3 rounded-full shadow-lg z-50 flex items-center gap-2"
       >
-        <SlidersHorizontal className="h-5 w-5" />
+        <SlidersHorizontal className="h-5 w-5 " />
         <span>Filters</span>
       </button>
 
@@ -149,6 +149,6 @@ export default function FilterBar() {
           onClick={() => setIsOpen(false)}
         />
       )}
-    </>
+    </div>
   );
 }

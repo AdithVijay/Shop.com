@@ -20,9 +20,9 @@ export default function Card4() {
 
   return (
     <section className="py-12">
-      <div className=" flex container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" flex container mx-auto px-4 sm:px-6">
       <FilterBar/>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
           {productData.map((product) => {
             if (product.isListed) {
               return (
