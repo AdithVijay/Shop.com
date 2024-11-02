@@ -1,17 +1,32 @@
 import axiosInstance from '@/config/axiosInstance'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import FilterBar from '../bars/FilterBar';
 
-export default function Card3({ productData }) {
+export default function Card4() {
+
+  const [productData, setproductData] = useState([]);
+  console.log("home");
+  
+  useEffect(() => {
+    async function fetchData(){
+      const response = await axiosInstance.get("admin/getproducts")
+      const data = response.data.data
+      setproductData(data)
+    }
+    fetchData()
+  }, []);
+
+
   return (
     <section className="py-12">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">Top Selling</h2>
+      <div className=" flex container mx-auto px-4 sm:px-6 lg:px-8">
+      <FilterBar/>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 justify-center">
-          {productData.slice(2, 6).map((product) => {
+          {productData.map((product) => {
             if (product.isListed) {
               return (
-                <Link to={"/shop"} key={product._id}>
+                <Link key={product._id} to={`/display/${product._id}`}>
                   <div
                     className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg mx-auto"
                     style={{ maxWidth: '290px', maxHeight: '850px' }}

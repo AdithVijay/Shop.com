@@ -8,7 +8,7 @@ import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { addUser } from "@/redux/Userslice";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 const UserLogin = () => {
  
@@ -119,9 +119,9 @@ const UserLogin = () => {
 
           <p className="mt-6 text-center text-sm text-gray-600">
             Don't have an account?{" "}
-            <a href="/signup" className="font-medium text-black hover:text-gray-800">
+            <Link to={"/signup"} className="font-medium text-black hover:text-gray-800">
               Sign in
-            </a>
+            </Link>
           </p>
         </div>
 

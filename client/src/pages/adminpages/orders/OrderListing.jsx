@@ -91,7 +91,7 @@ const OrderListing = () => {
                       {order._id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {order.user.name}
+                      { order.user?.name ? order.user?.name : "Deleted Name"}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="space-y-3">

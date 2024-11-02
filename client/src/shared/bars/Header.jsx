@@ -5,7 +5,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { Menu, Search, User } from "lucide-react"
 import shopco from "../../assets/shopco.png"
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import UserMenuDropdown from './Dropdow'
 import { useDispatch } from "react-redux"
 import { logoutUser } from '@/redux/Userslice'
@@ -42,10 +42,10 @@ const Header = () => {
 
           {/* Navigation Links - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-4">
-            <a href="/" className="text-sm font-medium text-muted-foreground hover:text-primary">Home</a>
-            <a href="/shop" className="text-sm font-medium text-muted-foreground hover:text-primary">Shop</a>
-            <a href="/our-story" className="text-sm font-medium text-muted-foreground hover:text-primary">Our Story</a>
-            <a href="/contact-us" className="text-sm font-medium text-muted-foreground hover:text-primary">Contact Us</a>
+            <Link to={"/"} className="text-sm font-medium text-muted-foreground hover:text-primary">Home</Link>
+            <Link to={"/shop"} className="text-sm font-medium text-muted-foreground hover:text-primary">Shop</Link>
+            <Link to={"/our-story"} className="text-sm font-medium text-muted-foreground hover:text-primary">Our Story</Link>
+            <Link to={"/contact-us"} className="text-sm font-medium text-muted-foreground hover:text-primary">Contact Us</Link>
           </nav>
 
           {/* Search Bar and Icons */}

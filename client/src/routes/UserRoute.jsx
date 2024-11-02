@@ -15,6 +15,7 @@ import Wishlist from "@/shared/wishlist/Wishlist";
 import CheckOutPage from "@/pages/userpages/CheckOutPage";
 import ForgotPass from "@/pages/userpages/ForgotPass";
 import ResetPassword from "@/pages/userpages/ResetPassword";
+import Shop1 from "@/pages/userpages/Shop1";
 
 const UserRoute = () => {
   return (
@@ -47,16 +48,9 @@ const UserRoute = () => {
         <Route path="/password-forgot" element={<ForgotPass/>}></Route>
         <Route path="/password-reset/:id" element={<ResetPassword/>}></Route>
 
-      {/* THIS IS THE SHOPIING PAGE */}
-        <Route
-          path="/shop"
-          element={
-            <ProtecHome>
-              <ShoppingPage />
-            </ProtecHome>
-          }
-        ></Route>
-
+        {/* THIS IS THE SHOPIING PAGE */}
+        {/* <Route path="/shop" element={<ShoppingPage />}></Route> */}
+        <Route path="/shop" element={<Shop1/>}></Route>
         <Route path="/display/:id" element={<DisplayPoductMain />}></Route>
         <Route path="/addtocart" element={<AddToCart />}></Route>
         <Route path="/wishlist" element={<Wishlist />}></Route>

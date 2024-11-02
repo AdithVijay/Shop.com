@@ -5,7 +5,7 @@ import logo from "../../assets/logo.png";
 import { OTPVerification } from "@/components/ui/OTPVerification";
 import { GoogleLogin } from '@react-oauth/google';
 import { jwtDecode } from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "@/redux/Userslice";
@@ -251,12 +251,12 @@ const UserSignup = () => {
             </div>
 
           </div>
-
+            
           <p className="mt-6 text-center text-sm text-gray-600">
             Already have an account?{" "}
-            <a href="/login" className="font-medium text-black hover:text-gray-800">
+            <Link to={"/login"} className="font-medium text-black hover:text-gray-800">
               Log in
-            </a>
+            </Link>
           </p>
         </div>
 
