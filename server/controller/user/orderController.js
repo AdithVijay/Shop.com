@@ -88,7 +88,10 @@ const submitCheckout = async (req, res) => {
 const getOrderDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log("Fetching order details for user ID:", id);
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 4; // Default limit is 10 orders per page
+
+    const skip = (page - 1) * limit; // Calculate number of documents to skip
 
     const order = await Order.find({ user: id })
       .populate({
@@ -96,15 +99,23 @@ const getOrderDetails = async (req, res) => {
       })
       .populate("shipping_address")
       .populate("user")
+      .skip(skip)   // Apply skip for pagination
+      .limit(limit);
+
+      const totalOrders = await Order.countDocuments({ user: id });
+      const totalPages = Math.ceil(totalOrders / limit);
 
     if (!order || order.length === 0) {
       return res
         .status(404)
         .json({ message: "No orders found for this user." });
     }
-    console.log("Order details retrieved:", order);
 
-    return res.status(200).json(order);
+    return res.status(200).json({
+      order,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.error("Error fetching order details:", error);
     return res

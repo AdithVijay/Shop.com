@@ -7,9 +7,11 @@ import axiosInstance from "@/config/axiosInstance";
 
 const OrderListing = () => {
   const navigate = useNavigate();
-  const [orderDatas, setOrderData] = useState(null);
+  const [orderDatas, setOrderData] = useState([]);
   const [statusChange, setstatusChange] = useState("");
-  
+  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [totalPages, setTotalPages] = useState(1);
+
   const user = useSelector((state) => state.user.users);
  
   //=========================USEEFFECT======================
@@ -17,17 +19,31 @@ const OrderListing = () => {
     fetchOrderData();
   }, []);
 
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      fetchOrderData(currentPage - 1);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      fetchOrderData(currentPage + 1);
+    }
+  };
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
-    async function fetchOrderData() {
+    async function fetchOrderData(page=1) {
         try {
-            const response = await axiosInstance.get(`user/retrieveorder/${user}`);
-            setOrderData(response.data);   
+            const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=2`);
+            setOrderData(response.data.order)
+            setCurrentPage(response.data.currentPage);
+            setTotalPages(response.data.totalPages);
+            console.log(response);
         } catch (error) {
             console.log(error);
         }
       }
-      console.log(orderDatas)
+      console.log("order data ",orderDatas)
 
    //=========================CHANGING THE STATUS=======================
       async function updateOrderStatus(e,productId,orderId){
@@ -49,9 +65,6 @@ const OrderListing = () => {
 
       }
 
-      
-
-      
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -150,6 +163,23 @@ const OrderListing = () => {
               </tbody>
             </table>
           </div>
+          <div className="flex justify-between items-center p-4">
+          <button
+    disabled={currentPage === 1}
+    onClick={handlePreviousPage}
+    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  >
+    Previous
+  </button>
+  <span>Page {currentPage} of {totalPages}</span>
+  <button
+    disabled={currentPage === totalPages}
+    onClick={handleNextPage}
+    className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+  >
+    Next
+  </button>
+        </div>
         </div>
       </div>
     </div>

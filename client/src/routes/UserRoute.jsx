@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserLogin from "@/pages/userpages/UserLogin";
 import UserSignup from "@/pages/userpages/UserSignup";
-import OtpSignup from "@/shared/OtpSignup";
+// import OtpSignup from "@/shared/OtpSignup";
 import Home from "@/pages/userpages/Home";
 import Landing from "@/pages/userpages/Landing";
 import { Toaster } from "@/components/ui/sonner";
@@ -43,7 +43,7 @@ const UserRoute = () => {
         ></Route>
 
         <Route path="/signup" element={<UserSignup />}></Route>
-        <Route path="/otp" element={<OtpSignup />}></Route>
+        {/* <Route path="/otp" element={<OtpSignup />}></Route> */}
         <Route path="/login" element={<UserLogin />}></Route>
         <Route path="/password-forgot" element={<ForgotPass/>}></Route>
         <Route path="/password-reset/:id" element={<ResetPassword/>}></Route>

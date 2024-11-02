@@ -12,6 +12,8 @@ export default function UserManagement() {
     const [listUser, setlistUser] = useState([]);
   const userDataInState = useSelector((state)=>state.user.users)
   const dispatch = useDispatch()
+
+
   useEffect(() => {
     async function fetUser(){
         try{
@@ -24,6 +26,8 @@ export default function UserManagement() {
     }
     fetUser()
   }, []);
+
+  
   async function handleList(id) {
     try {
       const response = await axiosInstance.put(`/admin/listuser/${id}`);
@@ -134,35 +138,7 @@ export default function UserManagement() {
               </table>
             </div>
 
-            <div className="mt-6 flex justify-between items-center">
-              <button
-                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                className="flex items-center px-3 py-1 border rounded text-sm"
-                disabled={currentPage === 1}
-              >
-                <ChevronLeft size={16} className="mr-1" /> Previous
-              </button>
-              <div className="flex space-x-2">
-                {[1, 2, 3, '...', 8, 9, 10].map((page, index) => (
-                  <button
-                    key={index}
-                    onClick={() => typeof page === 'number' && setCurrentPage(page)}
-                    className={`px-3 py-1 border rounded text-sm ${
-                      currentPage === page ? 'bg-blue-600 text-white' : ''
-                    }`}
-                    disabled={typeof page !== 'number'}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-              <button
-                onClick={() => setCurrentPage(prev => prev + 1)}
-                className="flex items-center px-3 py-1 border rounded text-sm"
-              >
-                Next <ChevronRight size={16} className="ml-1" />
-              </button>
-            </div>
+  {/* pagenation here  */}
           </div>
         </div>
       </div>
