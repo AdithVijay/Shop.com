@@ -13,6 +13,7 @@ import DisplayPoductMain from "@/pages/userpages/DisplayPoductMain";
 import AddToCart from "@/pages/userpages/AddToCart";
 import Wishlist from "@/shared/wishlist/Wishlist";
 import CheckOutPage from "@/pages/userpages/CheckOutPage";
+import ForgotPass from "@/pages/userpages/ForgotPass";
 
 const UserRoute = () => {
   return (
@@ -42,6 +43,7 @@ const UserRoute = () => {
         <Route path="/signup" element={<UserSignup />}></Route>
         <Route path="/otp" element={<OtpSignup />}></Route>
         <Route path="/login" element={<UserLogin />}></Route>
+        <Route path="/password-forgot" element={<ForgotPass/>}></Route>
 
       {/* THIS IS THE SHOPIING PAGE */}
         <Route

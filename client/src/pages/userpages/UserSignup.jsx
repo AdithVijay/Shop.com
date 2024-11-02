@@ -67,7 +67,7 @@ const UserSignup = () => {
 //====================Submiting OTP INITAL ============================
 
   const handleSubmit = async (e) => {  
-    e.preventDefault();
+    e.preventDefault()
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
@@ -80,7 +80,7 @@ const UserSignup = () => {
     try {
       const response = await axiosInstance.post("/user/otp",{ email });
       console.log(response.data);
-      console.log(response.message);
+      console.log(response.message)
        setIsOTPDialogOpen(true);
        toast.success("...enter the otp sent")
     } catch (error) {
@@ -93,7 +93,7 @@ const UserSignup = () => {
 //====================VERIFYING OTP============================
 
   const handleOTPVerify =async (otp) => {
-    console.log('OTP verified:', otp);
+    console.log('OTP verified:', otp)
     try {
       const response = await axiosInstance.post("/user/create",{name,email,password,phonenumber,otp});
       console.log(response.data);

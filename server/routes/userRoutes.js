@@ -15,7 +15,9 @@ userRoute.post("/otp",userController.sendotp);
 userRoute.post("/resendotp",userController.resendOtp)
 userRoute.post("/googlesignin",userController.googleSignIn);
 userRoute.post("/login",userController.login);
-userRoute.post("/googleLogin",userController.googleLogin);
+userRoute.post("/googleLogin",userController.googleLogin)
+userRoute.post("/password-forgot-otp",userController.createPasswordResetOTP)
+userRoute.post("/verify-otp",userController.verifyPasswordResetOTP)
 
 //======================DATA TO BE DISPLAYED IN CARDS===========
 userRoute.get("/getproduct/:id",productController.fetchProduct);
