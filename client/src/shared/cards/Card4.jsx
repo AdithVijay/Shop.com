@@ -6,8 +6,31 @@ import FilterBar from '../bars/FilterBar';
 export default function Card4() {
 
   const [productData, setproductData] = useState([]);
-  console.log("home");
-  
+  const initialValues = {
+    Category : [],
+    fit : []
+  }
+  const [selectedFilters, setSelectedFilters] = useState(initialValues);
+
+  const handleFilterChange = (title, value) => {
+    setSelectedFilters((prev) => {
+      const updatedFilters = {...prev}
+      if (updatedFilters[title].includes(value)) {
+        updatedFilters[title] = updatedFilters[title].filter(item => item !== value)
+      } else {
+        updatedFilters[title] = [...updatedFilters[title], value]
+      }
+      return updatedFilters
+    })
+
+    // ------------------------------------------------------------------
+    console.log("Datas is very", selectedFilters)
+  };
+  const resetFilters = () => {
+    setSelectedFilters(initialValues);
+  };
+
+  //=============================================  
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
@@ -18,10 +41,11 @@ export default function Card4() {
   }, []);
 
 
+
   return (
     <section className="py-12">
       <div className=" flex container mx-auto px-4 sm:px-6">
-      <FilterBar/>
+      <FilterBar handleFilterChange={handleFilterChange} resetFilters={resetFilters} selectedFilters={selectedFilters}/>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center">
           {productData.map((product) => {
             if (product.isListed) {

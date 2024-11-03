@@ -16,6 +16,7 @@ import CheckOutPage from "@/pages/userpages/CheckOutPage";
 import ForgotPass from "@/pages/userpages/ForgotPass";
 import ResetPassword from "@/pages/userpages/ResetPassword";
 import Shop1 from "@/pages/userpages/Shop1";
+import NewFilter from "@/shared/bars/NewFilter";
 
 const UserRoute = () => {
   return (
@@ -56,6 +57,9 @@ const UserRoute = () => {
         <Route path="/wishlist" element={<Wishlist />}></Route>
         <Route path="/checkout" element={<CheckOutPage/>}></Route>
         
+          
+        <Route path="/filter" element={<NewFilter/>}></Route>
+
       </Routes>
 
       <Toaster />

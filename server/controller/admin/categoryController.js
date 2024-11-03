@@ -105,7 +105,20 @@ const handleUpdate = async (req,res)=>{
     }
 }
 
-
+const listCategoryForFiltering = async(req,res)=>{
+    try {
+        const category = await Category.find()
+        console.log(category);
+        const listedCategory = category.filter((x)=>x.isListed==true)
+        if(listedCategory){
+            return res.json(listedCategory)
+        }else{
+            return res.json("no categories listed")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
    addCategory,
@@ -113,7 +126,8 @@ module.exports = {
    listCategory,
    unListCategory,
    fetchCategory,
-   handleUpdate
+   handleUpdate,
+   listCategoryForFiltering
 }
 
 

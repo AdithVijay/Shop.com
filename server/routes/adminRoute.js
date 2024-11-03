@@ -44,6 +44,8 @@ adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
   //===================UPDATE ORDER STATUS================
   adminRoute.patch("/change-status",orderController.updateOrderStatus)
 
+  //==============LISTING CATEGORY IN THE FILTER BAR========
+  adminRoute.get("/categories",categoryController.listCategoryForFiltering)
 
 
 module.exports = adminRoute; 

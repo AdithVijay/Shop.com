@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
 import { SlidersHorizontal ,ChevronDown} from "lucide-react";
+import axiosInstance from "@/config/axiosInstance";
 
-export default function FilterBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const initialValues = {
-    os : [],
-    brand : []
-  }
-  const [selectedFilters, setSelectedFilters] = useState(initialValues);
+export default function FilterBar({selectedFilters,handleFilterChange,resetFilters}) {
+  const [isOpen, setIsOpen] = useState(false)
+
   const [isFilterCategoryOpen, setIsFilterCategoryOpen] = useState(false)
   const [isFilterFitOpen, setIsFilterFitOpen] = useState(false)
-
+  const [categoryData,setCategoryData]=useState([])
+  const [sleveData,setSleveData]=useState([])
   const filterCategoryChange = () => {
     setIsFilterCategoryOpen(!isFilterCategoryOpen)
   }
@@ -19,43 +17,32 @@ export default function FilterBar() {
     setIsFilterFitOpen(!isFilterFitOpen)
   }
 
-  useEffect(() => {
-    console.log(selectedFilters)
-  }, [selectedFilters])
+  useEffect(()=>{
+    fetchData()
+  },[])
+    
 
-  // This would come from your database
+
+  async function fetchData(){
+    const response = await axiosInstance.get("admin/categories")
+    console.log("this is the response for category", response);
+    const categoryData = response.data.map(cat => cat.category)
+    setCategoryData(categoryData)
+  }
+
+
   const filterData = {
-    Category: [
-      { id: "android", label: "Android" },
-      { id: "ios", label: "iOS" },
-      { id: "windows", label: "Windows" },
-      { id: "other", label: "Other" },
-    ],
+    Category: categoryData.map(category => ({ label: category })),
     fit: [
-      { id: "apple", label: "Apple" },
-      { id: "snapdragon", label: "Snapdragon" },
-      { id: "mediatek", label: "Mediatek" },
-      { id: "exynos", label: "Exynos" },
+      {label: "Full sleeve" },
+      {label: "Half sleeve" },
+      {label: "High Sleeve" },
+      {label: "Sleeveless" },
     ]
-  };
+  }
 
-  const handleFilterChange = (title, value) => {
-    setSelectedFilters((prev) => {
-      const updatedFilters = {...prev}
-      if (updatedFilters[title].includes(value)) {
-        updatedFilters[title] = updatedFilters[title].filter(item => item !== value)
-      } else {
-        updatedFilters[title] = [...updatedFilters[title], value]
-      }
-      return updatedFilters
-    })
-  };
-
-  const resetFilters = () => {
-    setSelectedFilters(initialValues);
-  };
-
-  const FilterSection = ({ title, items, isOpen, handleClickChange }) => {
+ 
+  const FilterSection = ({ selectedFilters,handleFilterChange,title, items, isOpen, handleClickChange }) => {
 
     return (
       <div className="mb-6">
@@ -70,8 +57,8 @@ export default function FilterBar() {
         </div>
         {isOpen && (
           <div className="space-y-2">
-            {items.map(({ id, label }, index) => (
-              <label key={id} className="flex items-center space-x-2">
+            {items.map(({ label }, index) => (
+              <label key={label} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   value={label}
@@ -85,11 +72,11 @@ export default function FilterBar() {
           </div>
         )}
       </div>
-    )
-  }
+    );
+  };
 
   return (
-    <div className="">
+    <div className=" mt-10">
       {/* Mobile Toggle Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
@@ -120,16 +107,20 @@ export default function FilterBar() {
           </div>
 
           <FilterSection
-            title="os"
+            title="Category"
             items={filterData.Category}
             isOpen={isFilterCategoryOpen}
             handleClickChange={filterCategoryChange}
+            selectedFilters={selectedFilters}
+            handleFilterChange={handleFilterChange}
           />
           <FilterSection
-            title="brand"
+            title="fit"
             items={filterData.fit}
             isOpen={isFilterFitOpen}
             handleClickChange={filterFitChange}
+            selectedFilters={selectedFilters}
+            handleFilterChange={handleFilterChange}
           />
           
 

@@ -381,6 +381,7 @@ export default function ProductAdd() {
                     <option value="">Select Sleeve Type</option>
                     <option value="Full sleeve">Full sleeve</option>
                     <option value="Half sleeve">Half sleeve</option>
+                    <option value="High Sleeve">High Sleeve</option>
                     <option value="Sleeveless">Sleeveless</option>
                   </select>
                 </div>
