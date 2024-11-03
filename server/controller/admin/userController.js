@@ -4,12 +4,24 @@ const User = require( "../../models/usersModel");
 
 const fetchUser = async(req,res)=>{
     try {
+        const page = parseInt(req.query.page) || 1; // Default to page 1
+        const limit = parseInt(req.query.limit) || 4; // Default limit is 10 orders per page
+        const skip = (page - 1) * limit; 
+
         const users = await User.find()
-        // console.log(users);
+        .skip(skip)   // Apply skip for pagination
+        .limit(limit);
+
+        const totalusers = await User.countDocuments()
+        const totalPages = Math.ceil(totalusers / limit);
+
         if(!users){
             return res.status(404).json({success:false, message: "User data not found" })
         }else{
-            return res.status(200).json({success:true,message:"User is being found ",  data: users })
+            return res.status(200).json({success:true,message:"User is being found ",  
+            data: users, 
+            currentPage: page,
+            totalPages, })
         }
     } catch (error) {
         console.log(error);

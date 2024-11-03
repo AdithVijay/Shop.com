@@ -6,28 +6,47 @@ import axiosInstance from '@/config/axiosInstance';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '@/redux/Userslice';
 export default function UserManagement() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [filterBy, setFilterBy] = useState('all');
   const [userData, setuserData] = useState([]);
     const [listUser, setlistUser] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1); // Track the current page
+    const [totalPages, setTotalPages] = useState(1);
   const userDataInState = useSelector((state)=>state.user.users)
   const dispatch = useDispatch()
 
-
   useEffect(() => {
-    async function fetUser(){
+    fetUser()
+  }, []);
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      fetUser(currentPage - 1);
+    }
+  };
+  
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      fetUser(currentPage + 1);
+    }
+  };
+
+
+    async function fetUser(page=1){
         try{
-            const response = await axiosInstance.get("/admin/fetchuserdata")
+            const response = await axiosInstance.get(`/admin/fetchuserdata?page=${page}&limit=5`)
             console.log(response.data.data);
+            console.log(response);
             setuserData(response.data.data)
+            setCurrentPage(response.data.currentPage);
+            setTotalPages(response.data.totalPages);
         }catch(err){
             console.log(err);
         }
     }
-    fetUser()
-  }, []);
+ 
 
-  
+
+
   async function handleList(id) {
     try {
       const response = await axiosInstance.put(`/admin/listuser/${id}`);
@@ -139,6 +158,23 @@ export default function UserManagement() {
             </div>
 
   {/* pagenation here  */}
+        <div className="flex justify-between items-center p-4">
+          <button
+              disabled={currentPage === 1}
+              onClick={handlePreviousPage}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button
+              disabled={currentPage === totalPages}
+              onClick={handleNextPage}
+              className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            >
+              Next
+            </button>
+        </div>
           </div>
         </div>
       </div>
