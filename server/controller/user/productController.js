@@ -38,9 +38,14 @@ const fetchProduct = async(req,res)=>{
 const getFilteredProducts = async (req, res) => {
 
 try {
-    const { filters,searchQuery} = req.body; 
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 4; // Default limit is 10 orders per page
+    const skip = (page - 1) * limit; 
+    const { filters,searchQuery,sortOrder} = req.body; 
     console.log(searchQuery)
+    console.log(sortOrder);
     
+
     const categoryNames = filters.Category || [];
     const fitTypes = filters.fit || [];
 
@@ -49,7 +54,7 @@ try {
     const categoryIds = categories.map(cat => cat._id)
 
     const query = {
-      isListed: true,
+      isListed: true, 
     };
 
     if (categoryIds.length > 0) {
@@ -66,9 +71,36 @@ try {
           { description: { $regex: searchQuery, $options: "i" } }    // Case-insensitive search in description
         ];
       }
-    const products = await ProductData.find(query).populate('category')
+
+      let sortCriteria = { }
+      switch(sortOrder){
+        case 'Price-Low-High':
+          sortCriteria.salePrice = 1;
+          break;
+        case 'Price-High-Low':
+          sortCriteria.salePrice = -1
+          break;
+        case 'New-Arrivals':
+          sortCriteria.createdAt = 1;
+          break;
+        case 'Name-A-to-Z':
+          sortCriteria.productName =1;
+          break;
+        case 'Name-Z-to-A':
+          sortCriteria.productName = -1;
+          break;
+        default:
+          sortCriteria = {}
+      }
+
+    const products = await ProductData.find(query).populate('category').sort(sortCriteria)
+    .skip(skip)   
+    .limit(limit);
+
+    const totalusers = await ProductData.countDocuments(query)
     
-        res.status(200).json({ success: true, products });
+    const totalPages = Math.ceil(totalusers/ limit);
+    res.status(200).json({ success: true, products,currentPage: page,totalPages });
       
    
   } catch (error) {

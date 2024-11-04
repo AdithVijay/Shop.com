@@ -21,7 +21,7 @@ const productSchema = new Schema({
   },
   sleeveType: {
     type: String,
-    enum: ['Full sleeve', 'Half sleeve', 'Sleeveless'],  // Only three types
+    enum: ['Full sleeve', 'Half sleeve', 'Sleeveless','High Sleeve'],  // Only three types
     required: true
   },
   sizes: {

@@ -33,7 +33,7 @@ export default function UserManagement() {
 
     async function fetUser(page=1){
         try{
-            const response = await axiosInstance.get(`/admin/fetchuserdata?page=${page}&limit=5`)
+            const response = await axiosInstance.get(`/admin/fetchuserdata?page=${page}&limit=4`)
             console.log(response.data.data);
             console.log(response);
             setuserData(response.data.data)

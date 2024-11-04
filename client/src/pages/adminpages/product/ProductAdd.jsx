@@ -185,10 +185,10 @@ export default function ProductAdd() {
     toast.success("addimng  the product please wait");
     const validationErrors = validateForm();
 
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    // if (Object.keys(validationErrors).length > 0) {
+    //   setErrors(validationErrors);
+    //   return;
+    // }
 
     if (product.images.filter((image) => image !== null).length < 4) {
       toast.error("Please add exactly 4 images before submitting.");

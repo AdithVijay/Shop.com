@@ -9,10 +9,10 @@ const fetchUser = async(req,res)=>{
         const skip = (page - 1) * limit; 
 
         const users = await User.find()
-        .skip(skip)   // Apply skip for pagination
+        .skip(skip)   
         .limit(limit);
 
-        const totalusers = await User.countDocuments()
+        const totalusers = await User.countDocuments();
         const totalPages = Math.ceil(totalusers / limit);
 
         if(!users){
