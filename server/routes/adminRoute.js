@@ -2,7 +2,7 @@ const express = require("express");
 const adminRoute = express.Router();
 
 
-const verifyAdmin = require( "../middleware/adminAuth");
+const verifyAdmin = require( "../middleware/adminAuth")
 const adminController = require("../controller/admin/adminController")
 const categoryController = require("../controller/admin/categoryController")
 const productController = require("../controller/admin/productController")
@@ -36,10 +36,10 @@ adminRoute.get("/getproducts",productController.gettingProducts)
 adminRoute.put("/listproduct/:id",productController.ListingProducts)
 adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
 
- //==================USERMANGMENT SIDE========================
- adminRoute.get("/fetchuserdata",userController.fetchUser)
- adminRoute.put("/listuser/:id",userController.listUser)
- adminRoute.put("/unlistuser/:id",userController.unlistUser)
+  //==================USERMANGMENT SIDE========================
+  adminRoute.get("/fetchuserdata",userController.fetchUser)
+  adminRoute.put("/listuser/:id",userController.listUser)
+  adminRoute.put("/unlistuser/:id",userController.unlistUser)
 
   //===================UPDATE ORDER STATUS================
   adminRoute.patch("/change-status",orderController.updateOrderStatus)
@@ -47,5 +47,6 @@ adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
   //==============LISTING CATEGORY IN THE FILTER BAR========
   adminRoute.get("/categories",categoryController.listCategoryForFiltering)
 
+  
 
 module.exports = adminRoute; 

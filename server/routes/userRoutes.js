@@ -49,4 +49,7 @@ userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE 
 userRoute.get("/vieworder/:id",orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
 userRoute.post("/changestatus",orderController.changeOrderStatus)//TO CHANGE STAUS OF ORDER IN OREDR.JSX
 
+//=============================TO DISPLAY THE FILTERED PRODUCTS==============================
+userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP
+
 module.exports = userRoute; 

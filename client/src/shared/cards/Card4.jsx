@@ -22,15 +22,15 @@ export default function Card4() {
       }
       return updatedFilters
     })
+  };
 
-    // ------------------------------------------------------------------
-    console.log("Datas is very", selectedFilters)
-  };
+  console.log("Datas is very", selectedFilters)
   const resetFilters = () => {
-    setSelectedFilters(initialValues);
-  };
+    setSelectedFilters(initialValues)
+  }
 
   //=============================================  
+
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
@@ -40,7 +40,7 @@ export default function Card4() {
     fetchData()
   }, []);
 
-
+  // console.log(productData);
 
   return (
     <section className="py-12">
