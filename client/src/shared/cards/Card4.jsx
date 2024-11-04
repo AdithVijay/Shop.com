@@ -25,6 +25,7 @@ export default function Card4() {
   };
 
   console.log("Datas is very", selectedFilters)
+  
   const resetFilters = () => {
     setSelectedFilters(initialValues)
   }

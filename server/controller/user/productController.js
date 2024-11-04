@@ -34,41 +34,48 @@ const fetchProduct = async(req,res)=>{
    return res.status(500).json({ success: false, message: "Server Error",});
 }
 
-//========================FILTERING THE PRODUCTS=========================
+//========================FILTERING THE PRODUCTS IN SHOP PAGE=========================
+const getFilteredProducts = async (req, res) => {
 
-const getFilteredProducts = async(req,res)=>{
-    try {
-        const { categories, sleeveTypes } = req.body;  // Changed to `req.body` to get JSON body data
-        
-        // Initialize the query with active products only
-        const query = { isListed: true };
+try {
+    const { filters } = req.body; 
+    console.log(filters);
+    console.log(filters.Category);
+    
 
-        // Step 1: Find Category IDs based on names if categories are provided
-        if (categories && categories.length > 0) {
-            // Fetch ObjectId values for the category names
-            const categoryObjects = await Category.find({ category: { $in: categories } });
-            console.log("Category Objects:", categoryObjects);
-            const categoryIds = categoryObjects.map(cat => cat._id);
-            query.category = { $in: categoryIds };  // Filter by these IDs
-        }
+    const categoryNames = filters.Category || [];
+    const fitTypes = filters.fit || [];
 
-        // Step 2: Add sleeveType filter if provided
-        if (sleeveTypes && sleeveTypes.length > 0) {
-            query.sleeveType = { 
-                $in: sleeveTypes.map(type => new RegExp(`^${type}$`, 'i')) 
-            };
-        }
 
-        // Step 3: Fetch the filtered products
-        const products = await ProductData.find(query).populate('category');
-        console.log(products);
-        
-        res.status(200).json({ success: true, data: products });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Server Error' });
+    const categories = await Category.find({ category: { $in: categoryNames } });
+    console.log(categories);
+    
+    const categoryIds = categories.map(cat => cat._id); 
+
+    const query = {
+      isListed: true,
+    };
+
+    if (categoryIds.length > 0) {
+      query.category = { $in: categoryIds };
     }
-}
+
+    if (fitTypes.length > 0) {
+      query.sleeveType = { $in: fitTypes };
+    }
+
+    const products = await ProductData.find(query).populate('category')
+
+
+    res.status(200).json({ success: true, products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).json({ success: false, message: 'Error fetching products', error: error.message });
+  }
+
+};
+
+
 
 module.exports = {
     relatedProducts,

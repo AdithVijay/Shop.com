@@ -105,6 +105,7 @@ const handleUpdate = async (req,res)=>{
     }
 }
 
+//================================TO DISPLAY ACTIVE CATOGORIES IN FILTER==============================
 const listCategoryForFiltering = async(req,res)=>{
     try {
         const category = await Category.find()
