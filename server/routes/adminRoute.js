@@ -47,6 +47,8 @@ adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
   //==============LISTING CATEGORY IN THE FILTER BAR========
   adminRoute.get("/categories",categoryController.listCategoryForFiltering)
 
-  
+  //============LISTING ORDER IN THE ORDER LISTING PAGE========
+  adminRoute.get("/retrieveorder",orderController.getOrderDetails)
+  adminRoute.post("/cancelorder/:id", orderController.cancelProduct);
 
 module.exports = adminRoute; 

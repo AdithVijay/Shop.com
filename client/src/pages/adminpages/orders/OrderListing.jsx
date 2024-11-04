@@ -8,13 +8,11 @@ import axiosInstance from "@/config/axiosInstance";
 const OrderListing = () => {
   const navigate = useNavigate();
   const [orderDatas, setOrderData] = useState([]);
-  const [statusChange, setstatusChange] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Track the current page
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const user = useSelector((state) => state.user.users);
- 
-  //=========================USEEFFECT======================
+
   useEffect(() => {
     fetchOrderData();
   }, []);
@@ -24,46 +22,54 @@ const OrderListing = () => {
       fetchOrderData(currentPage - 1);
     }
   };
-  
+
   const handleNextPage = () => {
     if (currentPage < totalPages) {
       fetchOrderData(currentPage + 1);
     }
   };
 
-  //=========================FETCHING THE DATA FROM BACKEND=======================
-    async function fetchOrderData(page=1) {
-        try {
-            const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=2`);
-            setOrderData(response.data.order)
-            setCurrentPage(response.data.currentPage);
-            setTotalPages(response.data.totalPages);
-            console.log(response);
-        } catch (error) {
-            console.log(error);
-        }
-      }
-      console.log("order data ",orderDatas)
+  async function fetchOrderData(page = 1) {
+    try {
+      const response = await axiosInstance.get(`admin/retrieveorder?page=${page}&limit=4`);
+      setOrderData(response.data.order);
+      setCurrentPage(response.data.currentPage);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
-   //=========================CHANGING THE STATUS=======================
-      async function updateOrderStatus(e,productId,orderId){
-
-        const newStatus = e.target.value;
-        console.log(productId,orderId);
-        const response = await axiosInstance.patch("/admin/change-status", {
-          orderId,
-          productId,
-          status: newStatus,
-        });
+  console.log(orderDatas);
   
-        if (response.status === 200) {
-          console.log("Order status updated successfully");
-          fetchOrderData(); // Refresh the order data after status update
-        } else {
-          console.error("Failed to update order status");
-        }
 
-      }
+  async function updateOrderStatus(e, orderId) {
+    console.log(orderId);
+    const newStatus = e.target.value;
+    const response = await axiosInstance.patch("/admin/change-status", {
+      orderId,
+      status: newStatus,
+    });
+
+    if (response.status === 200) {
+      fetchOrderData();
+    } else {
+      console.error("Failed to update order status");
+    }
+  }
+
+  async function cancelProduct(productId) {
+    try {
+      const response = await axiosInstance.post(`/admin/cancelorder/${productId}`);
+      fetchOrderData();
+    } catch (error) {
+      console.error("Error canceling product:", error);
+    }
+  }
+
+  function viewOrder(id){
+    navigate(`/admin-view-order/${id}`)
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -71,7 +77,12 @@ const OrderListing = () => {
       <div className="flex-grow p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 lg:p-8 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-800">Order List</h2>
+            <h2 className="text-2xl font-bold text-gray-800">Orders Management</h2>
+            <input
+              type="text"
+              placeholder="Search orders by ID, customer name, or email..."
+              className="mt-4 px-4 py-2 w-full border rounded"
+            />
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -84,79 +95,62 @@ const OrderListing = () => {
                     Customer
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
-                    Products
-                  </th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-500 uppercase">
                     Date
                   </th>
                   <th className="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase">
                     Total
                   </th>
-                  <th className="px-6 py-3 text-right text-sm font-medium text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase">
+                    Status
+                  </th>
+                  <th className="px-6 py-3 text-center text-sm font-medium text-gray-500 uppercase">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {orderDatas && orderDatas.map((order) => (
+                {orderDatas.map((order) => (
                   <tr key={order._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {order._id}
+                      {order.order_id}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      { order.user?.name ? order.user?.name : "Deleted Name"}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="space-y-3">
-                        {order?.order_items.map((product, id) => (
-                          <div key={id} className="space-y-1">
-                            <div className="font-semibold text-gray-900">
-                              {product.product.productName}
-                            </div>
-                            <div className="text-xs text-gray-500">
-                              {order.order_status}
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <select
-                                className="border rounded px-2 py-1 text-xs"
-                                value={order.order_status}
-                                onChange={(e)=>updateOrderStatus(e,product.product._id,order._id)}
-                              >
-                                <option value="Pending">Pending</option>
-                                <option value="Shipped">Shipped</option>
-                                <option value="Delivered">Delivered</option>
-                                <option value="Cancelled">Cancelled</option>
-                              </select>
-                              <button
-                                className={`px-3 py-1 rounded text-xs ${
-                                    order.order_status === "Cancelled" || order.order_status=="Delivered"
-                                    ? "bg-gray-200 text-gray-500"
-                                    : "bg-red-500 text-white hover:bg-red-600"
-                                }`}
-                                disabled={order.order_status === "Cancelled" || order.order_status=="Delivered"}
-                              >
-                                {order.order_status === "Cancelled" || order.order_status=="Delivered"
-                                  ? "Cancelled"
-                                  : "Cancel Product"}
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                      {order.user?.name || "Deleted Name"}
+                      <br />
+                      <span className="text-xs text-gray-500">{order.user?.email || "Deleted Email"}</span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                      {new Date(order.delivery_by).toDateString()}
+                      {new Date(order.placed_at).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-900 font-semibold">
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">
                       ₹{order.total_amount}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                      <button
-                        onClick={() => handleViewOrder(order._id)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 transition-colors text-sm"
+                    <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
+                      <select
+                        className="border rounded px-2 py-1 text-xs"
+                        value={order.order_status}
+                        onChange={(e) => updateOrderStatus(e, order._id)}
                       >
-                        Order Details
+                        <option value="Pending">Pending</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <button
+                        onClick={() => cancelProduct(order._id)}
+                        className={`px-4 py-2 rounded text-sm ${
+                          order.order_status === "Cancelled" ? "bg-gray-200 text-gray-500" : "bg-red-500 text-white hover:bg-red-600"
+                        }`}
+                        disabled={order.order_status === "Cancelled" || order.order_status === "Delivered"}
+                      >
+                        Cancel
                       </button>
+
+                      <button onClick={()=>viewOrder(order._id)} className="text-blue-600 border border-blue-600 ml-3 px-2 py-1 rounded-md hover:bg-blue-50">
+                      View order
+                    </button>
                     </td>
                   </tr>
                 ))}
@@ -164,7 +158,7 @@ const OrderListing = () => {
             </table>
           </div>
           <div className="flex justify-between items-center p-4">
-          <button
+            <button
               disabled={currentPage === 1}
               onClick={handlePreviousPage}
               className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
@@ -179,7 +173,7 @@ const OrderListing = () => {
             >
               Next
             </button>
-        </div>
+          </div>
         </div>
       </div>
     </div>

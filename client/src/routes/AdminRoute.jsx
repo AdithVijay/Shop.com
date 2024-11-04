@@ -11,6 +11,7 @@ import { Toaster } from '@/components/ui/sonner'
 import AdminHome from '@/protect/AdminHome'
 import AdminReturnLogin from '@/protect/AdminReturnLogin'
 import OrderListing from '@/pages/adminpages/orders/OrderListing'
+import ViewUserOrder from '@/pages/adminpages/orders/ViewUserOrder'
 const AdminRoute = () => {
   return (
     <div>
@@ -58,6 +59,12 @@ const AdminRoute = () => {
             <Route path='/admin-orders' element={
                     <AdminHome>
               <OrderListing/>
+              </AdminHome>
+              }></Route>
+
+<Route path='/admin-view-order/:id' element={
+                    <AdminHome>
+              <ViewUserOrder/>
               </AdminHome>
               }></Route>
           </Routes>

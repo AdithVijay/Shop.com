@@ -21,7 +21,7 @@ export default function Orders() {
     const response = await axiosInstance.get(`user/retrieveorder/${user}`);
     setOrderData(response.data);
   }
-  console.log(orderData)
+  console.log("orderadta",orderData)
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
   function viewOrder(id){
@@ -37,9 +37,9 @@ export default function Orders() {
             <h2 className="text-2xl font-bold mb-6 text-gray-800">Your Orders</h2>
 
             <div className="space-y-4">
-              {orderData.map((order, index) => (
+              {orderData?.order && orderData.order.map((order) => (
                 <div
-                  key={index}
+                  key={order._id}
                   className="border rounded-lg p-4 space-y-4"
                 >
                   {/* Order Header */}
