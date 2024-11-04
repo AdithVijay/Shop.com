@@ -38,19 +38,15 @@ const fetchProduct = async(req,res)=>{
 const getFilteredProducts = async (req, res) => {
 
 try {
-    const { filters } = req.body; 
-    console.log(filters);
-    console.log(filters.Category);
+    const { filters,searchQuery} = req.body; 
+    console.log(searchQuery)
     
-
     const categoryNames = filters.Category || [];
     const fitTypes = filters.fit || [];
 
-
     const categories = await Category.find({ category: { $in: categoryNames } });
-    console.log(categories);
     
-    const categoryIds = categories.map(cat => cat._id); 
+    const categoryIds = categories.map(cat => cat._id)
 
     const query = {
       isListed: true,
@@ -64,15 +60,21 @@ try {
       query.sleeveType = { $in: fitTypes };
     }
 
+    if (searchQuery) {
+        query.$or = [
+          { productName: { $regex: searchQuery, $options: "i" } },  // Case-insensitive search in product name
+          { description: { $regex: searchQuery, $options: "i" } }    // Case-insensitive search in description
+        ];
+      }
     const products = await ProductData.find(query).populate('category')
-
-
-    res.status(200).json({ success: true, products });
+    
+        res.status(200).json({ success: true, products });
+      
+   
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ success: false, message: 'Error fetching products', error: error.message });
   }
-
 };
 
 
