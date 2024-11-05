@@ -57,7 +57,12 @@ const getOrderDetails = async (req, res) => {
   //====================TO CANCEL THE PRODUCT==================
   const cancelProduct = async(req,res)=>{
     const id = req.params.id
-
+    const order = await Order.findOne({_id:id})
+    order.order_status = "Cancelled"
+    await order.save()
+    if(order){
+      return res.status(200).json("cancelled")
+    }
   }
 
 module.exports={

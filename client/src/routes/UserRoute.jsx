@@ -34,24 +34,18 @@ const UserRoute = () => {
         ></Route>
 
       {/* THIS IS THE HOME PAGE */}
-        <Route
-          path="/home"
-          element={
-            <ProtecHome>
-              <Home />
-            </ProtecHome>
-          }
-        ></Route>
+        <Route path="/home" element={<Home />}></Route>
 
         <Route path="/signup" element={<UserSignup />}></Route>
+        
         {/* <Route path="/otp" element={<OtpSignup />}></Route> */}
         <Route path="/login" element={<UserLogin />}></Route>
         <Route path="/password-forgot" element={<ForgotPass/>}></Route>
         <Route path="/password-reset/:id" element={<ResetPassword/>}></Route>
 
         {/* THIS IS THE SHOPIING PAGE */}
-        {/* <Route path="/shop" element={<ShoppingPage />}></Route> */}
         <Route path="/shop" element={<Shop1/>}></Route>
+
         <Route path="/display/:id" element={<DisplayPoductMain />}></Route>
         <Route path="/addtocart" element={<AddToCart />}></Route>
         <Route path="/wishlist" element={<Wishlist />}></Route>

@@ -10,12 +10,13 @@ const OrderListing = () => {
   const [orderDatas, setOrderData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [reload,setreload]= useState(false)
 
   const user = useSelector((state) => state.user.users);
 
   useEffect(() => {
     fetchOrderData();
-  }, []);
+  }, [reload]);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -42,7 +43,7 @@ const OrderListing = () => {
 
   console.log(orderDatas);
   
-
+//===================CHANGING THE ORDER STATUS================
   async function updateOrderStatus(e, orderId) {
     console.log(orderId);
     const newStatus = e.target.value;
@@ -52,21 +53,24 @@ const OrderListing = () => {
     });
 
     if (response.status === 200) {
-      fetchOrderData();
+      setOrderData((prev)=>prev.map((order)=>order._id==orderId ?{...order,order_status:newStatus}:order))
     } else {
       console.error("Failed to update order status");
     }
   }
+//===================CANCEL THE PRODUCT ==================
+  async function cancelProduct(id) {
+    console.log("buttton pressed");
 
-  async function cancelProduct(productId) {
     try {
-      const response = await axiosInstance.post(`/admin/cancelorder/${productId}`);
-      fetchOrderData();
+      const response = await axiosInstance.post(`/admin/cancelorder/${id}`)
+      setOrderData((prev)=>prev.map((order)=>order._id ==id ?{...order,order_status:"Cancelled"}:"" ))
     } catch (error) {
       console.error("Error canceling product:", error);
     }
   }
 
+//===================FUNCTION TO VIEW THE ORDER DETAILS==================
   function viewOrder(id){
     navigate(`/admin-view-order/${id}`)
   }
@@ -137,11 +141,12 @@ const OrderListing = () => {
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
+                    {/* Cancel button logic */}
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <button
                         onClick={() => cancelProduct(order._id)}
-                        className={`px-4 py-2 rounded text-sm ${
-                          order.order_status === "Cancelled" ? "bg-gray-200 text-gray-500" : "bg-red-500 text-white hover:bg-red-600"
+                        className={`px-4 py-2 rounded text-sm  ${
+                          order.order_status === "Cancelled" || order.order_status === "Delivered" ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"
                         }`}
                         disabled={order.order_status === "Cancelled" || order.order_status === "Delivered"}
                       >

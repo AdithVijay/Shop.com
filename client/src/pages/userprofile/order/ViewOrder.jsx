@@ -31,12 +31,25 @@ const ViewOrder = () => {
  //===================== CHANGING THE STATUS ======================
  async function statusChange(productId){
   try {
-    const response = await axiosInstance.post(`user/changestatus`,{id,productId})
-    console.log(response);
+    console.log(productId);
+    // const response = await axiosInstance.post(`user/changestatus`,{id,productId})
+    // console.log(response);
   } catch (error) {
-    
+    console.log(error)
   }
  }
+
+ //===================CANCEL THE PRODUCT ==================
+ async function cancelProduct(productId) {
+  console.log("buttton pressed");
+  console.log(productId);
+  try {
+    const response = await axiosInstance.post(`/admin/cancelorder/${productId}`)
+    fetchViewOrderData()
+  } catch (error) {
+    console.error("Error canceling product:", error);
+  }
+}
  
 
   return (
@@ -108,7 +121,7 @@ const ViewOrder = () => {
             <div>
           <div className="space-y-6">
             
-              <div key={item._id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border bg-gray-50 shadow-sm">
+              <div key={item._id}  className="flex  mt-5 flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-lg border bg-gray-50 shadow-sm">
                 <div className="flex items-center space-x-4">
                   <img src={item.product.images[0]} alt={item.name} className="w-20 h-28 object-cover  bg-gray-200" />
                   <div>
@@ -122,19 +135,20 @@ const ViewOrder = () => {
                 </div>
               
               </div>
-          
           </div>
-          <div className="flex items-center p-5 space-x-4 mt-4 sm:mt-0">
+          </div>
+        ))}
+        <div className="flex items-center p-5 space-x-4 mt-4 sm:mt-0">
                   <span className={`text-sm font-medium ${
-                    item.order_status === "Pending" ? "text-yellow-600" : "text-red-500"
+                   orderData.order_status === "Pending" ? "text-yellow-600" : "text-red-500" 
                   }`}>
                     Status: {orderData.order_status}
                   </span>
                 </div>
           <button 
-              onClick={()=>statusChange(item.product._id)}
+              onClick={()=>cancelProduct(orderData._id)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
-                  orderData.order_status === "Pending"
+                  orderData.order_status === "Pending" 
                     ? "bg-red-600 text-white hover:bg-red-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                  }`}
@@ -142,11 +156,7 @@ const ViewOrder = () => {
               >
                 {orderData.order_status === "Pending" ? "Cancel" : "Cancelled"}
             </button>
-          </div>
-
-        ))}
         </div>
-     
       </div>
      
     </div>
