@@ -54,7 +54,7 @@ try {
     const categoryIds = categories.map(cat => cat._id)
 
     const query = {
-      isListed: true, 
+      isListed: true,
     };
 
     if (categoryIds.length > 0) {
@@ -72,7 +72,7 @@ try {
         ];
       }
 
-      let sortCriteria = { }
+      let sortCriteria = {}
       switch(sortOrder){
         case 'Price-Low-High':
           sortCriteria.salePrice = 1;
@@ -81,7 +81,7 @@ try {
           sortCriteria.salePrice = -1
           break;
         case 'New-Arrivals':
-          sortCriteria.createdAt = 1;
+          sortCriteria.createdAt = -1;
           break;
         case 'Name-A-to-Z':
           sortCriteria.productName =1;
@@ -93,9 +93,11 @@ try {
           sortCriteria = {}
       }
 
-    const products = await ProductData.find(query).populate('category').sort(sortCriteria)
+    const products = await ProductData.find(query)
+    .populate('category')
+    .sort(sortCriteria)
     .skip(skip)   
-    .limit(limit);
+    .limit(limit)
 
     const totalusers = await ProductData.countDocuments(query)
     

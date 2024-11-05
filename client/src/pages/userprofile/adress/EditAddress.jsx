@@ -60,11 +60,11 @@ export default function EditAddress() {
 //======================UPDATING THE ADRESS==========================
   const handleUpdateAddress = async (e) => {
     e.preventDefault();    
-    // const validationErrors = validateForm();
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
     const addressData = {name,phonenumber,address,district,state,landmark,pinCode};
     console.log(addressData);
     
@@ -72,7 +72,7 @@ export default function EditAddress() {
       const response = await axiosInstance.patch(`/user/edituseraddress/${adressId}`,{addressData});
       // console.log(response);
       toast.success("Address updated successfully");
-      // navigate("/addresses");
+      navigate("/address");
     } catch (error) {
       console.error(error);
       toast.error("Failed to update address");

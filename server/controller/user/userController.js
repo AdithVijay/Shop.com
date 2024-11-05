@@ -4,20 +4,8 @@ const otpGenerator = require("otp-generator");
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const user = []; // In-memory storage for demonstration
-let refreshTokens = [];
-
-//====================TOKEN GENERATION FUNCTION============================
-function generateAccessToken(user) {
-    return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-  }
-  
-  function generateRefreshToken(user) {
-    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET);
-    refreshTokens.push(refreshToken);
-    return refreshToken;
-  }
-
+const genarateAccesTocken = require('../../utils/genarateAccesTocken');
+const genarateRefreshTocken = require('../../utils/genarateRefreshTocken');
 
 //============================PASSWORD HASHING================================
 const securePassword = async (password) => {
@@ -209,15 +197,10 @@ const login = async(req,res)=>{
         return res.status(403).json({ message: "Your account is blocked. Contact support." });
       }
   
-  
       if(user){
           if(await bcrypt.compare(password, user.password)){
-            const accessToken = generateAccessToken({ users: user._id });
-            const refreshToken = generateRefreshToken({ users: user._id  });
-            res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 15 * 60 * 1000 });
-            res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: 7 * 24 * 60 * 60 * 1000 });
-            console.log('Cookies:', req.cookies);
-  
+            genarateAccesTocken(res,user._id)
+            genarateRefreshTocken(res,user._id)
           return res.status(200).json({
               message: "Login successful",
               id: user._id,
@@ -225,7 +208,6 @@ const login = async(req,res)=>{
               email: user.email,
               isListed:user.isListed
             })
-  
           }
       }else{
           return res.status(500).json({ message: "Invalid email or password" });
@@ -377,6 +359,18 @@ const resetPassword = async(req,res)=>{
     return res.status(200).json(user)
 }
 
+//======================== UPDATE DATA IN USERPROFILE===================
+ const updateUserData = async(req,res)=>{
+   const id = req.params.id
+    const{name,phoneNumber} = req.body
+    console.log(name,phoneNumber);
+    
+    const updatedData = {
+      name,phoneNumber
+    }
+   const user = await User.findByIdAndUpdate(id,updatedData,{new:true})
+   return res.json(user)
+ }
 
 module.exports={
     signup,
@@ -388,5 +382,6 @@ module.exports={
     retrieveUserData,
     createPasswordResetOTP,
     verifyPasswordResetOTP,
-    resetPassword
+    resetPassword,
+    updateUserData
 }

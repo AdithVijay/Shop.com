@@ -23,7 +23,7 @@ export default function Card3({ productData }) {
                     <div className="p-3 text-center">
                       <h3 className="text-sm mb-1 text-gray-800">{product.productName}</h3>
                       <p className="text-sm mb-1 text-gray-600">₹{product.salePrice}</p>
-                      <p className="text-sm text-gray-600">X M S L XL XXL </p>
+                      <p className="text-sm text-gray-600">XS S M L Xl</p>
                     </div>
                   </div>
                 </Link>

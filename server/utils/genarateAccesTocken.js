@@ -11,6 +11,8 @@ function genarateAccesTocken(res, admin) {
     sameSite: "strict",
     maxAge: 1 * 60 * 1000,
   });
+  console.log("cookie created");
+  
 }
 
 

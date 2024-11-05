@@ -151,6 +151,19 @@ const gettingProducts = async(req,res)=>{
         console.log(error);
     }
 }
+// ==========================DISPALY DIFFERENT CATEGORY PRODUCT ===========================
+const gettingCategoryForCard = async(req,res)=>{
+    try {
+        const response = await ProductData.find().populate('category');
+        if(!response){
+            return res.status(404).json({success:false, message: "Product data not found" })
+        }else{
+            return res.status(200).json({success:true,message:"Product is being updated ",  data: response })
+        } 
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 // ==========================LISTING PRODUCT DATA IN PRODUCT PAGE===========================
 const ListingProducts = async(req,res)=>{
@@ -198,5 +211,6 @@ module.exports={
     updateProduct,
     gettingProducts,
     ListingProducts,
-    unListingProducts
+    unListingProducts,
+    gettingCategoryForCard
 }

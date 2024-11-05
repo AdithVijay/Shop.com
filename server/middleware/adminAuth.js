@@ -1,11 +1,9 @@
 const jwt = require("jsonwebtoken");
-// const Admin = require('../model/Admin');
+
 
 const verifyAdmin = async (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-
-    
 
     if (accessToken) {
         const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {

@@ -34,9 +34,15 @@ export default function UserProfile() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = "Email is invalid.";
     }
+    if (!phoneNumber.trim()) {
+      newErrors.phoneNumber = "Phone number is required.";
+    } else if (!/^\d{10,15}$/.test(phoneNumber)) {
+      newErrors.phoneNumber = "Phone number must be between 10 and 15 digits.";
+    }
+    return newErrors;
   };
 
-
+//================FETCHING USER DATA================
   useEffect(() => {
     async function fetchProduct(){
       try {
@@ -54,7 +60,7 @@ export default function UserProfile() {
     fetchProduct()
   }, [id]);
   
-
+//================UPDATING THE USER DATA================
   const handleUpdatePersonalInfo = async (e) => {
     e.preventDefault();
 
@@ -68,22 +74,19 @@ export default function UserProfile() {
 
     const personalData = {
       name,
-      email,
-      dateOfBirth,
-      currentPassword,
-      newPassword,
+      phoneNumber
     };
-
+    console.log(personalData)
+    
     try {
-      const response = await axiosInstance.post("/user/update", personalData);
-      console.log("Personal data to be sent:", personalData);
+      const response = await axiosInstance.post(`/user/update/${id}`, personalData);
+      console.log("Personal data to be sent:", response);
       toast.success("Personal information updated successfully");
       navigate("/profile");
     } catch (error) {
       console.error(error);
       toast.error("Failed to update personal information");
     }
-
   };
 
   return (
@@ -106,7 +109,7 @@ export default function UserProfile() {
                     id="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className="  mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   />
                   {errors.name && <span className="text-red-500 text-sm">{errors.name}</span>}
                 </div>
@@ -119,23 +122,23 @@ export default function UserProfile() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    disabled
                   />
                   {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
                 </div>
-              {
-
-                phoneNumber?<div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700">PhoneNumber</label>
-                <input
-                  type="email"
-                  id="email"
-                  value={phoneNumber}
-                  onChange={(e) => setphoneNumber(e.target.value)}
-                  className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-                {errors.email && <span className="text-red-500 text-sm">{errors.email}</span>}
-              </div>:""
-              }
+                {phoneNumber ? (
+                    <div>
+                      <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                      <input
+                        type="tel" // Use "tel" to indicate a phone number
+                        id="phoneNumber"
+                        value={phoneNumber}
+                        onChange={(e) => setPhoneNumber(e.target.value)} // Ensure this matches your state update function
+                        className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                      />
+                      {errors.phoneNumber && <span className="text-red-500 text-sm">{errors.phoneNumber}</span>}
+                    </div>
+                  ) : ""}
                 
                 {/* <div>
                   <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Current Password</label>

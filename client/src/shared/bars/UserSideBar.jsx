@@ -3,10 +3,30 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, User, MapPin, Package, Wallet, Ticket, Key, Trash2, LogOut } from 'lucide-react';
 import shopco from "../../assets/shopco.png";
 import dp1 from "../../assets/dp1.jpg";
+import { useSelector } from 'react-redux';
+import axiosInstance from '@/config/axiosInstance';
 
 const UserSideBar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const location = useLocation();
+  const [name, setName] = useState("");
+  const id =useSelector((state)=>state.user.users)
+
+  
+  useEffect(() => {
+    async function fetchProduct(){
+      try {
+        const response = await axiosInstance.get(`user/userdetails/${id}`) 
+        console.log(response);
+        setName(response.data.name)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchProduct()
+  }, [id]);
+  console.log(name);
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,21 +70,29 @@ const UserSideBar = () => {
           <Menu size={18} />
         </button>
       </div>
-
+      <Link to={"/shop"}>
       <div className={`p-4 border-b flex items-center ${isExpanded ? 'justify-start' : 'justify-center'}`}>
-        <img 
-          src={dp1} 
+        {/* <img 
+          src={name.} 
           alt="User Avatar" 
           className="w-10 h-10 rounded-full border-2 border-gray-300 object-cover" 
-        />
+        /> */}
+        
+        <div className=" flex justify-center bg-slate-500 items-center w-10 h-10 rounded-full border-2 border-gray-300 object-cover" >
+          <div className=''>
+            {name.charAt(0)}
+          </div>
+        </div>
         {isExpanded && (
           <div className="ml-3">
-            <p className="text-sm font-medium text-gray-700">Suhail Subair</p>
-            <p className="text-xs text-gray-500">User</p>
-          </div>
-        )}
-      </div>
+            <p className="text-sm font-medium text-gray-700">{name}</p>
 
+          </div>
+        
+        )}
+         
+      </div>
+      </Link>
       <nav className="flex-grow overflow-y-auto">
         <ul className="py-2">
           {menuItems.map((item, index) => (

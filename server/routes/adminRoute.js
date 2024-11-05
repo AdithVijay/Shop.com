@@ -1,7 +1,6 @@
 const express = require("express");
 const adminRoute = express.Router();
 
-
 const verifyAdmin = require( "../middleware/adminAuth")
 const adminController = require("../controller/admin/adminController")
 const categoryController = require("../controller/admin/categoryController")
@@ -17,38 +16,39 @@ const orderController = require("../controller/admin/orderController")
 //==================CATEGORY SIDE==========================
  adminRoute.post("/addcategory",verifyAdmin,categoryController.addCategory);
  adminRoute.get("/getcategory",categoryController.getCategory);
- adminRoute.put("/listcategory/:id",categoryController.listCategory);
- adminRoute.put("/unlistcategory/:id",categoryController.unListCategory);
+ adminRoute.put("/listcategory/:id",verifyAdmin,categoryController.listCategory);
+ adminRoute.put("/unlistcategory/:id",verifyAdmin,categoryController.unListCategory);
  adminRoute.get("/fetchcategory/:id",categoryController.fetchCategory);
- adminRoute.put("/updatecategory/:id",categoryController.handleUpdate);
+ adminRoute.put("/updatecategory/:id",verifyAdmin,categoryController.handleUpdate);
 
 //==================PRODUCT SIDE=============================
- adminRoute.post("/addproduct",productController.addProduct)
+ adminRoute.post("/addproduct",verifyAdmin,productController.addProduct)
  adminRoute.get("/getcategory",productController.getCatgoryData)
 
 //==================PRODUCT EDIT=============================
 adminRoute.get("/fetchproduct/:id",productController.fetchProduct);
-adminRoute.put("/updateproduct/:id",productController.updateProduct);
+adminRoute.put("/updateproduct/:id",verifyAdmin,productController.updateProduct);
 
 
 //==================PRODUCT LIST PAGE=========================
 adminRoute.get("/getproducts",productController.gettingProducts)
-adminRoute.put("/listproduct/:id",productController.ListingProducts)
-adminRoute.put("/unlistproduct/:id",productController.unListingProducts)
+adminRoute.get("/getdifferentcategory",productController.gettingCategoryForCard)
+adminRoute.put("/listproduct/:id",verifyAdmin,productController.ListingProducts)
+adminRoute.put("/unlistproduct/:id",verifyAdmin,productController.unListingProducts)
 
   //==================USERMANGMENT SIDE========================
   adminRoute.get("/fetchuserdata",userController.fetchUser)
-  adminRoute.put("/listuser/:id",userController.listUser)
-  adminRoute.put("/unlistuser/:id",userController.unlistUser)
+  adminRoute.put("/listuser/:id",verifyAdmin,userController.listUser)
+  adminRoute.put("/unlistuser/:id",verifyAdmin, userController.unlistUser)
 
   //===================UPDATE ORDER STATUS================
-  adminRoute.patch("/change-status",orderController.updateOrderStatus)
+  adminRoute.patch("/change-status",verifyAdmin,orderController.updateOrderStatus)
 
   //==============LISTING CATEGORY IN THE FILTER BAR========
   adminRoute.get("/categories",categoryController.listCategoryForFiltering)
 
   //============LISTING ORDER IN THE ORDER LISTING PAGE========
   adminRoute.get("/retrieveorder",orderController.getOrderDetails)
-  adminRoute.post("/cancelorder/:id", orderController.cancelProduct);
+  adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct);
 
-module.exports = adminRoute; 
+module.exports = adminRoute;

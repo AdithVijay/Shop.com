@@ -11,6 +11,7 @@ import React, { useEffect, useState } from 'react'
 
 const Home = () => {
   const [productData, setproductData] = useState([]);
+  const [categoryData, setcategoryData] = useState([]);
   console.log("home");
   
   useEffect(() => {
@@ -20,6 +21,14 @@ const Home = () => {
       setproductData(data)
     }
     fetchData()
+  }, []);
+  useEffect(() => {
+    async function fetchCategoryData(){
+      const response = await axiosInstance.get("admin/getdifferentcategory")
+      const data = response.data.data
+      setcategoryData(data)
+    }
+    fetchCategoryData()
   }, []);
 
 console.log("home",productData);    

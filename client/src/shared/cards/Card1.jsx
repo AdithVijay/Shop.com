@@ -8,7 +8,7 @@ function Card1({ productData, name }) {
         <h2 className="text-2xl font-bold mb-6">{name}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {productData.slice(0, 5).map((product, index) => {
-            if (product.isListed) {
+            if (product.isListed && product.category.isListed) {
               return (
                 <Link to={`/display/${product._id}`} className="card-link" key={index}>
                   <div
