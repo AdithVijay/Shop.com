@@ -75,7 +75,7 @@ const UserSignup = () => {
       return;
     }
 
-    toast(".....verifying")
+    toast(".....verifying", {position : 'top-center'})
     // console.log("Submitting at front end :", { name, email, password, phonenumber }); 
     try {
       const response = await axiosInstance.post("/user/otp",{ email });

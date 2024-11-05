@@ -34,6 +34,7 @@ async function sendVerificationEmail(email, otp) {
 	}
 }
 
+
 OTPSchema.pre("save", async function (next) {
 	console.log("New document saved to database");
 

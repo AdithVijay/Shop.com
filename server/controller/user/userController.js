@@ -138,7 +138,7 @@ const resendOtp = async (req,res)=>{
       const otpPayload = { email, otp };
       const otpBody = await OTP.create(otpPayload)
 
-      await sendVerificationEmail(email, otp);
+   
 
       res.status(200).json({
         success: true,
