@@ -2,32 +2,34 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-
+import banner1 from "../../assets/banner1.webp"
+import banner2 from "../../assets/banner2.webp"
+import banner4 from "../../assets/banner4.png"
 const HeroSection = () => {
   const images = [
     {
-      src: 'https://www.snitch.co.in/cdn/shop/files/4_WebBanner_1920x1080_1_1400x.jpg?v=1728392099',
+      src: banner1,
       alt: 'Mens Collection - Exclusive',
       title: 'Classic Exclusive',
       subtitle: 'Mens Collection',
       offer: 'UPTO 40% OFF'
     },
     {
-      src: 'https://www.westside.com/cdn/shop/files/C2_08_1920X900_FORMAL_SHIRT_3b893f14-041c-4927-a40c-aa6972bb302f.jpg?v=1727421617',
+      src: banner4,
       alt: 'Limited Edition Deals',
       title: 'Limited Edition',
       subtitle: 'Formal Shirts',
       offer: 'BUY 2 GET 1 FREE'
     },
     {
-      src: 'https://www.snitch.co.in/cdn/shop/files/2_WebBanner_1920x1080_4_1400x.jpg?v=1728458033',
+      src: 'https://blackberrys.com/cdn/shop/files/WEEKEND_CHILL_03db8124-a03b-420c-b90e-72406a968ba0.jpg?v=1715746352',
       alt: 'Summer Sale',
       title: 'Summer Sale',
       subtitle: 'Hot Deals',
       offer: 'UP TO 50% OFF'
     },
     {
-      src: 'https://blackberrys.com/cdn/shop/files/WEEKEND_CHILL_03db8124-a03b-420c-b90e-72406a968ba0.jpg?v=1715746352',
+      src: banner2,
       alt: 'Weekend Chill',
       title: 'Weekend Chill',
       subtitle: 'Casual Collection',

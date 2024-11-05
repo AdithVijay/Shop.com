@@ -7,7 +7,7 @@ import Card3 from '@/shared/cards/Card3'
 import Footer from '@/shared/footer/Footer'
 import axiosInstance from '@/config/axiosInstance'
 import React, { useEffect, useState } from 'react'
-
+import banner3 from "../../assets/banner3.avif"
 
 const Home = () => {
   const [productData, setproductData] = useState([]);
@@ -39,7 +39,7 @@ console.log("home",productData);
       <Header/>
       <HeroSection/>
       <Card1 productData={productData} name={"Related Category"}/>
-      <Card2/>
+  
       <Card3 productData ={productData}  />
       <Footer/>
     </div>
