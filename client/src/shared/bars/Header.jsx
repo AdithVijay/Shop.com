@@ -24,7 +24,8 @@ const Header = () => {
     navigate("/login");
   }
   function logoutButton(){
-
+    const response = axiosInstance.post("admin/logout")
+    console.log(response);
     dispatch(logoutUser())
     navigate("/home")
   }

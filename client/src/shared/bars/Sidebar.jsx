@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, Home, Package, List, Users, BarChart2, Tag, Folder, Image, Settings, LogOut } from 'lucide-react';
 import shopco from "../../assets/shopco.png";
+import { useDispatch } from 'react-redux';
+import { logoutAdmin } from '@/redux/Adminslice';
+import axiosInstance from '@/config/axiosInstance';
+
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const location = useLocation();
-
+  const dispatch = useDispatch()
   const menuItems = [
     { name: 'Dashboard', icon: <Home size={16} />, path: '/login' },
     { name: 'Products', icon: <Package size={16} />, path: '/productlist' },
@@ -19,6 +23,15 @@ const Sidebar = () => {
     { name: 'Settings', icon: <Settings size={16} />, path: '/settings' },
   ];
 
+    function handleLogout(){
+      try {
+        const response = axiosInstance.post("admin/logout")
+        console.log(response);
+        dispatch(logoutAdmin()) 
+      } catch (error) {
+        console.log(error);
+      }
+    }
   return (
     <div 
       className={`bg-white h-screen flex flex-col fixed left-0 top-0 transition-all duration-300 ease-in-out ${
@@ -59,9 +72,9 @@ const Sidebar = () => {
         </ul>
       </nav>
 
-      <div className="p-2 border-t mt-auto flex-shrink-0">
+      <button onClick={()=>handleLogout()} className="p-2 border-t mt-auto flex-shrink-0">
         <Link
-          to="/logout"
+          to="/admin"
           className={`flex items-center px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors duration-200 ${
             isExpanded ? 'justify-start' : 'justify-center'
           }`}
@@ -69,7 +82,7 @@ const Sidebar = () => {
           <LogOut size={16} />
           {isExpanded && <span className="ml-2">Logout</span>}
         </Link>
-      </div>
+      </button>
     </div>
   );
 };

@@ -4,7 +4,7 @@ const genarateAccesTocken = require('../../utils/genarateAccesTocken');
 const genarateRefreshTocken = require('../../utils/genarateRefreshTocken');
 
 
-
+//=====================LOGIN=====================
 const adminLogin = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -34,7 +34,15 @@ const adminLogin = async (req, res) => {
     }
 };
 
+const adminLogOut = async(req,res)=>{
+    try {
+        res.clearCookie('accessToken', { httpOnly: true, secure: true, sameSite: 'strict' });
+        res.clearCookie('refreshToken', { httpOnly: true, secure: true, sameSite: 'strict' });
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 
-
-module.exports = { adminLogin}
+module.exports = { adminLogin,adminLogOut}

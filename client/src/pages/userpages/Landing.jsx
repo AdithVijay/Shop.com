@@ -29,7 +29,7 @@ const Landing = () => {
     <div>
       <Header/>
       <HeroSection/>
-      <Card1 productData ={productData} />
+      <Card1 name={"Categories"} productData ={productData} />
       <Card2/>
       <Card3 productData ={productData}  />
       <Footer/>

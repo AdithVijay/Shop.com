@@ -4,6 +4,7 @@ import Sidebar from '@/shared/bars/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { addAdmin } from '@/redux/Adminslice';
 import { useDispatch } from 'react-redux';
+import { toast } from 'sonner';
 
 const AdminLogin = () => {
 
@@ -22,6 +23,7 @@ const AdminLogin = () => {
       navigate("/category")
     } catch (error) {
       console.error("there is ",error);
+      toast.error("You are not the admin")
     }
   };
 

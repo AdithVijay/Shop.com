@@ -13,6 +13,9 @@ const orderController = require("../controller/admin/orderController")
 //==================ADMIN LOGIN===========================
  adminRoute.post("/login", adminController.adminLogin);
 
+ //==================ADMIN LOGIN===========================
+ adminRoute.post("/logout",adminController.adminLogOut)//GIVEN THE SAME FOR USER ALSO 
+
 //==================CATEGORY SIDE==========================
  adminRoute.post("/addcategory",verifyAdmin,categoryController.addCategory);
  adminRoute.get("/getcategory",categoryController.getCategory);
