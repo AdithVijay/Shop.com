@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,Link } from "react-router-dom";
 import UserSideBar from "@/shared/bars/UserSideBar";
 import Sidebar from "@/shared/bars/Sidebar";
 import { useSelector } from "react-redux";
@@ -32,7 +32,7 @@ const OrderListing = () => {
 
   async function fetchOrderData(page = 1) {
     try {
-      const response = await axiosInstance.get(`admin/retrieveorder?page=${page}&limit=4`);
+      const response = await axiosInstance.get(`admin/retrieveorder?page=${page}&limit=6`);
       setOrderData(response.data.order);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
@@ -82,11 +82,9 @@ const OrderListing = () => {
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 lg:p-8 border-b border-gray-200">
             <h2 className="text-2xl font-bold text-gray-800">Orders Management</h2>
-            <input
-              type="text"
-              placeholder="Search orders by ID, customer name, or email..."
-              className="mt-4 px-4 py-2 w-full border rounded"
-            />
+            <div className="text-sm text-gray-500">
+              <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt;<Link to={"/admin-orders"}>Order Management</Link> 
+            </div>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">

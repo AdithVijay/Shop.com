@@ -5,16 +5,38 @@ import UserAddress from '../pages/userprofile/adress/UserAddress'
 import EditAddress from '../pages/userprofile/adress/EditAddress'
 import Orders from '../pages/userprofile/order/Orders'
 import ViewOrder from '@/pages/userprofile/order/ViewOrder'
+import ProtecHome from '@/protect/ProtectedHome'
+import ProtectOther from '@/protect/ProtectOther'
 const UserProfileRoute = () => {
   return (
     <div>
 
           <Routes>
-            <Route path='/profile' element={<UserProfile/>}></Route>
-            <Route path='/address' element={<UserAddress/>}></Route>
-            <Route path='/edit/:id' element={<EditAddress/>}></Route>
-            <Route path='/orders' element={<Orders/>}></Route>
-            <Route path='/vieworders/:id' element={<ViewOrder/>}></Route>
+            <Route path='/profile' element={
+              <ProtectOther>
+              <UserProfile/>
+              </ProtectOther>
+              }></Route>
+            <Route path='/address' element={
+              <ProtectOther>
+              <UserAddress/>
+              </ProtectOther>
+              }></Route>
+            <Route path='/edit/:id' element={
+              <ProtectOther>
+              <EditAddress/>
+              </ProtectOther>
+              }></Route>
+            <Route path='/orders' element={
+              <ProtecHome>
+              <Orders/>
+              </ProtecHome>
+              }></Route>
+            <Route path='/vieworders/:id' element={
+               <ProtecHome>
+              <ViewOrder/>
+              </ProtecHome>
+              }></Route>
           </Routes>
 
     </div>

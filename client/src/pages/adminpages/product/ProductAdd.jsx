@@ -177,7 +177,7 @@ export default function ProductAdd() {
     setStock({ ...stock, [size]: value });
   };
 
-  // =========================POSTING THE DATA TO DATABASE ===============================
+  // =========================POSTING THE DATA TO DATABASE ====================
 
   const handleAddProduct = async (e) => {
    
@@ -185,10 +185,10 @@ export default function ProductAdd() {
     toast.success("addimng  the product please wait");
     const validationErrors = validateForm();
 
-    // if (Object.keys(validationErrors).length > 0) {
-    //   setErrors(validationErrors);
-    //   return;
-    // }
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
 
     if (product.images.filter((image) => image !== null).length < 4) {
       toast.error("Please add exactly 4 images before submitting.");
@@ -225,7 +225,12 @@ export default function ProductAdd() {
       console.log(response);
       navigate("/productlist");
     } catch (error) {
-      console.error(error);
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message);
+    } else {
+        console.error(error);
+        toast.error("An error occurred. Please try again.");
+    }
     }
   };
 
@@ -241,7 +246,7 @@ export default function ProductAdd() {
                 Dashboard
               </Link>{" "}
               &gt;{" "}
-              <Link to="/products" className="hover:underline">
+              <Link to="/productlist" className="hover:underline">
                 product
               </Link>{" "}
               &gt; add

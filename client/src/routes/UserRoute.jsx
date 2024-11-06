@@ -17,43 +17,89 @@ import ForgotPass from "@/pages/userpages/ForgotPass";
 import ResetPassword from "@/pages/userpages/ResetPassword";
 import Shop1 from "@/pages/userpages/Shop1";
 import NewFilter from "@/shared/bars/NewFilter";
+import ProtectOther from "@/protect/ProtectOther";
 
 const UserRoute = () => {
   return (
     <div>
       <Routes>
+        {/* THIS IS THE LANDING PAGE */}
+        <Route path="/" element={<Landing />}></Route>
 
-      {/* THIS IS THE LANDING PAGE */}
+        {/* THIS IS THE HOME PAGE */}
         <Route
-          path="/"
+          path="/home"
+          element={
+            <ProtecHome>
+              <Home />
+            </ProtecHome>
+          }
+        ></Route>
+
+        <Route
+          path="/signup"
           element={
             <ProtectLanding>
-              <Landing /> 
+              <UserSignup />
             </ProtectLanding>
           }
         ></Route>
 
-      {/* THIS IS THE HOME PAGE */}
-        <Route path="/home" element={<Home />}></Route>
+        <Route
+          path="/login"
+          element={
+            <ProtectLanding>
+              <UserLogin />
+            </ProtectLanding>
+          }
+        ></Route>
 
-        <Route path="/signup" element={<UserSignup />}></Route>
-        
-        {/* <Route path="/otp" element={<OtpSignup />}></Route> */}
-        <Route path="/login" element={<UserLogin />}></Route>
-        <Route path="/password-forgot" element={<ForgotPass/>}></Route>
-        <Route path="/password-reset/:id" element={<ResetPassword/>}></Route>
+        <Route
+          path="/password-forgot"
+          element={
+            <ProtectLanding>
+              <ForgotPass />
+            </ProtectLanding>
+          }
+        ></Route>
+
+        <Route
+          path="/password-reset/:id"
+          element={
+            <ProtectLanding>
+              <ResetPassword />
+            </ProtectLanding>
+          }
+        ></Route>
 
         {/* THIS IS THE SHOPIING PAGE */}
-        <Route path="/shop" element={<Shop1/>}></Route>
+        <Route path="/shop" element={<Shop1 />}></Route>
 
+        {/* THIS IS PRODUCT PAGE */}
         <Route path="/display/:id" element={<DisplayPoductMain />}></Route>
-        <Route path="/addtocart" element={<AddToCart />}></Route>
-        <Route path="/wishlist" element={<Wishlist />}></Route>
-        <Route path="/checkout" element={<CheckOutPage/>}></Route>
-        
-          
-        <Route path="/filter" element={<NewFilter/>}></Route>
 
+        {/* THIS IS ADD TO CART */}
+        <Route
+          path="/addtocart"
+          element={
+            <ProtectOther>
+              <AddToCart />
+            </ProtectOther>
+          }
+        ></Route>
+
+        <Route path="/wishlist" element={<Wishlist />}></Route>
+
+        <Route
+          path="/checkout"
+          element={
+            <ProtecHome>
+              <CheckOutPage />
+            </ProtecHome>
+          }
+        ></Route>
+
+        <Route path="/filter" element={<NewFilter />}></Route>
       </Routes>
 
       <Toaster />

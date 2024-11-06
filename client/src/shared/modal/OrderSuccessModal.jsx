@@ -8,6 +8,9 @@ export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
   function viewOrder(){
     navigate("/orders")
   }
+  function shoping(){
+    navigate("/shop")
+  }
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
@@ -53,7 +56,8 @@ export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
           >
             View Order
           </button>
-          <button
+
+          <button onClick={shoping}
             className="w-full sm:w-1/2 px-4 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
             Continue Shopping

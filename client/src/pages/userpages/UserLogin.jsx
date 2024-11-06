@@ -123,6 +123,12 @@ const UserLogin = () => {
               Sign in
             </Link>
           </p>
+          <p className="mt-2 text-center text-sm text-gray-600">
+              
+            <Link to={"/password-forgot"} className="font-medium text-black hover:text-gray-800">
+            Forgot Password ?
+            </Link>
+          </p>
         </div>
 
         {/* Right Section - Image */}

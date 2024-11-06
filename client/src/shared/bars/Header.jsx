@@ -34,12 +34,13 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
+          <Link to={"/home"}>
           <div className="flex items-center">
                 <div className="font-bold text-xl tracking-wide px-4 py-2">
             SHOP.CO
             </div>
           </div>
-
+          </Link>
           {/* Navigation Links - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-4">
             <Link to={"/"} className="text-sm font-medium text-muted-foreground hover:text-primary">Home</Link>
@@ -48,15 +49,15 @@ const Header = () => {
             <Link to={"/contact-us"} className="text-sm font-medium text-muted-foreground hover:text-primary">Contact Us</Link>
           </nav>
 
-          {/* Search Bar and Icons */}
+
           <div className="flex items-center space-x-4">
             {/* Search Icon */}
-            <button onClick={toggleSearch} className="text-muted-foreground hover:text-primary">
+            {/* <button onClick={toggleSearch} className="text-muted-foreground hover:text-primary">
               <Search className="h-5 w-5" />
-            </button>
+            </button> */}
 
             {/* Search Input */}
-            {isSearchVisible && (
+            {/* {isSearchVisible && (
               <div className="relative hidden md:block">
                 <Input
                   className="w-full max-w-xs"
@@ -64,7 +65,7 @@ const Header = () => {
                   placeholder="Search..."
                 />
               </div>
-            )}
+            )} */}
 
             {/* User Icon */}
             <button className="text-muted-foreground hover:text-primary">

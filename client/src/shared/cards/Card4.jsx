@@ -45,6 +45,7 @@ export default function Card4() {
 
 //=================FILTERCHANGE==============
   const handleFilterChange = (title, value) => {
+    console.log(title, value)
     setSelectedFilters((prev) => {
       const updatedFilters = { ...prev };
       if (updatedFilters[title].includes(value)) {

@@ -139,7 +139,7 @@ export default function UserManagement() {
                           onClick={() => handleList(x._id)}
                           disabled={x.isListed}
                         >
-                          List
+                          Block
                         </button>
                         <button
                           className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 ml-2"
@@ -147,7 +147,7 @@ export default function UserManagement() {
                           onClick={() => handleUnlist(x._id)}
                           disabled={!x.isListed}
                         >
-                          Unlist
+                          UnBlock
                         </button>
                       </td>
                     </tr>

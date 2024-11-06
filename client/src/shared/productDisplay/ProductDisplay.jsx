@@ -1,7 +1,7 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams ,Link} from 'react-router-dom';
 import { toast } from 'sonner';
 
 const product = {
@@ -108,8 +108,11 @@ async function fetchProduct(){
   
 // ======================================================================================================================================================================================================
   return (
+    <div>
+      <div className="text-sm text-gray-500 flex justify-center mt-4">
+              <Link to="/shop" className="hover:underline">Shop </Link>&gt; Product Display
+      </div>
     <div className="flex flex-col md:flex-row p-4 max-w-screen-lg mx-auto">
-      
       {/* Thumbnails Section */}
       <div className="flex md:flex-col md:w-1/12 md:pr-4 space-x-2 md:space-x-0 md:space-y-2 mb-4 md:mb-0 justify-center">
         {productData?.images?.map((img, index) => (
@@ -209,6 +212,7 @@ async function fetchProduct(){
           <img src={mainImage} alt={product.name} className="max-w-full max-h-full" />
         </div>
       )}
+    </div>
     </div>
   );
 };

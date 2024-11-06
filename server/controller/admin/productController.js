@@ -19,6 +19,14 @@ const addProduct = async(req,res)=>{
 
           console.log( stock );
 
+          const existingProduct = await ProductData.findOne({ productName });
+          if (existingProduct) {
+              return res.status(400).json({ 
+                  success: false, 
+                  message: "Product name already exists. Please choose a unique name." 
+              });
+          }
+
           const count = Object.values(stock).reduce((acc,curr)=>{
                return acc+=curr
           },0)

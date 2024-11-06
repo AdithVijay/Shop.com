@@ -7,7 +7,7 @@ export default function Card3({ productData }) {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-bold mb-6 text-center">Top Selling</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 justify-center">
-          {productData.slice(2, 6).map((product) => {
+          {productData.slice(4, 8).map((product) => {
             if (product.isListed) {
               return (
                 <Link to={"/shop"} key={product._id}>

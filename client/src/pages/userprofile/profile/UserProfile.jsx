@@ -71,11 +71,8 @@ export default function UserProfile() {
       setErrors(validationErrors);
       return;
     }
-
-    const personalData = {
-      name,
-      phoneNumber
-    };
+    
+   
     console.log(personalData)
     
     try {

@@ -30,8 +30,10 @@ const ForgotPass = () => {
       toast(response.data.message)
     } catch (error) {
       toast.error(error.response.data.message);
+      console.log(error.response);
     }
   };
+
 
   //====================VERIFYING OTP============================
   const handleOTPVerify =async (otp) => {
@@ -39,7 +41,6 @@ const ForgotPass = () => {
     try {
       const response = await axiosInstance.post("/user/verify-otp",{email,otp});
       console.log("resposnse after veryifyihng otp",response.data)
-      toast(response.message)
       const id =  response.data.data[0]._id
       navigate(`/password-reset/${id}`)
     } catch (error) {

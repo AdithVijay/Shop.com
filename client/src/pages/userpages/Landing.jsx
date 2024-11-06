@@ -4,9 +4,10 @@ import HeroSection from '@/shared/banner/HeroSection'
 import Card1 from '@/shared/cards/Card1'
 import Card2 from '@/shared/cards/Card2'
 import Card3 from '@/shared/cards/Card3'
-import Footer from '@/shared/footer/Footer'
+
 import axiosInstance from '@/config/axiosInstance'
 import React, { useEffect, useState } from 'react'
+import Footer from '@/shared/footer/Footer'
 
 // =================THIS ITHE FIRST THIJNG THATS USER GONNA SEEE============
 
@@ -31,7 +32,7 @@ const Landing = () => {
       <Card1 productData ={productData} />
       <Card2/>
       <Card3 productData ={productData}  />
-      {/* <Footer/> */}
+      <Footer/>
     </div>
   )
 }

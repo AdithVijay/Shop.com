@@ -26,7 +26,7 @@ export default function FilterBar() {
   },[])
     console.log("Datas", selectedFilters)
 
-
+//===============FETCHING DATA TO THE FILTERBAR================
   async function fetchData(){
     const response = await axiosInstance.get("admin/categories")
     console.log("this is the response for category", response);

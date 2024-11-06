@@ -44,16 +44,14 @@ const ViewUserOrder = () => {
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-1 text-sm text-gray-600 mb-8">
           <a href="/" className="flex items-center hover:text-blue-600">
-            <Home className="h-5 w-5" />
-            <span className="ml-1">Home</span>
+          
+            <span className="ml-1">Dashboard</span>
           </a>
           <ChevronRight className="h-4 w-4" />
-          <a href="/account" className="flex items-center hover:text-blue-600">
-            <User className="h-4 w-4" />
-            <span className="ml-1">Account</span>
+          <a href="/admin-orders" className="flex items-center hover:text-blue-600">
+
+            <span className="ml-1">Orders</span>
           </a>
-          <ChevronRight className="h-4 w-4" />
-          <a href="/orders" className="hover:text-blue-600">My Orders</a>
           <ChevronRight className="h-4 w-4" />
           <span className="text-gray-800 font-semibold">Order Details</span>
         </nav>

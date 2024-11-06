@@ -84,16 +84,7 @@ const handleUnlist = async (id) => {
                   <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt; Product Management
                 </div>
               </div>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 border rounded-md"
-                />
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-              </div>
+          
             </div>
             
             <div className="overflow-x-auto">
@@ -103,7 +94,7 @@ const handleUnlist = async (id) => {
                     <th className="border p-2 text-center">Product Name</th>
                     <th className="border p-2 text-center">Category</th>
                     <th className="border p-2 text-center">QTY</th>
-                    <th className="border p-2 text-center">Sale Price</th>
+                    <th className="border p-2 text-center">Regular Price</th>
                     <th className="border p-2 text-center">Sale price</th>
                     <th className="border p-2 text-center">Actions</th>
                     <th>Edit</th>

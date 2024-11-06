@@ -115,7 +115,7 @@ export default function FilterBar({selectedFilters,handleFilterChange,resetFilte
             handleFilterChange={handleFilterChange}
           />
           <FilterSection
-            title="Sleeve Type"
+            title="fit"
             items={filterData.fit}
             isOpen={isFilterFitOpen}
             handleClickChange={filterFitChange}
