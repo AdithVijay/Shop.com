@@ -3,12 +3,18 @@ const Category = require("../../models/category")
 const addCategory = async(req,res)=>{
     try{
          const{category, description } = req.body;
-         console.log(category, description);
+
+         const noramlizeCategory = category.toLowerCase()
+
+         const existingCategory = await Category.findOne({category:noramlizeCategory})
+         if(existingCategory){
+            return res.json({message:"Category already exist"})
+         }
          const new_category = await Category.create({
             description,
-            category,
+            category: noramlizeCategory,
           });
-        
+
           if (new_category) {
             return res.status(201).json({ success: true, message: "New Category Added Successfully", data: new_category });
           } else {

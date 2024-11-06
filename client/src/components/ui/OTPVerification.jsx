@@ -53,7 +53,7 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
   
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} >
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-center">Verify OTP</DialogTitle>

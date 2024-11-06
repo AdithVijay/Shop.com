@@ -39,7 +39,7 @@ export default function CategoryManagement() {
   };
 
   
-// ===================FETCHING DAT TO LIST IN TABLES=========================================================================
+// ===================FETCHING DAT TO LIST IN TABLES=============
 
   useEffect(() => {
     async function fetchData() {
@@ -53,7 +53,7 @@ export default function CategoryManagement() {
     fetchData()
   }, [])
   
-// ===================ADD NEW CATGEORY=========================================================================
+// =====================ADD NEW CATGEORY======================
 
   const addCategory = async (e) => {
     e.preventDefault();
@@ -68,7 +68,8 @@ export default function CategoryManagement() {
     console.log("Submitting:", { category, description }); 
     try {
       const response = await axiosInstance.post("/admin/addcategory", { category, description });
-      console.log(response.data);
+      console.log(response.data)
+      toast(response.data.message)
       if (response.data.success) {
         toast.success(response.data.message);
         setrecieveCategory([...recieveCategory, response.data.data]);
