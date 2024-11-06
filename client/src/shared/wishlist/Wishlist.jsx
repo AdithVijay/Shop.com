@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
@@ -43,12 +42,12 @@ const wishlistItems = [
 
 export default function Wishlist() {
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 ">
       <h1 className="text-4xl font-bold mb-4">Favourites</h1>
       <p className="text-gray-600 mb-8">{wishlistItems.length} Items</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-2">
         {wishlistItems.map((item) => (
-          <div key={item.id} className="flex flex-col">
+          <div key={item.id} className="flex flex-col transform transition-transform duration-200 hover:scale-105">
             <div className="relative aspect-[3/4] mb-4">
               <img
                 src={item.image}
@@ -57,7 +56,7 @@ export default function Wishlist() {
                 objectFit="cover"
                 className="rounded-lg"
               />
-              <button className="absolute top-2 right-2 bg-white rounded-full p-2">
+              <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-200 transition-colors">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -74,7 +73,7 @@ export default function Wishlist() {
                 </svg>
               </button>
             </div>
-            <h2 className="text-lg font-semibold mb-2">{item.name}</h2>
+            <h2 className="text-md font-semibold mb-2">{item.name}</h2>
             <p className="text-gray-600 mb-2">{item.price}</p>
             <p className="text-sm text-gray-500 mb-2">
               {item.newArrival && "New Arrival"}
@@ -99,18 +98,19 @@ export default function Wishlist() {
                 Not available in stores
               </p>
             )}
-            <Select>
-              <SelectTrigger className="w-full mb-4">
-                <SelectValue placeholder="Select size" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="xs">XS</SelectItem>
-                <SelectItem value="s">S</SelectItem>
-                <SelectItem value="m">M</SelectItem>
-                <SelectItem value="l">L</SelectItem>
-                <SelectItem value="xl">XL</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="relative w-full mb-4">
+              <select className="appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+              <option value="">Select Size</option>
+                <option value="s">S</option>
+                <option value="m">M</option>
+                <option value="l">L</option>
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M5.25 7.25l4.5 4.5 4.5-4.5" />
+                </svg>
+              </div>
+            </div>
             <Button className="w-full">Add</Button>
           </div>
         ))}

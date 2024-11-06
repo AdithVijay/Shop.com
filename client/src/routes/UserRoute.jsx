@@ -18,6 +18,7 @@ import ResetPassword from "@/pages/userpages/ResetPassword";
 import Shop1 from "@/pages/userpages/Shop1";
 import NewFilter from "@/shared/bars/NewFilter";
 import ProtectOther from "@/protect/ProtectOther";
+import UserWishList from "@/pages/userpages/UserWishList";
 
 const UserRoute = () => {
   return (
@@ -88,13 +89,22 @@ const UserRoute = () => {
           }
         ></Route>
 
-        <Route path="/wishlist" element={<Wishlist />}></Route>
+
 
         <Route
           path="/checkout"
           element={
             <ProtecHome>
               <CheckOutPage />
+            </ProtecHome>
+          }
+        ></Route>
+
+        <Route
+          path="/wishlist"
+          element={
+            <ProtecHome>
+                <UserWishList/>
             </ProtecHome>
           }
         ></Route>
