@@ -108,7 +108,8 @@ async function fetchProduct(){
         console.log(error);
       }
     }
-
+    
+//==================ADDING PROUDUCT TO WISHLIST=========================
    async function addToWishlist(){
     try {
       const response = await axiosInstance.post("/user/addtowishlist",{id,userId})

@@ -3,80 +3,75 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import axiosInstance from "@/config/axiosInstance"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import { toast } from "sonner"
 
-const wishlistItems = [
-  {
-    id: 1,
-    name: "Sequined thong body",
-    price: "Rs.2,299.00",
-    newArrival: true,
-    color: "Black",
-    image: "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729266344/vhusqafix4hbasxzub14.jpg",
-    available: false
-  },
-  {
-    id: 2,
-    name: "Regular Fit Zip-top jumper",
-    price: "Rs.2,999.00",
-    newArrival: true,
-    color: "Navy blue",
-    image: "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729266344/vhusqafix4hbasxzub14.jpg",
-    available: false
-  },
-  {
-    id: 3,
-    name: "Regular Fit Wool-blend jumper",
-    price: "Rs.2,999.00",
-    newArrival: true,
-    color: "Light brown marl",
-    image: "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729266344/vhusqafix4hbasxzub14.jpg",
-    available: false
-  },
-  {
-    id: 4,
-    name: "Regular Fit Zip-top jumper",
-    price: "Rs.2,999.00",
-    newArrival: true,
-    color: "White",
-    image: "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729266344/vhusqafix4hbasxzub14.jpg",
-    available: false
-  },
-]
+
 
 
 export default function Wishlist() {
 
   const [wishlist, setwishlist] = useState(null)
-  const user = useSelector((state)=>state.user.users)
-  console.log(user);
+  const [size, setsize] = useState({})
+  
+  
+  const userId = useSelector((state)=>state.user.users)
+  console.log(userId);
 
   //=========================USEFFECT========================
   useEffect(()=>{
     fetchData()
-  },[user])
+  },[userId])
 
   //================DATA FETCHING FOR WISHLIST==============
   async function fetchData(){
     try {
-      const response  = await axiosInstance.get(`/user/get-wishlist-data/${user}`)
+      const response  = await axiosInstance.get(`/user/get-wishlist-data/${userId}`)
       console.log(response)
       setwishlist(response.data.items)
     } catch (error) {
       console.log(error)
     }
   }
-console.log("This is the wishlist", wishlist)
+  console.log("This is the wishlist", wishlist)
 
-   
+  //==============HANDLING THE SIZE CHANGE================
+  function handlesizechange(productId,size){
+    console.log("product id", productId);
+    setsize((prev)=>({...prev,[productId]:size}))
+  }
+
   
+
+  //==============ADDING THE DATA TO CART==================
+  async function addtoCart(productId,price){
+    try {
+      console.log("cart being pressed",size,productId,price)
+      //logic to destrucutre the object
+      const selectedSize =size[productId]
+      if(!selectedSize){
+        return toast("select a size")
+      }
+      const response = await axiosInstance.post("user/cartadd",{
+        userId,
+        productId,
+        price,
+        quantity:1,
+        selectedSize
+      })
+      console.log(response)      
+      toast(response.data.message) 
+    } catch (error) {
+      
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 ">
-      <h1 className="text-4xl font-bold mb-4">Favourites</h1>
-      <p className="text-gray-600 mb-8">{wishlistItems.length} Items</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-2">
+      <h1 className="text-4xl font-bold mb-4 text-center">Favourites</h1>
+      <p className="text-gray-600 mb-8 text-center">{wishlist && wishlist.length} Items</p>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-2 ">
         {wishlist && wishlist.map((item) => (
-          <div key={item.id} className="flex flex-col transform transition-transform duration-200 hover:scale-105">
+          <div key={item._id} className="flex flex-col transform transition-transform duration-200 hover:scale-105 ">
             <div className="relative aspect-[3/4] mb-4">
               <img
                 src={item.productId.images[0]}
@@ -102,36 +97,18 @@ console.log("This is the wishlist", wishlist)
                 </svg>
               </button>
             </div>
-            <h2 className="text-md font-semibold mb-2">{item.productId.productName}</h2>
-            <p className="text-gray-600 mb-2">₹{item.productId.salePrice}</p>
-            <p className="text-sm text-gray-500 mb-2">
-              {item.newArrival && "New Arrival"}
-            </p>
-            <p className="text-sm text-gray-500 mb-4">Colour: {item.color}</p>
-            {!item.available && (
-              <p className="text-sm text-gray-500 mb-4 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-5 h-5 mr-1"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z"
-                  />
-                </svg>
-                Not available in stores
-              </p>
-            )}
+            <div className=" flex flex-col items-center">
+              <h2 className="text-md font-semibold mb-2">{item.productId.productName}</h2>
+              <p className="text-gray-600 mb-2">₹{item.productId.salePrice}</p>
+            </div>
             <div className="relative w-full mb-4">
-
-                <select className=" flex text-center appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                <select onChange={(e)=>handlesizechange(item.productId._id,e.target.value)} className=" flex text-center appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <option value="">Select Size</option>
-                <option value=""></option>
+                {Object.entries(item.productId.sizes).map(([size,stock])=>(
+                  <option value={size} key={size}  disabled={stock==0} >
+                      {size} {stock > 0 ?`(${stock} stocks available)`:"Out Of Stock"}
+                  </option>
+                ))}
                 </select>
             
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -140,7 +117,9 @@ console.log("This is the wishlist", wishlist)
                 </svg>
               </div>
             </div>
-            <Button className="w-full">Add</Button>
+              <button onClick={()=>addtoCart(item.productId._id,item.productId.salePrice)} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
+              Add to Cart
+            </button>
           </div>
         ))}
       </div>

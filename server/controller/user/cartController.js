@@ -6,6 +6,8 @@ const addItemToCart = async (req, res) => {
       const { userId, productId, selectedSize, quantity, price } = req.body;
       const totalItemPrice = price * quantity;
 
+      console.log(req.body);
+      
       let cart = await Cart.findOne({ userId });
       if (cart) {
         const existingItem = cart.items.find(
