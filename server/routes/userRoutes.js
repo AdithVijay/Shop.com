@@ -7,6 +7,7 @@ const productController = require("../controller/user/productController")
 const addressController = require("../controller/user/addressController")
 const cartController = require("../controller/user/cartController")
 const orderController = require("../controller/user/orderController")
+const wishListController = require("../controller/user/wishListController")
 
 
 //=================USERLOGIN AND SIGNUP=============
@@ -52,4 +53,6 @@ userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WH
 //=============================TO DISPLAY THE FILTERED PRODUCTS==============================
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP
 
+//=============================TO DISPLAY THE FILTERED PRODUCTS==============================
+userRoute.post("/addtowishlist",wishListController.addToWishlist)
 module.exports = userRoute; 

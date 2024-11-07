@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate, useParams ,Link} from 'react-router-dom';
 import { toast } from 'sonner';
 
+
 const product = {
   name: "One Life Graphic T-shirt",
   price: 299,
@@ -33,6 +34,7 @@ const ProductDetail = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [productData, setproductData] = useState([]);
   const[size,setsize]=useState('')
+  const [displayWishlist, setdisplayWishlist] = useState(false);
   const[displayCart,setdisplayCart]=useState(false)
   const [selectedQuantity, setSelectedQuantity] = useState(0); 
   const userId =  useSelector(state=>state.user.users)
@@ -101,11 +103,21 @@ async function fetchProduct(){
         }else{
           setdisplayCart(false)
         }
-      } catch (error) {
+      } catch (error){
         console.log(error);
       }
     }
-  
+
+   async function addToWishlist(){
+    console.log("afdfddf");
+    
+    try {
+      const response = await axiosInstance.post("/user/addtowishlist",{id,userId})
+      console.log(response)
+    } catch (error) {
+      console.log(error)
+    }
+    }
 // ======================================================================================================================================================================================================
   return (
     <div>
@@ -193,8 +205,15 @@ async function fetchProduct(){
         </div>
         </div>
 
-        {/* Add to Cart Button */}
+            {/* Add to Wishlist Button */}
+            <button 
+            onClick={addToWishlist}
+            className="mt-4 w-full bg-gray-300 text-black py-2 rounded text-sm lg:text-base lg:py-3"
+          >
+            {/* {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} */} Wishlist
+          </button>
 
+        {/* Add to Cart Button */}
         <button 
             onClick={() => displayCart ? navigate('/addtocart') : addtocart(id)} 
             className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3"
