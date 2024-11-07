@@ -12,6 +12,7 @@ import AdminHome from '@/protect/AdminHome'
 import AdminReturnLogin from '@/protect/AdminReturnLogin'
 import OrderListing from '@/pages/adminpages/orders/OrderListing'
 import ViewUserOrder from '@/pages/adminpages/orders/ViewUserOrder'
+import OfferModal from '@/shared/modal/OfferModal'
 const AdminRoute = () => {
   return (
     <div>
@@ -62,9 +63,14 @@ const AdminRoute = () => {
               </AdminHome>
               }></Route>
 
-<Route path='/admin-view-order/:id' element={
+            <Route path='/admin-view-order/:id' element={
                     <AdminHome>
               <ViewUserOrder/>
+              </AdminHome>
+              }></Route>
+              <Route path='/modal' element={
+                    <AdminHome>
+                      <OfferModal/>
               </AdminHome>
               }></Route>
           </Routes>

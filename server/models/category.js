@@ -23,6 +23,10 @@ const categorySchema = new mongoose.Schema({
       type: Date,
       default: Date.now,
     },
+    offerPrice:{
+      type:Number,
+      default:0
+    }
   });
 
   const Category = mongoose.model("categorie", categorySchema);

@@ -4,6 +4,7 @@ import Sidebar from '@/shared/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'sonner';
+import OfferModal from '@/shared/modal/OfferModal';
 
 export default function CategoryManagement() {
   const [category, setCategories] = useState("");
@@ -176,9 +177,11 @@ export default function CategoryManagement() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border p-2 text-left">ID</th>
+
                     <th className="border p-2 text-left">Category Name</th>
                     <th className="border p-2 text-left">Category Description</th>
+                    <th className="border p-2 text-left">Offer %</th>
+                    <th className="border p-2 text-left">Offer</th>
                     <th className="border p-2 text-center">List/Unlist</th>
                     <th className="border p-2 text-center">Action</th>
                   </tr>
@@ -186,9 +189,12 @@ export default function CategoryManagement() {
                 <tbody>
                   {recieveCategory.map((category, index) => (
                     <tr key={category._id} className="border-b">
-                      <td className="border p-2">{index + 1}</td>
                       <td className="border p-2">{category.category}</td>
                       <td className="border p-2">{category.description}</td>
+                      <td className="border p-2">100</td>
+                      <td className="border p-2">
+                        <OfferModal/>
+                      </td>
                       <td className="border p-2 text-center">
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"

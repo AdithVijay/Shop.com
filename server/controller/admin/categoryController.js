@@ -126,6 +126,15 @@ const listCategoryForFiltering = async(req,res)=>{
         console.log(error)
     }
 }
+const createCategoryOffer =async()=>{
+    try {
+        const {offerData} = req.body
+        console.log(offerData);
+        
+    } catch (error) {
+        
+    }
+}
 
 module.exports = {
    addCategory,
@@ -134,7 +143,8 @@ module.exports = {
    unListCategory,
    fetchCategory,
    handleUpdate,
-   listCategoryForFiltering
+   listCategoryForFiltering,
+   createCategoryOffer
 }
 
 
