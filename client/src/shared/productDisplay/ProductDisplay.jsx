@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams ,Link} from 'react-router-dom';
 import { toast } from 'sonner';
+import { CiHeart } from "react-icons/ci";
 
 
 const product = {
@@ -109,11 +110,10 @@ async function fetchProduct(){
     }
 
    async function addToWishlist(){
-    console.log("afdfddf");
-    
     try {
       const response = await axiosInstance.post("/user/addtowishlist",{id,userId})
       console.log(response)
+      toast(response.data.message)
     } catch (error) {
       console.log(error)
     }
@@ -212,7 +212,7 @@ async function fetchProduct(){
           >
             {/* {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} */} Wishlist
           </button>
-
+        
         {/* Add to Cart Button */}
         <button 
             onClick={() => displayCart ? navigate('/addtocart') : addtocart(id)} 

@@ -53,6 +53,8 @@ userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WH
 //=============================TO DISPLAY THE FILTERED PRODUCTS==============================
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP
 
-//=============================TO DISPLAY THE FILTERED PRODUCTS==============================
+//=============================TO ADD PRODUCT To WISHLIST==============================
 userRoute.post("/addtowishlist",wishListController.addToWishlist)
-module.exports = userRoute; 
+userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)
+
+module.exports = userRoute;

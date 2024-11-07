@@ -1,0 +1,66 @@
+{
+    "data": {
+      "createdAt": "2024-11-07T05:06:50.574Z",
+      "items": [
+        {
+          "productId": {
+            "additionalInfo": "The actual colour of the product may vary slightly due to photographic lighting sources or your device.",
+            "category": "670f61c2a53ac9f6160d74c1",
+            "createdAt": "2024-10-21T11:41:34.736Z",
+            "description": "Give your everyday wardrobe an effortless appeal with this classy pink 95%polyester 5%spandex shirt. Designed in a Box fit, this shirt is known for its endless versatility.",
+            "images": [
+              "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729510903/1kdcvzpaexs8ujxphigx.jpg",
+              "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729510903/ihn39fz72zluxw5ocri2.jpg",
+              "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729510903/bvdu5tmw@s0xkra1amvl.jpg",
+              "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729510903/rczcoq8notntf2xg7nvv.jpg",
+              "https://res.cloudinary.com/dxmoiixw3/image/upload/v1729510903/xmhk4yts3trvh23ullxm.jpg"
+            ],
+            "isListed": true,
+            "productName": "Pink Cuban Textured Shirt",
+            "regularPrice": 1500,
+            "salePrice": 1200,
+            "sizes": {
+              "S": 5,
+              "M": 8,
+              "L": 7,
+              "XL": 8,
+              "XXL": 6
+            },
+            "sleeveType": "Half sleeve",
+            "totalStock": 35,
+            "__v": 0,
+            "_id": "67163dee1f8336ead317cce3"
+          },
+          "_id": "672c4aea6f4e93580d5bacab"
+        },
+        {
+          "productId": {
+            "_id": "672c4da97bea8094c445c789"
+          }
+        }
+      ],
+      "user": "670d6e73d5b8589fc6df5198",
+      "__v": 1,
+      "_id": "672c4aea6f4e93580d5bacaa"
+    },
+    "status": 200,
+    "statusText": "OK",
+    "headers": {
+      "content-length": "2567",
+      "content-type": "application/json; charset=utf-8"
+    },
+    "config": {
+      "transitional": {},
+      "adapter": ["xhr", "http", "https"],
+      "transformRequest": ["[Function: transformRequest]"],
+      "transformResponse": ["[Function: transformResponse]"],
+      "timeout": 5000,
+      "otherConfigProperties": {}
+    },
+    "request": {
+      "readyState": 4,
+      "timeout": 5000,
+      "withCredentials": true
+    }
+  }
+  

@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import axiosInstance from "@/config/axiosInstance"
+import { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 
 const wishlistItems = [
   {
@@ -40,23 +43,46 @@ const wishlistItems = [
   },
 ]
 
+
 export default function Wishlist() {
 
+  const [wishlist, setwishlist] = useState(null)
+  const user = useSelector((state)=>state.user.users)
+  console.log(user);
 
+  //=========================USEFFECT========================
+  useEffect(()=>{
+    fetchData()
+  },[user])
+
+  //================DATA FETCHING FOR WISHLIST==============
+  async function fetchData(){
+    try {
+      const response  = await axiosInstance.get(`/user/get-wishlist-data/${user}`)
+      console.log(response)
+      setwishlist(response.data.items)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+console.log("This is the wishlist", wishlist)
+
+   
+  
 
   return (
     <div className="container mx-auto px-4 py-8 ">
       <h1 className="text-4xl font-bold mb-4">Favourites</h1>
       <p className="text-gray-600 mb-8">{wishlistItems.length} Items</p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pt-2">
-        {wishlistItems.map((item) => (
+        {wishlist && wishlist.map((item) => (
           <div key={item.id} className="flex flex-col transform transition-transform duration-200 hover:scale-105">
             <div className="relative aspect-[3/4] mb-4">
               <img
-                src={item.image}
+                src={item.productId.images[0]}
                 alt={item.name}
                 layout="fill"
-                objectFit="cover"
+                style={{ objectFit: "cover" }} 
                 className="rounded-lg"
               />
               <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-200 transition-colors">
@@ -76,8 +102,8 @@ export default function Wishlist() {
                 </svg>
               </button>
             </div>
-            <h2 className="text-md font-semibold mb-2">{item.name}</h2>
-            <p className="text-gray-600 mb-2">{item.price}</p>
+            <h2 className="text-md font-semibold mb-2">{item.productId.productName}</h2>
+            <p className="text-gray-600 mb-2">₹{item.productId.salePrice}</p>
             <p className="text-sm text-gray-500 mb-2">
               {item.newArrival && "New Arrival"}
             </p>
@@ -102,12 +128,12 @@ export default function Wishlist() {
               </p>
             )}
             <div className="relative w-full mb-4">
-              <select className="appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-              <option value="">Select Size</option>
-                <option value="s">S</option>
-                <option value="m">M</option>
-                <option value="l">L</option>
-              </select>
+
+                <select className=" flex text-center appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                <option value="">Select Size</option>
+                <option value=""></option>
+                </select>
+            
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                   <path d="M5.25 7.25l4.5 4.5 4.5-4.5" />

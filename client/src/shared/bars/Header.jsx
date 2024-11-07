@@ -69,12 +69,11 @@ const Header = () => {
             )} */}
 
             {/* User Icon */}
-            <button className="text-muted-foreground hover:text-primary">
+            <div className="text-muted-foreground hover:text-primary">
             <DropdownMenu/>
-            </button>
+            </div>
 
             {/* Login Button - Hidden on mobile */}
-         
            
             {!userData? <button 
               className="w-full bg-black text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105"

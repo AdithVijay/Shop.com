@@ -2,29 +2,44 @@ const Wishlist = require("../../models/wishlist");
 const User = require("../../models/usersModel");
 const ProductData = require("../../models/productModel");
 
+//====================ADDING PRODUCT TO WISHLIST====================
 const addToWishlist = async(req,res)=>{
-    const {userId,id} = req.body
-    const user = await User.findById(userId);
+    const {userId,id:productId} = req.body
 
-    if (!user) {
-        return res.status(404).json({ message: "User not found" });
+    const usersWishlist = await Wishlist.findOne({user:userId})
+
+    if(usersWishlist){
+        const existingItem = usersWishlist.items.find((x)=>x.productId == productId)
+        if(existingItem){
+            return res.json({message:"Product already in the wishlist"})
+        }else{
+            const newItem = usersWishlist.items.push({productId})
+            console.log(newItem);
+            await usersWishlist.save()
+            return res.json({message:"product added to wishlist"})
+        }
     }
 
-    // Fetch the product by productId (id)
-    const product = await ProductData.findOne({ _id: id });
-
-    if (!product) {
-        return res.status(404).json({ message: "Product not found" });
+   
+    if(!usersWishlist){
+        const wishlist = await Wishlist.create({
+            user: userId,
+            items: [{ productId: productId }]
+        });
+        res.status(200).json({ message: "Product added to wishlist", wishlist });
     }
+}
 
-    const wishlist = await Wishlist.create({
-        user: userId,
-        items: [{ productId: id }]  // Added productId in items array
-    });
+//====================GETTING DATA TO DISPLAY IN WISHLIST====================
 
-    res.status(200).json({ message: "Product added to wishlist", wishlist });
+const gettingWishlistData = async(req,res)=>{
+    const {id} = req.params
+    console.log(id)
+    const wishlist = await Wishlist.findOne({user:id}).populate(["items.productId"])
+    return res.json(wishlist)
 }
 
 module.exports = {
-    addToWishlist
+    addToWishlist,
+    gettingWishlistData
 }
