@@ -40,6 +40,8 @@ adminRoute.get("/getproducts",productController.gettingProducts)
 adminRoute.get("/getdifferentcategory",productController.gettingCategoryForCard)
 adminRoute.put("/listproduct/:id",verifyAdmin,productController.ListingProducts)
 adminRoute.put("/unlistproduct/:id",verifyAdmin,productController.unListingProducts)
+adminRoute.post("/add-product-offer",verifyAdmin,productController.addProductOffer)
+adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProductOffer)
 
   //==================USERMANGMENT SIDE========================
   adminRoute.get("/fetchuserdata",userController.fetchUser)

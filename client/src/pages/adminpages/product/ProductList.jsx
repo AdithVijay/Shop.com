@@ -11,6 +11,8 @@ export default function ProductList() {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [reloadOnOffer, setreloadOnOffer] = useState(false);
+  
   const navigate = useNavigate();
 
 // ==================GETTING THE PRODUCT DATA =========================
@@ -21,12 +23,13 @@ export default function ProductList() {
         const response = await axiosInstance.get('/admin/getproducts')
         console.log(response,"Data reciving");
           setProducts(response.data.data);        
+
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     }
     fetchProducts()
-  },[])
+  },[reloadOnOffer])
 
 // ========================EDITTING THE PRODUCT=========================
 
@@ -51,7 +54,7 @@ const handleList = async (id) => {
   }
 };
 
-// ===================UNLIST CATGEORY=========================================================================
+// ===================UNLIST CATGEORY=================
 
 const handleUnlist = async (id) => {
   try {
@@ -67,8 +70,31 @@ const handleUnlist = async (id) => {
   } catch (error) {
     console.error(error);
   }
-};
+}
+//==============================HANDLE RELOAD ON OFFER CHANGE==================
+  function handleReloadChangeForOffer(){
+    setreloadOnOffer(!reloadOnOffer)
+  }
 
+//==============================ADDING THE OFFER==============================
+  async function addProductOffer({offerData,targetId}){
+    try {
+      console.log(offerData,targetId);
+      const response = await axiosInstance.post("/admin/add-product-offer",{offerData,productId:targetId})
+      console.log(response)
+      handleReloadChangeForOffer()
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  //========================OFFER REMOVE FUNCTION=======================
+  async function removeOffer(productId,offerPrice){
+    console.log(productId,offerPrice);
+    const response = await axiosInstance.post("/admin/remove-product-offer",{productId,offerPrice})
+    console.log(response);
+    toast(response.data.message)
+    handleReloadChangeForOffer()
+  }
 
 // =====================================================================================================
 
@@ -94,7 +120,7 @@ const handleUnlist = async (id) => {
                   <tr className="bg-gray-100">
                     <th className="border p-2 text-center">Product Name</th>
                     <th className="border p-2 text-center">Category</th>
-                    <th className="border p-2 text-center">QTY</th>
+                    <th className="border p-2 text-center">offer %</th>
                     <th className="border p-2 text-center">Offer</th>
                     <th className="border p-2 text-center">Sale price</th>
                     <th className="border p-2 text-center">Actions</th>
@@ -106,11 +132,18 @@ const handleUnlist = async (id) => {
                     <tr key={product._id} className="border-b">
                       <td className="border p-2 text-center">{product. productName}</td>
                       <td className="border p-2 text-center">{product.category ? product.category.category : "No category"}</td>
-                      <td className="border p-2 text-center">{product.totalStock}</td>
+                      <td className="border p-2 text-center">{product.offerPrice}</td>
+
                       {/* This is the place where  */}
                       <td className="border p-2 text-center">
-                        <OfferModal/>
+                        {product.OfferIsActive?
+                            <button onClick={()=>removeOffer(product._id,product.offerPrice)} className="bg-red-500 text-white py-2 px-2 rounded-lg">
+                               Remove
+                            </button>
+                          :<OfferModal targetId={product._id} submitOffer={addProductOffer} handleReloadChangeForOffer={handleReloadChangeForOffer}/>
+                         }
                       </td>
+
                       <td className="border p-2 text-center">{product.salePrice}</td>
                       <td className="border p-2 text-center">
                       <button

@@ -56,6 +56,14 @@ const productSchema = new Schema({
   isListed: {
     type: Boolean,
     default: true,
+  },
+  offerPrice:{
+    type:Number,
+    default:0
+  },
+  OfferIsActive:{
+    type:Boolean,
+    default:false
   }
 });
 const ProductData = mongoose.model('Product', productSchema);

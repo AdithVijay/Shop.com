@@ -209,6 +209,41 @@ const unListingProducts = async(req,res)=>{
 }
 }
 
+// ==========================UNLISTING PRODUCT DATA IN PRODUCT PAGE===========================
+const addProductOffer = async(req,res)=>{
+    console.log(req.body)
+    const {offerData,productId} = req.body
+    const product = await ProductData.findById(productId)
+    product.regularPrice = product.salePrice
+    const offerPrice =Math.round( product.salePrice - (product.salePrice * offerData/100))
+    await ProductData.findByIdAndUpdate({_id:productId},
+        {
+        salePrice:offerPrice,
+        regularPrice:product.regularPrice,
+        offerPrice:offerData,
+        OfferIsActive:true
+        },
+        {new:true}
+    )
+}
+const removeProductOffer = async(req,res)=>{
+    try {
+        const {productId,offerPrice} = req.body
+        console.log(req.body)
+        const product = await ProductData.findById(productId)  
+        const data=  await ProductData.findByIdAndUpdate({
+            _id:productId},
+            {salePrice:product.regularPrice,
+            OfferIsActive:false,
+            offerPrice:0
+            },
+        {new:true}
+    )
+    console.log(data)
+    }catch (error) {
+        console.log(error);
+    }
+}
 
 
 
@@ -220,5 +255,7 @@ module.exports={
     gettingProducts,
     ListingProducts,
     unListingProducts,
-    gettingCategoryForCard
+    gettingCategoryForCard,
+    addProductOffer,
+    removeProductOffer
 }

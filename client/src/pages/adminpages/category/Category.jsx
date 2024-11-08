@@ -17,6 +17,7 @@ export default function CategoryManagement() {
   }
 
   const navigate = useNavigate()
+  
   const [errors, setErrors] = useState({});
   const letterRegex = /^[A-Za-z\s]+$/;
 // ===================VALIDATE FORM===================================================
