@@ -145,8 +145,9 @@ export default function Card4() {
                     />
                     <div className="p-3 text-center">
                       <h3 className="text-sm mb-1 text-gray-800">{product.productName}</h3>
+                      <p className="text-sm mb-1 text-gray-600">{product.category.category}</p>
+                      {/* <p className="text-sm text-gray-600">X M S L XL XXL</p> */}
                       <p className="text-sm mb-1 text-gray-600">₹{product.salePrice}</p>
-                      <p className="text-sm text-gray-600">X M S L XL XXL</p>
                     </div>
                   </div>
                 </Link>

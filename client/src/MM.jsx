@@ -1,30 +1,36 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export default function OfferModal({handleReloadChangeForOffer,submitOffer,targetId}) {
+export default function OfferModal({ 
+    targetId,  // Either categoryId or productId
+    handleReloadChangeForOffer, 
+    submitOffer, // Function to handle API call
+    title = "Enter The Offer", // Default title, can be overridden
+    placeholder = "Enter the offer percentage" // Default placeholder
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [offerData, setOfferData] = useState(null);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const [offerData, setofferData] = useState(null);
-  const navigate =useNavigate()
 
-  //==================== SUBMITING THE OFFER =================
+  //==================== SUBMITTING THE OFFER =================
   async function handleSubmit() {
+    console.log("Target ID:", targetId);
+    console.log("Sending offerData:", offerData); 
     try {
-      submitOffer({offerData,targetId})
-      handleReloadChangeForOffer()
-      closeModal()
+      await submitOffer({ offerData, targetId }); // Call the passed function
+      toast("Offer applied successfully");
+      handleReloadChangeForOffer();
+      closeModal();
     } catch (error) {
-      console.error("Error submitting offer:", error); 
+      console.error("Error submitting offer:", error);
     }
   }
 
-
   return (
-    <div >
+    <div>
       {/* Button to open the modal */}
       <button onClick={openModal} className="bg-blue-500 text-white py-2 px-2 rounded-lg">
         Add Offer
@@ -34,13 +40,13 @@ export default function OfferModal({handleReloadChangeForOffer,submitOffer,targe
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg w-80">
-            <h2 className="text-xl font-semibold mb-4">Enter The Offer</h2>
+            <h2 className="text-xl font-semibold mb-4">{title}</h2>
             
             {/* Input field */}
             <input
-              type="number"  // Ensures numeric input
-              placeholder="Enter the offer price"
-              onChange={(e) => setofferData(e.target.value)}
+              type="number"
+              placeholder={placeholder}
+              onChange={(e) => setOfferData(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full mb-4 focus:outline-none focus:border-blue-500"
             />
 
@@ -53,7 +59,7 @@ export default function OfferModal({handleReloadChangeForOffer,submitOffer,targe
                 Cancel
               </button>
               <button
-                onClick={() =>handleSubmit()}
+                onClick={handleSubmit}
                 className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
               >
                 Submit

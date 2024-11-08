@@ -142,6 +142,20 @@ export default function CategoryManagement() {
       handleReloadChangeForOffer()
     }
 
+  //==================== SUBMITING THE OFFER =================
+    async function addCategoryOffer({offerData,targetId}) {
+      console.log(targetId);
+      console.log("Sending offerData:", offerData); 
+      try {
+        const response = await axiosInstance.post("/admin/create-category-offer", {offerData,categoryId:targetId});
+        console.log("Server response:", response.data)
+        toast(response.data.message)
+        handleReloadChangeForOffer()
+      } catch (error) {
+        console.error("Error submitting offer:", error); 
+      }
+    }
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -211,13 +225,15 @@ export default function CategoryManagement() {
                       <td className="border p-2">{category.category}</td>
                       <td className="border p-2">{category.description}</td>
                       <td className="border p-2 text-center">{category.offerPrice}%</td>
+
                       <td className="border p-2 text-center">
                         {category.offerIsActive?
                         <button onClick={()=>removeOffer(category._id,category.offerPrice)} className="bg-red-500 text-white py-2 px-2 rounded-lg">
                         Remove
                       </button>
-                        :<OfferModal categoryId = {category._id} handleReloadChangeForOffer={handleReloadChangeForOffer}/>}
+                        :<OfferModal targetId = {category._id} submitOffer={addCategoryOffer} handleReloadChangeForOffer={handleReloadChangeForOffer}/>}
                       </td>
+
                       <td className="border p-2 text-center">
                         <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"

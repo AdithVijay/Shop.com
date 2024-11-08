@@ -4,6 +4,7 @@ import Sidebar from '@/shared/bars/Sidebar';
 import axiosInstance from '@/config/axiosInstance';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "sonner";
+import OfferModal from '@/shared/modal/OfferModal';
 
 
 export default function ProductList() {
@@ -94,7 +95,7 @@ const handleUnlist = async (id) => {
                     <th className="border p-2 text-center">Product Name</th>
                     <th className="border p-2 text-center">Category</th>
                     <th className="border p-2 text-center">QTY</th>
-                    <th className="border p-2 text-center">Regular Price</th>
+                    <th className="border p-2 text-center">Offer</th>
                     <th className="border p-2 text-center">Sale price</th>
                     <th className="border p-2 text-center">Actions</th>
                     <th>Edit</th>
@@ -106,11 +107,12 @@ const handleUnlist = async (id) => {
                       <td className="border p-2 text-center">{product. productName}</td>
                       <td className="border p-2 text-center">{product.category ? product.category.category : "No category"}</td>
                       <td className="border p-2 text-center">{product.totalStock}</td>
-                      {/* <td className="border p-2 text-right">INR {product.price.toFixed(2)}</td> */}
-                      <td className="border p-2 text-center">{product.salePrice}</td>
-                      <td className="border p-2 text-center">{product.regularPrice}</td>
+                      {/* This is the place where  */}
                       <td className="border p-2 text-center">
-                        
+                        <OfferModal/>
+                      </td>
+                      <td className="border p-2 text-center">{product.salePrice}</td>
+                      <td className="border p-2 text-center">
                       <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
                           style={{ opacity: product.isListed ? "0.5" : "1" }}
