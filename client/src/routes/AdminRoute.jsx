@@ -13,6 +13,8 @@ import AdminReturnLogin from '@/protect/AdminReturnLogin'
 import OrderListing from '@/pages/adminpages/orders/OrderListing'
 import ViewUserOrder from '@/pages/adminpages/orders/ViewUserOrder'
 import OfferModal from '@/shared/modal/OfferModal'
+import CouponList from '@/pages/adminpages/coupons/CouponList'
+import AddCoupoun from '@/pages/adminpages/coupons/AddCoupoun'
 const AdminRoute = () => {
   return (
     <div>
@@ -68,9 +70,16 @@ const AdminRoute = () => {
               <ViewUserOrder/>
               </AdminHome>
               }></Route>
-              <Route path='/modal' element={
+
+              <Route path='/coupon' element={
                     <AdminHome>
-                      <OfferModal/>
+                      <CouponList/>
+              </AdminHome>
+              }></Route>
+
+              <Route path='/add-coupon' element={
+                    <AdminHome>
+                      <AddCoupoun/>
               </AdminHome>
               }></Route>
           </Routes>
