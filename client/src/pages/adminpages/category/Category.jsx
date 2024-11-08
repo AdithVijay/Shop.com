@@ -10,6 +10,11 @@ export default function CategoryManagement() {
   const [category, setCategories] = useState("");
   const [description, setdescription] = useState("");
   const [recieveCategory, setrecieveCategory] = useState([]);
+  const [reloadOnOffer, setreloadOnOffer] = useState(false);
+
+  function handleReloadChangeForOffer(){
+    setreloadOnOffer(!reloadOnOffer)
+  }
 
   const navigate = useNavigate()
   const [errors, setErrors] = useState({});
@@ -52,7 +57,7 @@ export default function CategoryManagement() {
       }
     }
     fetchData()
-  }, [])
+  }, [reloadOnOffer])
   
 // =====================ADD NEW CATGEORY======================
 
@@ -191,9 +196,10 @@ export default function CategoryManagement() {
                     <tr key={category._id} className="border-b">
                       <td className="border p-2">{category.category}</td>
                       <td className="border p-2">{category.description}</td>
-                      <td className="border p-2">100</td>
+                      <td className="border p-2 text-center">{category.offerPrice}%</td>
                       <td className="border p-2">
-                        <OfferModal categoryId = {category._id}/>
+                        
+                        <OfferModal categoryId = {category._id} handleReloadChangeForOffer={handleReloadChangeForOffer}/>
                       </td>
                       <td className="border p-2 text-center">
                         <button

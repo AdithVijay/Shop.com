@@ -127,11 +127,30 @@ const listCategoryForFiltering = async(req,res)=>{
         console.log(error)
     }
 }
+//================================TO CREATE THE CATEGORY OFFER =======================
 const createCategoryOffer = async (req, res) => {
     try {
       const { offerData,categoryId} = req.body
-        console.log("Offer data",offerData);
-        
+      console.log("Offer data",offerData,categoryId);
+
+      const category = await Category.findByIdAndUpdate(
+        {_id:categoryId},
+        {offerPrice:offerData,offerIsActive:true},
+        {new:true}
+      )
+      console.log(category)
+
+      const Products = await ProductData.find({category:categoryId})
+
+      for(let product of Products){
+        const discountPrice =Math.round( product.salePrice - (product.salePrice*offerData/100))
+        await ProductData.findByIdAndUpdate(
+            product._id,
+            { salePrice: discountPrice },
+            { new: true }
+          );
+      }
+      res.status(200).json({ message: "Offer created and applied to products successfully" });
     } catch (error) {
       console.error("Error creating offer:", error);
       res.status(500).json({ error: "Failed to create offer" });

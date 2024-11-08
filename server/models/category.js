@@ -26,6 +26,10 @@ const categorySchema = new mongoose.Schema({
     offerPrice:{
       type:Number,
       default:0
+    },
+    offerIsActive:{
+      type:Boolean,
+      default:false
     }
   });
 

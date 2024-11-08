@@ -1,13 +1,15 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
-export default function OfferModal({categoryId}) {
+export default function OfferModal({categoryId,handleReloadChangeForOffer}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [offerData, setofferData] = useState(null);
-  
+  const navigate =useNavigate()
 
   //==================== SUBMITING THE OFFER =================
   async function submitOffer() {
@@ -15,12 +17,14 @@ export default function OfferModal({categoryId}) {
     console.log("Sending offerData:", offerData); 
     try {
       const response = await axiosInstance.post("/admin/create-category-offer", {offerData,categoryId});
-      console.log("Server response:", response.data); 
+      console.log("Server response:", response.data)
+      toast(response.data.message)
+      handleReloadChangeForOffer()
+      closeModal()
     } catch (error) {
       console.error("Error submitting offer:", error); 
     }
   }
-  
 
   return (
     <div >
