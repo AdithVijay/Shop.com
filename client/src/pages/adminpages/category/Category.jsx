@@ -193,7 +193,7 @@ export default function CategoryManagement() {
                       <td className="border p-2">{category.description}</td>
                       <td className="border p-2">100</td>
                       <td className="border p-2">
-                        <OfferModal/>
+                        <OfferModal categoryId = {category._id}/>
                       </td>
                       <td className="border p-2 text-center">
                         <button

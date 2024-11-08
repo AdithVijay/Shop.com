@@ -1,7 +1,7 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useState } from 'react';
 
-export default function OfferModal() {
+export default function OfferModal({categoryId}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => setIsModalOpen(true);
@@ -9,9 +9,16 @@ export default function OfferModal() {
   const [offerData, setofferData] = useState(null);
   
 
-  async function submitOffer(){
-    const response = await axiosInstance.post("/admin/create-category-offer",offerData)
-    console.log(response);
+  //==================== SUBMITING THE OFFER =================
+  async function submitOffer() {
+    console.log(categoryId);
+    console.log("Sending offerData:", offerData); 
+    try {
+      const response = await axiosInstance.post("/admin/create-category-offer", {offerData,categoryId});
+      console.log("Server response:", response.data); 
+    } catch (error) {
+      console.error("Error submitting offer:", error); 
+    }
   }
   
 
@@ -30,9 +37,9 @@ export default function OfferModal() {
             
             {/* Input field */}
             <input
-              type="text"
+              type="number"  // Ensures numeric input
               placeholder="Enter the offer price"
-              onChange={(e)=>setofferData(e.target.value)}
+              onChange={(e) => setofferData(e.target.value)}
               className="border border-gray-300 p-2 rounded-lg w-full mb-4 focus:outline-none focus:border-blue-500"
             />
 

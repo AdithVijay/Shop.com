@@ -1,4 +1,5 @@
 const Category = require("../../models/category")
+const ProductData = require("../../models/productModel")
 
 const addCategory = async(req,res)=>{
     try{
@@ -126,15 +127,16 @@ const listCategoryForFiltering = async(req,res)=>{
         console.log(error)
     }
 }
-const createCategoryOffer =async()=>{
+const createCategoryOffer = async (req, res) => {
     try {
-        const {offerData} = req.body
-        console.log(offerData);
+      const { offerData,categoryId} = req.body
+        console.log("Offer data",offerData);
         
     } catch (error) {
-        
+      console.error("Error creating offer:", error);
+      res.status(500).json({ error: "Failed to create offer" });
     }
-}
+  };
 
 module.exports = {
    addCategory,
