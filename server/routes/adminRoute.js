@@ -24,6 +24,7 @@ const orderController = require("../controller/admin/orderController")
  adminRoute.get("/fetchcategory/:id",categoryController.fetchCategory);
  adminRoute.put("/updatecategory/:id",verifyAdmin,categoryController.handleUpdate);
  adminRoute.post("/create-category-offer",categoryController.createCategoryOffer);
+ adminRoute.post("/remove-offer",categoryController.removeCategoryOffer)
 
 //==================PRODUCT SIDE=============================
  adminRoute.post("/addproduct",verifyAdmin,productController.addProduct)

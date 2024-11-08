@@ -128,6 +128,20 @@ export default function CategoryManagement() {
     navigate(`/categoryedit/${id}`);
   }
 
+  //=========================OFFER REFRESH FUNCTION=====================
+  function handleReloadChangeForOffer(){
+    setreloadOnOffer(!reloadOnOffer)
+  }
+
+  //========================OFFER REMOVE FUNCTION=======================
+    async function removeOffer(categoryId,offerPrice){
+      console.log(categoryId,offerPrice);
+      const response = await axiosInstance.post("/admin/remove-offer",{categoryId,offerPrice})
+      console.log(response);
+      toast(response.data.message)
+      handleReloadChangeForOffer()
+    }
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -197,9 +211,12 @@ export default function CategoryManagement() {
                       <td className="border p-2">{category.category}</td>
                       <td className="border p-2">{category.description}</td>
                       <td className="border p-2 text-center">{category.offerPrice}%</td>
-                      <td className="border p-2">
-                        
-                        <OfferModal categoryId = {category._id} handleReloadChangeForOffer={handleReloadChangeForOffer}/>
+                      <td className="border p-2 text-center">
+                        {category.offerIsActive?
+                        <button onClick={()=>removeOffer(category._id,category.offerPrice)} className="bg-red-500 text-white py-2 px-2 rounded-lg">
+                        Remove
+                      </button>
+                        :<OfferModal categoryId = {category._id} handleReloadChangeForOffer={handleReloadChangeForOffer}/>}
                       </td>
                       <td className="border p-2 text-center">
                         <button

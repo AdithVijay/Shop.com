@@ -143,10 +143,14 @@ const createCategoryOffer = async (req, res) => {
       const Products = await ProductData.find({category:categoryId})
 
       for(let product of Products){
+        product.regularPrice = product.salePrice
+        console.log(product.regularPrice);
         const discountPrice =Math.round( product.salePrice - (product.salePrice*offerData/100))
         await ProductData.findByIdAndUpdate(
             product._id,
-            { salePrice: discountPrice },
+            { salePrice: discountPrice,
+              regularPrice: product.regularPrice 
+            },
             { new: true }
           );
       }
@@ -157,6 +161,33 @@ const createCategoryOffer = async (req, res) => {
     }
   };
 
+  //================================TO REMOVE THE CATEGORY OFFER =======================
+  const removeCategoryOffer =async (req,res)=>{
+    const {categoryId,offerPrice} = req.body
+    console.log(req.body);
+    
+    const category = await Category.findByIdAndUpdate(
+        {_id:categoryId},
+        {offerPrice:0,offerIsActive:false},
+        {new:true}
+      )
+      console.log(category)
+    
+    const Products = await ProductData.find({category:categoryId})
+    console.log(Products)
+    for(let product of Products){
+
+            await ProductData.findByIdAndUpdate(
+                product._id,
+                { salePrice: product.regularPrice },
+                { new: true }
+            );
+    }
+    res.status(200).json({ message: "Offer created and applied to products successfully" });
+  }
+
+
+
 module.exports = {
    addCategory,
    getCategory,
@@ -165,7 +196,8 @@ module.exports = {
    fetchCategory,
    handleUpdate,
    listCategoryForFiltering,
-   createCategoryOffer
+   createCategoryOffer,
+   removeCategoryOffer
 }
 
 
