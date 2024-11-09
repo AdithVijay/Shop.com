@@ -111,7 +111,7 @@ export default function Cart() {
               className="flex flex-col sm:flex-row gap-6 mb-6 pb-6 border-b border-gray-200 text-center sm:text-left"
             >
               <img
-                src={product.productId.images[0]}
+                src={product?.productId?.images[0]}
                 alt={product.productId.productName}
                 className="w-40 h-auto object-cover mx-auto sm:mx-0"
               />

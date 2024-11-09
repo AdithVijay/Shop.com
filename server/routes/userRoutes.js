@@ -59,6 +59,6 @@ userRoute.post("/addtowishlist",wishListController.addToWishlist)//ADDING THE DA
 userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)//FETCHING DATA IN WHISHLIST PAGE
 
 //============================APPLYING COUPOUN OFFER IN CHECKOUT========================
-userRoute.post("/apply-coupoun",couponController.applyCoupounOffer)
+userRoute.post("/apply-coupoun",couponController.applyCoupounOffer)//APPLYING COPOUN OFFER ON CHEFCKOUT ITMES
 
 module.exports = userRoute;

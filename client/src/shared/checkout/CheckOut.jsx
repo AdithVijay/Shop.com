@@ -127,7 +127,7 @@ const CheckOut = () => {
     }
     console.log(selectedCoupun)
     
-    const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user})
+    const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user,subtotal})
     console.log(response);
   }
   
