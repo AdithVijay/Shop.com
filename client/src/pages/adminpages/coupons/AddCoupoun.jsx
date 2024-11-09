@@ -5,26 +5,25 @@ import { ChevronDown } from 'lucide-react'
 import Sidebar from '@/shared/bars/Sidebar'
 import { Link } from 'react-router-dom'
 import axiosInstance from '@/config/axiosInstance'
+import { toast } from 'sonner'
 
 export default function AddCoupon() {
   const [code, setCode] = useState('')
   const [perPersonLimit, setperPersonLimit] = useState('')
-  const [discountType, setDiscountType] = useState('Percentage')
   const [discountValue, setDiscountValue] = useState('')
   const [minPurchaseAmount, setMinPurchaseAmount] = useState('')
-  const [maxDiscountAmount, setMaxDiscountAmount] = useState('')
   const [expirationDate, setExpirationDate] = useState('')
   const [usageLimit, setUsageLimit] = useState('')
+  const [description , setdescription] = useState('')
 
   const handleSubmit = async(e) => {
     e.preventDefault()
     const formData = {
       code,
       perPersonLimit,
-      discountType,
       discountValue,
+      description,
       minPurchaseAmount,
-      maxDiscountAmount,
       expirationDate,
       usageLimit
     }
@@ -33,10 +32,10 @@ export default function AddCoupon() {
     try {
         const response = await axiosInstance.post('/admin/create-coupon', formData)
         console.log('Coupon added:', response.data)
-        alert('Coupon added successfully!')
+        toast(response.data.message)
       } catch (error) {
         console.error('Error adding coupon:', error)
-        alert('Failed to add coupon')
+        toast('Failed to add coupon')
       }
 
   }
@@ -49,7 +48,7 @@ export default function AddCoupon() {
           <div className="p-8 lg:p-10">
             <h2 className="text-2xl font-medium text-gray-900 mb-6">Add New Coupon</h2>
             <div className="text-sm text-gray-500 mb-8">
-              <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt; Coupon Management
+              <Link to="/coupon" className="hover:underline">Coupoun</Link> &gt; Add New Coupon
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -67,7 +66,6 @@ export default function AddCoupon() {
                   />
                 </div>
                 <div>
-                    {/* perPerson limit */}
                   <label htmlFor="description" className="block text-md font-semibold text-gray-700">Per Person Limit</label>
                   <input
                     type="number"
@@ -75,7 +73,7 @@ export default function AddCoupon() {
                     value={perPersonLimit}
                     onChange={(e) => setperPersonLimit(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
-                    placeholder="Brief description"
+                    placeholder="Enter the Per Person limit"
                   />
                 </div>
               </div>
@@ -90,6 +88,7 @@ export default function AddCoupon() {
                     value={usageLimit}
                     onChange={(e) => setUsageLimit(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
+                      placeholder="Enter the Usage Limit"
                   />
                 </div>
                 <div>
@@ -100,7 +99,7 @@ export default function AddCoupon() {
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
-                    placeholder="Enter discount value"
+                    placeholder="Enter discount value in Percentage"
                   />
                 </div>
               </div>
@@ -115,21 +114,10 @@ export default function AddCoupon() {
                     value={minPurchaseAmount}
                     onChange={(e) => setMinPurchaseAmount(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
+                      placeholder="Enter discount value"
                   />
                 </div>
-                <div>
-                  <label htmlFor="maxDiscountAmount" className="block text-md font-semibold text-gray-700">Maximum Discount Amount</label>
-                  <input
-                    type="number"
-                    id="maxDiscountAmount"
-                    value={maxDiscountAmount}
-                    onChange={(e) => setMaxDiscountAmount(e.target.value)}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
-                  />
-                </div>
-              </div>
-
-              {/* Expiration Date and Usage Limit */}
+                   {/* Expiration Date and Usage Limit */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="expirationDate" className="block text-md font-semibold text-gray-700">Expiration Date</label>
@@ -142,6 +130,21 @@ export default function AddCoupon() {
                   />
                 </div>
               </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="minPurchaseAmount" className="block text-md font-semibold text-gray-700">Description</label>
+                  <input
+                    type="text"
+                    id="description"
+                    value={description}
+                    onChange={(e) => setdescription(e.target.value)}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
+                    placeholder='Brief Description'
+                  />
+                </div>
+              </div>
+                
               {/* Form Buttons */}
               <div className="flex justify-end space-x-4">
                 <button

@@ -7,21 +7,25 @@ import { toast } from "sonner";
 import OfferModal from "@/shared/modal/OfferModal";
 
 export default function CouponList() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([])
+  const [coupons, setcoupon] = useState([]);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [reloadOnOffer, setreloadOnOffer] = useState(false);
 
   const navigate = useNavigate();
 
-  // ==================GETTING THE PRODUCT DATA =========================
+  // ==================GETTING THE COUPOUN DATA =========================
 
   useEffect(() => {
     async function fetchProducts() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 200));
-        const response = await axiosInstance.get("/admin/getproducts");
+        const response = await axiosInstance.get("/admin/get-coupons");
         console.log(response, "Data reciving");
-        setProducts(response.data.data);
+
+        setcoupon(response.data.coupouns)
+        // setProducts(response.data.data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -29,80 +33,13 @@ export default function CouponList() {
     fetchProducts();
   }, [reloadOnOffer]);
 
+  console.log(coupons);
+  
   // ========================EDITTING THE PRODUCT=========================
 
   const handleEdit = (id) => {
-    navigate(`/productedit/${id}`);
-  };
-
-  // ============================SOFT DELETE==============================
-
-  const handleList = async (id) => {
-    console.log(id);
-    try {
-      const response = await axiosInstance.put(`/admin/listproduct/${id}`);
-      setProducts(
-        products.map((x) => {
-          if (x._id == id) {
-            x.isListed = true;
-          }
-          return x;
-        })
-      );
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // ===================UNLIST CATGEORY=================
-
-  const handleUnlist = async (id) => {
-    try {
-      const response = await axiosInstance.put(`/admin/unlistproduct/${id}`);
-      console.log(response);
-      setProducts(
-        products.map((x) => {
-          if (x._id === id) {
-            x.isListed = false;
-          }
-          return x;
-        })
-      );
-      toast.success("unlisted");
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  //==============================HANDLE RELOAD ON OFFER CHANGE==================
-  function handleReloadChangeForOffer() {
-    setreloadOnOffer(!reloadOnOffer);
+    // navigate(`/productedit/${id}`);
   }
-
-  //==============================ADDING THE OFFER==============================
-  async function addProductOffer({ offerData, targetId }) {
-    try {
-      console.log(offerData, targetId);
-      const response = await axiosInstance.post("/admin/add-product-offer", {
-        offerData,
-        productId: targetId,
-      });
-      console.log(response.data.message);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  //========================OFFER REMOVE FUNCTION=======================
-  async function removeOffer(productId, offerPrice) {
-    console.log(productId, offerPrice);
-    const response = await axiosInstance.post("/admin/remove-product-offer", {
-      productId,
-      offerPrice,
-    });
-    console.log(response.data.message);
-    toast(response.data.message);
-    handleReloadChangeForOffer();
-  }
-
   // =====================================================================================================
 
   return (
@@ -130,59 +67,42 @@ export default function CouponList() {
                     <th className="border p-2 text-center">Coupon Code</th>
                     <th className="border p-2 text-center">DiscoutAmount</th>
                     <th className="border p-2 text-center">MinPurchase </th>
-                    <th className="border p-2 text-center">ExpDate</th>
-                    <th className="border p-2 text-center">Maxdiscount</th>
                     <th className="border p-2 text-center">Usagelimit</th>
-                    <th className="border p-2 text-center">Per User limit</th>
-                    <th>Edit</th>
+                    <th className="border p-2 text-center">PerPersonLimit</th>
+                    <th className="border p-2 text-center">expDate</th>
+                    <th className="border p-2 text-center">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {products.map((product) => (
-                    <tr key={product._id} className="border-b">
+                  {coupons.map((coupon) => (
+                    <tr key={coupon._id} className="border-b">
                       <td className="border p-2 text-center">
-                            F002
+                            {coupon.code}
                       </td>
                       <td className="border p-2 text-center">
-                        {product.category
-                          ? product.category.category
-                          : "No category"}
+                            {coupon.discountValue}
                       </td>
                       <td className="border p-2 text-center">
-                        {product.offerPrice}
+                            {coupon.minPurchaseAmount}
                       </td>
 
                       {/* This is the place where  */}
                       <td className="border p-2 text-center">
-                        hi
+                        {coupon.usageLimit}
                       </td>
                       <td className="border p-2 text-center">
-                        hi
+                      {coupon.perPersonLimit}
                       </td>
                       <td className="border p-2 text-center">
-                        {product.salePrice}
-                      </td>
-                      <td className="border p-2 text-center">
-                        <button
-                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"
-                          style={{ opacity: product.isListed ? "0.5" : "1" }}
-                          onClick={() => handleList(product._id)}
-                          disabled={product.isListed}
-                        >
-                          List
-                        </button>
-                        <button
-                          className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition duration-300 ml-2"
-                          style={{ opacity: !product.isListed ? "0.5" : "1" }}
-                          onClick={() => handleUnlist(product._id)}
-                          disabled={!product.isListed}
-                        >
-                          Unlist
-                        </button>
+                      {new Date(coupon.expirationDate).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })}
                       </td>
                       <td>
                         <button
-                          onClick={() => handleEdit(product._id)}
+                          onClick={() => handleEdit(coupon._id)}
                           className="text-blue-600 pl-6 hover:text-blue-800 mr-2"
                         >
                           <Edit2 size={18} />

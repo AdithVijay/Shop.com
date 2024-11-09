@@ -7,7 +7,7 @@ const couponSchema = new Schema({
     required: true,
     trim: true
   },
-  description: {
+  description:{
     type: String,
     required: true,
     trim: true
@@ -15,24 +15,29 @@ const couponSchema = new Schema({
   discountValue: {
     type: Number,
     required: true,
-    default: 0  // Ensures discount value is non-negative
+    default: 0  
   },
   minPurchaseAmount:{
     type: Number,
     required: true,
   },
-  maxDiscountAmount: {
-    type: Number,
-    required: true,
-  },
-  expirationDate: {
-    type: Date,
-    required: true  
-  },
   usageLimit: {
     type: Number,
     required: true,
-    min: 1  
+  },
+  perPersonLimit:{
+    type:Number,
+    required:true
+  },
+  userUsage: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      count: { type: Number, default: 0 },
+    },
+  ],
+  expirationDate: {
+    type: Date,
+    required: true  
   },
   isActive: {
     type: Boolean,
@@ -43,5 +48,6 @@ const couponSchema = new Schema({
   timestamps: true 
 });
 
-// Export the schema
-module.exports = mongoose.model('Coupon', couponSchema);
+const Coupon = mongoose.model('Coupon', couponSchema)
+module.exports = Coupon
+

@@ -7,7 +7,7 @@ const categoryController = require("../controller/admin/categoryController")
 const productController = require("../controller/admin/productController")
 const userController = require("../controller/admin/userController")
 const orderController = require("../controller/admin/orderController")
-
+const coupounController = require("../controller/admin/coupounController")
 
 
 //==================ADMIN LOGIN===========================
@@ -56,6 +56,9 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
 
   //============LISTING ORDER IN THE ORDER LISTING PAGE========
   adminRoute.get("/retrieveorder",orderController.getOrderDetails)
-  adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct);
+  adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct)
 
+  //========================COUPOUN MANAGMENT====================
+  adminRoute.post("/create-coupon",coupounController.createCoupon)//TO CREATE A COUPOUN 
+  adminRoute.get("/get-coupons",coupounController.getCoupons)//TO CREATE A COUPOUN 
 module.exports = adminRoute;

@@ -17,6 +17,7 @@ const CheckOut = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const [relaod, setrelaod] = useState(false);
+  const [coupons, setcoupon] = useState([]);
   const shipping = 'Free';
   const total = subtotal;
 
@@ -24,6 +25,7 @@ const CheckOut = () => {
     useEffect(() => {
         fetchAdress()
         fetchProduct() 
+        fetchCoupuns()
     },[relaod]);
 
 //=======================FETCHING ADRESS======================
@@ -91,7 +93,28 @@ const CheckOut = () => {
         console.log(error);
        }
     }
-  
+
+  //============================FETCHING COUPOUN ===========================
+    
+  async function fetchCoupuns() {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 200));
+      const response = await axiosInstance.get("/admin/get-coupons");
+      console.log(response, "Data reciving");
+
+      setcoupon(response.data.coupouns)
+      // setProducts(response.data.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  }
+
+
+  function copyCoupoun(code) {
+    navigator.clipboard.writeText(code)
+    toast("Coupoun copied")
+  }
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -174,6 +197,27 @@ const CheckOut = () => {
             <input type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
             <button className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
           </div>
+
+            {/* Coupon Display Area */}
+                <div className="border p-4 rounded-lg mt-4">
+                  <h3 className="text-lg font-semibold mb-4">Available Coupons</h3>
+                  {coupons.map((coupon) => (
+                    <div key={coupon._id} className="flex justify-between items-center mb-2">
+                      <div>
+                        <p className="font-bold">{coupon.code}</p>
+                        <p className="text-sm text-gray-600">valid for orders above ₹{coupon.minPurchaseAmount}</p>
+                      </div>
+                      <button 
+                        className="bg-black text-white px-4 py-1"
+                        onClick={() => copyCoupoun(coupon.code) }
+                      >
+                        COPY
+                      </button>
+                      
+                    </div>
+                   ))} 
+                </div>
+
           <button onClick={()=>submitCheckout()} className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>
         </div>
       </div>
