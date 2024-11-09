@@ -38,6 +38,10 @@ const cartSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  totalCartPrice:{
+    type:Number,
+    default:0
+  }
 });
 
 const Cart = mongoose.model('Cart', cartSchema);

@@ -8,6 +8,7 @@ const addressController = require("../controller/user/addressController")
 const cartController = require("../controller/user/cartController")
 const orderController = require("../controller/user/orderController")
 const wishListController = require("../controller/user/wishListController")
+const couponController = require('../controller/user/couponController')
 
 
 //=================USERLOGIN AND SIGNUP=============
@@ -54,7 +55,10 @@ userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WH
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP
 
 //=============================TO ADD PRODUCT To WISHLIST==============================
-userRoute.post("/addtowishlist",wishListController.addToWishlist)
-userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)
+userRoute.post("/addtowishlist",wishListController.addToWishlist)//ADDING THE DATA TO WISHLISH DB
+userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)//FETCHING DATA IN WHISHLIST PAGE
+
+//============================APPLYING COUPOUN OFFER IN CHECKOUT========================
+userRoute.post("/apply-coupoun",couponController.applyCoupounOffer)
 
 module.exports = userRoute;

@@ -12,6 +12,11 @@ export default function Cart() {
   const [quantity, setQuantity] = useState(1);
   const [relaod, setrelaod] = useState(false);
 
+  //==============================RELOADDING===========================
+  function pageReloading(){
+    setrelaod(!relaod)
+  }
+
   //=================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE =================
   async function fetchProduct() {
     try {
@@ -25,12 +30,12 @@ export default function Cart() {
         0
       );
       setSubtotal(calculatedSubtotal);
-      setrelaod(false);
     } catch (error) {
       console.log(error)
       toast.error("cart is empty");
     }
   }
+
   useEffect(() => {
     fetchProduct();
   }, [relaod]);
@@ -54,7 +59,7 @@ export default function Cart() {
           selectedSize,
         });
         console.log(response);
-        setrelaod(true);
+        pageReloading()
       } catch (error) {
         console.log(error);
       }
@@ -72,7 +77,7 @@ export default function Cart() {
           selectedSize,
         });
         console.log(response);
-        setrelaod(true);
+        pageReloading()
       } catch (error) {
         console.log(error);
       }
@@ -84,7 +89,7 @@ export default function Cart() {
       console.log(selectedSize);
       const response = await axiosInstance.delete(`/user/deleteCart`, {data: { productId, selectedSize,userId }});
       console.log("Item deleted:", response.data);
-      setrelaod(true)
+      pageReloading()
     } catch (error) {
       console.error("Error deleting item:", error);
     }

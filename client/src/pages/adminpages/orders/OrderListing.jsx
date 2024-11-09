@@ -13,6 +13,7 @@ const OrderListing = () => {
   const [reload,setreload]= useState(false)
 
   const user = useSelector((state) => state.user.users);
+  
 
   useEffect(() => {
     fetchOrderData();
@@ -61,10 +62,9 @@ const OrderListing = () => {
 //===================CANCEL THE PRODUCT ==================
   async function cancelProduct(id) {
     console.log("buttton pressed");
-
     try {
       const response = await axiosInstance.post(`/admin/cancelorder/${id}`)
-      setOrderData((prev)=>prev.map((order)=>order._id ==id ?{...order,order_status:"Cancelled"}:"" ))
+      setOrderData((prev)=>prev.map((order)=>order?._id ==id ?{...order,order_status:"Cancelled"}:order ))
     } catch (error) {
       console.error("Error canceling product:", error);
     }

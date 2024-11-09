@@ -18,6 +18,8 @@ const CheckOut = () => {
   const [orderDetails, setOrderDetails] = useState({});
   const [relaod, setrelaod] = useState(false);
   const [coupons, setcoupon] = useState([]);
+  const [selectedCoupun, setselectedCoupun] = useState("");
+  
   const shipping = 'Free';
   const total = subtotal;
 
@@ -109,12 +111,26 @@ const CheckOut = () => {
     }
   }
 
-
+  //=======================COPY COUPOUN===============
   function copyCoupoun(code) {
     navigator.clipboard.writeText(code)
     toast("Coupoun copied")
   }
 
+  //=====================FUNCTION TO SUBMIT COUPOUN TO BACKEND==================
+  async function submitCoupoun(){
+    if(coupons.length==0){
+      return toast.error("coupons not available")
+     }
+    if(!selectedCoupun){
+     return toast.error("Select a coupoun")
+    }
+    console.log(selectedCoupun)
+    
+    const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user})
+    console.log(response);
+  }
+  
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -194,22 +210,27 @@ const CheckOut = () => {
             </div>
           </div>
           <div className="mt-4">
-            <input type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
-            <button className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
+            <input onChange={(e)=>setselectedCoupun(e.target.value)} type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
+            <button onClick={()=>submitCoupoun()} className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
           </div>
 
             {/* Coupon Display Area */}
                 <div className="border p-4 rounded-lg mt-4">
-                  <h3 className="text-lg font-semibold mb-4">Available Coupons</h3>
+                  {coupons.length === 0 && (
+                    <h3 className="text-lg font-semibold mb-4">Coupons Not Available</h3>
+                  )}
+                  {coupons.length > 0 && (
+                    <h3 className="text-lg font-semibold mb-4">Available Coupons</h3>
+                  )}
                   {coupons.map((coupon) => (
-                    <div key={coupon._id} className="flex justify-between items-center mb-2">
+                    <div key={coupon?._id} className="flex justify-between items-center mb-2">
                       <div>
-                        <p className="font-bold">{coupon.code}</p>
-                        <p className="text-sm text-gray-600">valid for orders above ₹{coupon.minPurchaseAmount}</p>
+                        <p className="font-bold">{coupon?.code}</p>
+                        <p className="text-sm text-gray-600">valid for orders above ₹{coupon?.minPurchaseAmount}</p>
                       </div>
                       <button 
                         className="bg-black text-white px-4 py-1"
-                        onClick={() => copyCoupoun(coupon.code) }
+                        onClick={() => copyCoupoun(coupon?.code) }
                       >
                         COPY
                       </button>

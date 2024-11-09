@@ -7,6 +7,8 @@ const createCoupon = async (req, res) => {
         minPurchaseAmount,expirationDate,usageLimit,description} = req.body;
 
     const existingCoupon = await Coupon.findOne({ code });
+    console.log(existingCoupon);
+    
     if (existingCoupon) {
       return res.status(400).json({
         success: true,

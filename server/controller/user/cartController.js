@@ -9,6 +9,7 @@ const addItemToCart = async (req, res) => {
       console.log(req.body);
       
       let cart = await Cart.findOne({ userId });
+
       if (cart) {
         const existingItem = cart.items.find(
           (item) => item.productId.toString() === productId && item.selectedSize === selectedSize
@@ -16,10 +17,11 @@ const addItemToCart = async (req, res) => {
   
         if (existingItem) {
           existingItem.quantity += quantity;
-          existingItem.totalItemPrice += totalItemPrice;
+          existingItem.totalItemPrice += totalItemPrice
         } else {
           cart.items.push({ productId, selectedSize, quantity, price, totalItemPrice });
         }
+
       } else {
         cart = new Cart({
           userId,
@@ -41,6 +43,10 @@ const getCartItems = async(req,res)=>{
   try {
     const id = req.params.id
     const cart = await Cart.findOne({userId:id}).populate('items.productId')
+
+    const totalItemprice = cart.items.map((x)=>x.totalItemPrice)
+    console.log(totalItemprice)
+
     if(cart){
       return res.status(200).json(cart)
     }else{
@@ -155,9 +161,12 @@ const delteCartItem = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
   module.exports = { addItemToCart,
     getCartItems,
     incrementProductCount,
     decrementProductCount,
     checkSizeExist,
-    delteCartItem};
+    delteCartItem
+  };

@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import Sidebar from '@/shared/bars/Sidebar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import axiosInstance from '@/config/axiosInstance'
 import { toast } from 'sonner'
 
@@ -15,7 +15,9 @@ export default function AddCoupon() {
   const [expirationDate, setExpirationDate] = useState('')
   const [usageLimit, setUsageLimit] = useState('')
   const [description , setdescription] = useState('')
+  const navigate= useNavigate()
 
+//====================SUBMITTING THE COUPOUN=================
   const handleSubmit = async(e) => {
     e.preventDefault()
     const formData = {
@@ -28,14 +30,15 @@ export default function AddCoupon() {
       usageLimit
     }
     console.log(formData)
-
+    
     try {
         const response = await axiosInstance.post('/admin/create-coupon', formData)
         console.log('Coupon added:', response.data)
         toast(response.data.message)
+        navigate("/coupon")
       } catch (error) {
         console.error('Error adding coupon:', error)
-        toast('Failed to add coupon')
+        toast(error.response.data.message)
       }
 
   }
@@ -153,12 +156,14 @@ export default function AddCoupon() {
                 >
                   Cancel
                 </button>
+
                 <button
                   type="submit"
                   className="px-4 py-2 bg-blue-500 text-white text-md rounded-md hover:bg-blue-600"
                 >
                   Add Coupon
                 </button>
+
               </div>
             </form>
           </div>
