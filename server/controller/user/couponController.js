@@ -29,7 +29,7 @@ const applyCoupounOffer = async(req,res)=>{
         
 
         if (userUsage && userUsage.count >= couponData.perPersonLimit) {
-        return res.status(400).json({ message: `You have reached the per-person usage limit of ${couponData.perPersonLimit} for this coupon.` });
+        return res.status(400).json({ message: "Coupoun Limit reached" });
         }
         
         if(userUsage){
@@ -38,11 +38,18 @@ const applyCoupounOffer = async(req,res)=>{
             couponData.userUsage.push({ userId: user, count: 1 })
         }
 
+         couponData.usageLimit -= 1 
+
+        if(couponData.usageLimit==0){
+            return res.status(400).json({ message: "Coupoun Not available" });
+        }
+
         await couponData.save(); 
 
         const newSubtotal = subtotal - couponData.discountValue;
 
-    return res.status(200).json({ newSubtotal, message: 'Coupon applied successfully!' });
+        return res.status(200).json({ newSubtotal, message: 'Coupon applied successfully!' });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'An error occurred while applying the coupon.' });

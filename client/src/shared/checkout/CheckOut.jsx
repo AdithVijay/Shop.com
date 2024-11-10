@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CreditCard, Truck, Wallet } from 'lucide-react';
-import dp1 from '../../assets/dp1.jpg'
+import { MdDelete } from "react-icons/md";
 import axiosInstance from '@/config/axiosInstance';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -19,6 +19,11 @@ const CheckOut = () => {
   const [relaod, setrelaod] = useState(false);
   const [coupons, setcoupon] = useState([]);
   const [selectedCoupun, setselectedCoupun] = useState("");
+  const [coupoundiscount,setcoupoundiscount] = useState();
+  const [actualCoupounDiscount, setactualCoupounDiscount] = useState(null);
+  
+  const [a, seta] = useState(null);
+  
   
   const shipping = 'Free';
   const total = subtotal;
@@ -103,35 +108,49 @@ const CheckOut = () => {
       await new Promise((resolve) => setTimeout(resolve, 200));
       const response = await axiosInstance.get("/admin/get-coupons");
       console.log(response, "Data reciving");
-
       setcoupon(response.data.coupouns)
-      // setProducts(response.data.data);
+
     } catch (error) {
       console.error("Error fetching products:", error);
     }
   }
 
+
   //=======================COPY COUPOUN===============
-  function copyCoupoun(code) {
+  function copyCoupoun(code,discountValue) {
+    seta(discountValue) 
     navigator.clipboard.writeText(code)
     toast("Coupoun copied")
   }
-
+  
   //=====================FUNCTION TO SUBMIT COUPOUN TO BACKEND==================
   async function submitCoupoun(){
-    if(coupons.length==0){
-      return toast.error("coupons not available")
-     }
-    if(!selectedCoupun){
-     return toast.error("Select a coupoun")
-    }
-    console.log(selectedCoupun)
-    
-    const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user,subtotal})
-    console.log(response);
-  }
-  
+    try {
+        if(coupons.length==0){
+          return toast.error("coupons not available")
+        }
+        if(!selectedCoupun){
+        return toast.error("Select a coupoun")
+        }    
 
+        const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user,subtotal})
+        console.log(response)
+        setactualCoupounDiscount(response.data.newSubtotal)
+        setcoupoundiscount(a)
+        toast.success(response.data.message) 
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
+  }
+  console.log("coupoun discount",coupoundiscount)
+  
+//==========================FUNCTION TO REMOVE COUPOUN========================
+  function handleDeleteCoupon(){
+    console.log("delet")
+    setcoupoundiscount(null)
+    setactualCoupounDiscount(null)
+    setselectedCoupun("")
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
@@ -204,14 +223,28 @@ const CheckOut = () => {
               <span>Shipping:</span>
               <span>{shipping}</span>
             </div>
+
+            <div className="flex justify-between mb-2">
+              <span>Coupoun Discount:</span>
+              <span>₹{coupoundiscount?coupoundiscount:0}</span>
+            </div>
+
             <div className="flex justify-between font-semibold">
               <span>Total:</span>
-              <span>₹{total}</span>
+              <span>₹{actualCoupounDiscount?actualCoupounDiscount:total}</span>
             </div>
+
           </div>
           <div className="mt-4">
-            <input onChange={(e)=>setselectedCoupun(e.target.value)} type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
-            <button onClick={()=>submitCoupoun()} className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
+
+            <input value={selectedCoupun} onChange={(e)=>setselectedCoupun(e.target.value)} type="text" placeholder="Coupon Code" className="border p-2 w-full mb-2" />
+          {actualCoupounDiscount?
+          <button   onClick={handleDeleteCoupon} className="bg-black text-white px-4 py-2 w-full">Remove Coupon</button>
+          :
+          <button  onClick={()=>submitCoupoun()} className="bg-black text-white px-4 py-2 w-full">Apply Coupon</button>
+          }
+
+
           </div>
 
             {/* Coupon Display Area */}
@@ -230,7 +263,7 @@ const CheckOut = () => {
                       </div>
                       <button 
                         className="bg-black text-white px-4 py-1"
-                        onClick={() => copyCoupoun(coupon?.code) }
+                        onClick={() => copyCoupoun(coupon?.code,coupon.discountValue) }
                       >
                         COPY
                       </button>
