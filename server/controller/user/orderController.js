@@ -1,79 +1,89 @@
 const Order = require("../../models/order");
 const Cart = require("../../models/cart");
 const ProductData = require("../../models/productModel");
+const Wallet = require("../../models/wallet");
 
 //======================CHECKOUT WHEN USER PRESS CHECKOUT========================
 const submitCheckout = async (req, res) => {
   const { user, subtotal, payment_method, cartdata, shipping_address} =
     req.body;
-
-    console.log(cartdata)
+    console.log(subtotal);
     
-    
-  try {
-    const products = cartdata.map((item) => ({
-      product: item.productId._id,
-      qty: item.quantity,
-      size:item.selectedSize,
-      price: item.price,
-      discount: 0,
-      total_price: item.price,
-    }));
-
-    // Create a new order
-    const order = new Order({
-      user,
-      order_items: products,
-      order_status: "Pending",
-      total_amount: subtotal,
-      shipping_address,
-      payment_method,
-      total_price_with_discount: subtotal,
-      shipping_fee: 0,
-    });
-
-    await order.save();
-    // console.log("Order created:", order);
-
-    // Update the cart to remove purchased items
-    const productIds = cartdata.map((item) => item.productId._id.toString());
-    const selectedSizes = cartdata.map((item) => item.selectedSize);
-
-    await Cart.updateOne(
-      { userId: user },
-      {
-        $pull: {
-          items: {
-            $or: productIds.map((id, index) => ({
-              productId: id,
-              selectedSize: selectedSizes[index],
-            })),
-          },
-        },
+    if(payment_method=="Wallet"){
+      const wallet = await Wallet.findOne({userId:user})
+      if(wallet.balance>=subtotal){
+        console.log(wallet)
+        wallet.balance = wallet.balance - subtotal
+        wallet.transaction.push({transactionType:"debit",amount:subtotal})
+        await wallet.save()
+      }else{
+        return res.status(404).json({message:"Insufficient balence in wallet"})
+        console.log("insuffuicient ballanceee");
+        
       }
-    );
-
-    // console.log("Cart items removed successfully for user:", user);
-
-    // Update product stock based on purchased quantities and sizes
-    for (let item of cartdata) {
-      const { productId, selectedSize, quantity } = item;
-      await ProductData.updateOne(
-        { _id: productId },
-        {
-          $inc: {
-            [`sizes.${selectedSize}`]: -quantity, // Reduce size-specific stock
-            totalStock: -quantity,                 // Reduce total stock
-          },
-        }
-      );
     }
 
-    // console.log("Product stock updated successfully.");
+  
+  try {
+  //    const products = cartdata.map((item) => ({
+  //      product: item.productId._id,
+  //      qty: item.quantity,
+  //      size:item.selectedSize,
+  //      price: item.price,
+  //      discount: 0,
+  //      total_price: item.price,
+  //    }))
+  //   // // Create a new order
+  //  const order = new Order({
+  //    user,
+  //      order_items: products,
+  //      order_status: "Pending",
+  //      total_amount: subtotal,
+  //      shipping_address,
+  //     payment_method,
+  //      total_price_with_discount: subtotal,
+  //      shipping_fee: 0,
+  //    });
 
-    res
-      .status(201)
-      .json({ message: "Order placed and stock updated successfully" });
+  //    await order.save();
+  //    // console.log("Order created:", order)
+  //    // Update the cart to remove purchased items
+  //    const productIds = cartdata.map((item) => item.productId._id.toString());
+  //    const selectedSizes = cartdata.map((item) => item.selectedSize)
+  //    await Cart.updateOne(
+  //      { userId: user },
+  //      {
+  //        $pull: {
+  //          items: {
+  //            $or: productIds.map((id, index) => ({
+  //              productId: id,
+  //              selectedSize: selectedSizes[index],
+  //            })),
+  //        },
+  //        },
+  //   }
+  // );
+
+  //   /// console.log("Cart items removed successfully for user:", user);
+
+  //   /// Update product stock based on purchased quantities and sizes
+  // for (let item of cartdata) {
+  //   const { productId, selectedSize, quantity } = item;
+  //   await ProductData.updateOne(
+  //     { _id: productId },
+  //     {
+  //       $inc: {
+  //         [`sizes.${selectedSize}`]: -quantity, // Reduce size-specific stock
+  //         totalStock: -quantity,                 // Reduce total stock
+  //        },
+  //     }
+  //   );
+  // }
+
+
+  // res
+  //   .status(201)
+  //   .json({ message: "Order placed and stock updated successfully" });
   } catch (error) {
     console.error("Error during checkout:", error);
     res

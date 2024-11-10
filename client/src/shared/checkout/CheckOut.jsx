@@ -83,7 +83,7 @@ const CheckOut = () => {
           shipping_address:selectedAddress
         })
           console.log("order db scess",response);
-
+          
           // MODAL PROPS 
           setOrderDetails({
             orderId: response.data.orderId || `ORD${Date.now()}`,
@@ -97,6 +97,7 @@ const CheckOut = () => {
           setShowSuccessModal(true);
           setrelaod(true)
        } catch (error) {
+        toast(error.response.data.message)
         console.log(error);
        }
     }
@@ -109,7 +110,6 @@ const CheckOut = () => {
       const response = await axiosInstance.get("/admin/get-coupons");
       console.log(response, "Data reciving");
       setcoupon(response.data.coupouns)
-
     } catch (error) {
       console.error("Error fetching products:", error);
     }

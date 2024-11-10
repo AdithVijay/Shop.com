@@ -9,6 +9,7 @@ const cartController = require("../controller/user/cartController")
 const orderController = require("../controller/user/orderController")
 const wishListController = require("../controller/user/wishListController")
 const couponController = require('../controller/user/couponController')
+const walletController = require("../controller/user/walletController")
 
 
 //=================USERLOGIN AND SIGNUP=============
@@ -60,5 +61,9 @@ userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)//
 
 //============================APPLYING COUPOUN OFFER IN CHECKOUT========================
 userRoute.post("/apply-coupoun",couponController.applyCoupounOffer)//APPLYING COPOUN OFFER ON CHEFCKOUT ITMES
+
+//=======================================WALLET==========================================
+userRoute.get("/get-wallet-data/:id",walletController.getWalletData)
+userRoute.post("/add-wallet-fund",walletController.addFundInWallet)
 
 module.exports = userRoute;

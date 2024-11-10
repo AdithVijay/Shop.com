@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const genarateAccesTocken = require('../../utils/genarateAccesTocken');
 const genarateRefreshTocken = require('../../utils/genarateRefreshTocken');
 
+
 //============================PASSWORD HASHING================================
 const securePassword = async (password) => {
     try {

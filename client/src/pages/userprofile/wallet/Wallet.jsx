@@ -4,35 +4,36 @@ import UserSideBar from "@/shared/bars/UserSideBar";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/config/axiosInstance";
 import { RefreshCw } from "lucide-react";
+import FundModal from "./fundModal";
+
 
 export default function Wallet() {
   const user = useSelector((state) => state.user.users);
-  const [walletData, setWalletData] = useState({
-    balance: 2000.00,
-    transactions: [
-      {
-        id: 1,
-        type: "Credit",
-        amount: 2000.00,
-        date: "11/9/2024",
-        status: "completed"
-      }
-    ]
-  });
+  const [wallet,setWalllet] = useState(null)
+  const[reload,setReload] = useState(false)
 
+//====================USEFFECT==============
   useEffect(() => {
     fetchWalletData();
-  }, []);
+  }, [reload]);
 
+  //================FETCHING WALLET DATA==============
   async function fetchWalletData() {
     try {
-      const response = await axiosInstance.get(`user/wallet/${user}`);
-      setWalletData(response.data);
+      const response = await axiosInstance.get(`user/get-wallet-data/${user}`)
+      setWalllet(response.data.wallet);
     } catch (error) {
       console.error("Error fetching wallet data:", error);
     }
   }
+  console.log("Wallet data",wallet)
 
+  //=================RELOAD FUNCTION=============
+  function reloadFunc(){
+    setReload(!reload)
+  }
+  
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
       <UserSideBar />
@@ -46,15 +47,9 @@ export default function Wallet() {
               <div className="flex justify-between items-center">
                 <div>
                   <h3 className="text-lg font-semibold text-gray-600 mb-2">Wallet Balance</h3>
-                  <p className="text-4xl font-bold">₹{walletData.balance.toFixed(2)}</p>
+                  <p className="text-4xl font-bold">₹{wallet?.balance}</p>
                 </div>
-                <Button 
-                  variant="default"
-                  size="lg"
-                  className="bg-gray-900 text-white hover:bg-gray-800"
-                >
-                  Add Funds
-                </Button>
+                <FundModal user={user} reload={reloadFunc}/>
               </div>
             </div>
           </div>
@@ -75,19 +70,35 @@ export default function Wallet() {
                     </tr>
                   </thead>
                   <tbody>
-                    {walletData.transactions.map((transaction) => (
-                      <tr key={transaction.id} className="border-t">
+                    {wallet && wallet?.transaction.map((transaction) => (
+                      <tr key={transaction._id} className="border-t">
                         <td className="py-4">
                           <div className="flex items-center gap-2">
-                            <RefreshCw className="w-5 h-5 text-green-500" />
-                            <span className="text-gray-800">{transaction.type}</span>
+                          {transaction.transactionType === "credit" ? (
+                            <>
+                              <RefreshCw className="w-5 h-5 text-green-500" />
+                              <span className="text-gray-800">{transaction.transactionType}</span>
+                            </>
+                          ) : (
+                            <>
+                              <RefreshCw className="w-5 h-5 text-red-500 transform rotate-90" />
+                              <span className="text-gray-800">{transaction.transactionType}</span>
+                            </>
+                          )}
                           </div>
                         </td>
+                        {transaction.transactionType=="credit"?
                         <td className="py-4 text-green-600">
-                          +₹{transaction.amount.toFixed(2)}
-                        </td>
+                        +₹{transaction.amount}
+                      </td>:
+                      <td className="py-4 text-red-500">
+                      -₹{transaction.amount}
+                    </td>
+                        }
+                        
                         <td className="py-4 text-gray-600">
-                          {transaction.date}
+                        {new Date(wallet.createdAt).toLocaleDateString()}
+
                         </td>
                         <td className="py-4">
                           <span className="px-2 py-1 text-sm text-gray-600">
