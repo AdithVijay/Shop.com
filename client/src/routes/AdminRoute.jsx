@@ -71,7 +71,7 @@ const AdminRoute = () => {
               </AdminHome>
               }></Route>
 
-              <Route path='/coupon' element={
+              <Route path='/coupons' element={
                     <AdminHome>
                       <CouponList/>
               </AdminHome>

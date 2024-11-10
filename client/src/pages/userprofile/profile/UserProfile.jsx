@@ -11,10 +11,7 @@ import axiosInstance from "@/config/axiosInstance";
 export default function UserProfile() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
   const [phoneNumber, setphoneNumber] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const data = useSelector(state=>state?.user?.users)
   const id = data
   console.log(id);
@@ -130,46 +127,12 @@ export default function UserProfile() {
                         type="tel" // Use "tel" to indicate a phone number
                         id="phoneNumber"
                         value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)} // Ensure this matches your state update function
+                        onChange={(e) => setphoneNumber(e.target.value)} // Ensure this matches your state update function
                         className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       />
                       {errors.phoneNumber && <span className="text-red-500 text-sm">{errors.phoneNumber}</span>}
                     </div>
                   ) : ""}
-                
-                {/* <div>
-                  <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Current Password</label>
-                  <input
-                    type="password"
-                    id="currentPassword"
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">New Password</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  />
-                  {errors.confirmPassword && <span className="text-red-500 text-sm">{errors.confirmPassword}</span>}
-                </div> */}
               </div>
 
               <div className="flex justify-end">
