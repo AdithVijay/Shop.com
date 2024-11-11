@@ -77,7 +77,7 @@ export default function Orders() {
                       <p>Order Placed: {new Date(order.placed_at).toDateString()}</p>
                       <p>Order delivered: {new Date(order.delivery_by).toDateString()}</p>
                       <p>Ship To: {order.shipping_address.address}</p>
-                      <p>Total: {order.total_price_with_discount}</p>
+                      <p>Total: {order.total_price_with_discount||order.total_amount}</p>
 
                     </div>
 

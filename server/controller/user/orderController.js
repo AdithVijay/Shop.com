@@ -5,9 +5,9 @@ const Wallet = require("../../models/wallet");
 
 //======================CHECKOUT WHEN USER PRESS CHECKOUT========================
 const submitCheckout = async (req, res) => {
-  const { user, subtotal, payment_method, cartdata, shipping_address} =
+  const { user, subtotal, payment_method, cartdata, shipping_address,coupon_discount,total_price_with_discount} =
     req.body;
-    console.log(subtotal);
+    console.log(subtotal)
     
     if(payment_method=="Wallet"){
       const wallet = await Wallet.findOne({userId:user})
@@ -21,7 +21,6 @@ const submitCheckout = async (req, res) => {
       }
     }
 
-  
   try {
      const products = cartdata.map((item) => ({
        product: item.productId._id,
@@ -38,8 +37,9 @@ const submitCheckout = async (req, res) => {
        order_status: "Pending",
        total_amount: subtotal,
        shipping_address,
-      payment_method,
-       total_price_with_discount: subtotal,
+       coupon_discount,
+        payment_method,
+       total_price_with_discount,
        shipping_fee: 0,
      });
 
@@ -62,9 +62,6 @@ const submitCheckout = async (req, res) => {
     }
   );
 
-    /// console.log("Cart items removed successfully for user:", user);
-
-    /// Update product stock based on purchased quantities and sizes
   for (let item of cartdata) {
     const { productId, selectedSize, quantity } = item;
     await ProductData.updateOne(
@@ -77,7 +74,6 @@ const submitCheckout = async (req, res) => {
       }
     );
   }
-
 
   res
     .status(201)

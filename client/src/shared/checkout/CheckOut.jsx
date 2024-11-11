@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'sonner';
 import OrderSuccessModal from '../modal/OrderSuccessModal';
+import PaymentComponent from '../payment/PaymentComponent';
 
 const CheckOut = () => {
   const user = useSelector((state) => state.user.users)//userId 
@@ -23,10 +24,8 @@ const CheckOut = () => {
   const [actualCoupounDiscount, setactualCoupounDiscount] = useState(null);
   
   const [a, seta] = useState(null);
-  
-  
   const shipping = 'Free';
-  const total = subtotal;
+
 
 // ========================USEEFECT==========================
     useEffect(() => {
@@ -69,28 +68,32 @@ const CheckOut = () => {
     async function submitCheckout() {
       if(!paymentMethod){
         return toast.error("choose a payment method")
-       }
+      }
       if(!selectedAddress){
         return toast.error("choose an address")
        }
 
        try {
+        console.log("inside the try catch", actualCoupounDiscount)
+        // IF COUPOUN APPLIED THEN THIS FUNCTION 
         const response =await axiosInstance.post("/user/checkout",{
           user,
           subtotal,
+          total_price_with_discount:actualCoupounDiscount||0,
           payment_method:paymentMethod,
           cartdata,
+          coupon_discount:coupoundiscount,
           shipping_address:selectedAddress
         })
+
           console.log("order db scess",response);
-          
           // MODAL PROPS 
           setOrderDetails({
             orderId: response.data.orderId || `ORD${Date.now()}`,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
             paymentMethod: paymentMethod,
-            amount: subtotal,
+            amount: actualCoupounDiscount||subtotal,
             expectedDelivery: "27 - September - 2024" 
           });
          
@@ -102,8 +105,7 @@ const CheckOut = () => {
        }
     }
 
-  //============================FETCHING COUPOUN ===========================
-    
+  //============================FETCHING COUPOUN ===========================    
   async function fetchCoupuns() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
@@ -114,7 +116,6 @@ const CheckOut = () => {
       console.error("Error fetching products:", error);
     }
   }
-
 
   //=======================COPY COUPOUN===============
   function copyCoupoun(code,discountValue) {
@@ -135,8 +136,8 @@ const CheckOut = () => {
 
         const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user,subtotal})
         console.log(response)
-        setactualCoupounDiscount(response.data.newSubtotal)
-        setcoupoundiscount(a)
+        setactualCoupounDiscount(response.data.newSubtotal)//The price displayed as total 
+        setcoupoundiscount(a)//The amount to be displayed in Coupoun discount
         toast.success(response.data.message) 
     } catch (error) {
       toast.error(error.response.data.message)
@@ -151,6 +152,12 @@ const CheckOut = () => {
     setactualCoupounDiscount(null)
     setselectedCoupun("")
   }
+
+  console.log(coupoundiscount);
+  console.log("Paymet menthod", paymentMethod);
+  console.log("tis is the subtoatl", subtotal);
+
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row gap-8">
@@ -184,7 +191,7 @@ const CheckOut = () => {
           </Link>
           <h3 className="font-semibold mt-6 mb-2">Payment Methods</h3>
           <div className="space-y-2">
-            {['Debit Card / Credit Card', 'Bank', 'UPI Method', 'Cash on delivery', 'Wallet'].map((method) => (
+            {['RazorPay', 'Cash on delivery', 'Wallet'].map((method) => (
               <div key={method} className="flex items-center">
                 <input
                   type="radio"
@@ -231,7 +238,7 @@ const CheckOut = () => {
 
             <div className="flex justify-between font-semibold">
               <span>Total:</span>
-              <span>₹{actualCoupounDiscount?actualCoupounDiscount:total}</span>
+              <span>₹{actualCoupounDiscount?actualCoupounDiscount:subtotal}</span>
             </div>
 
           </div>
@@ -272,7 +279,18 @@ const CheckOut = () => {
                    ))} 
                 </div>
 
-          <button onClick={()=>submitCheckout()} className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>
+                   {/* PAYMENT SUBMISSION */}
+
+          {paymentMethod!= "RazorPay"?
+          <button onClick={()=>submitCheckout()} className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>:
+          
+          <PaymentComponent
+           user={user}
+           amount={subtotal}
+           handlePlaceOrder={submitCheckout}
+            />
+          }
+
         </div>
       </div>
       <OrderSuccessModal

@@ -1,14 +1,10 @@
 import { toast } from 'sonner';
 import React, { useState } from 'react';
 
-function PaymentComponent() {
-  const [amount, setAmount] = useState('');
+function PaymentComponent({user,amount,handlePlaceOrder}) {
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (amount === "") {
-      alert("Please enter an amount");
-    } else {
+  const handleSubmit = () => {
+
       var options = {
         key: "rzp_test_qCInnPOVC7vtPP", // Replace with your Razorpay key
         key_secret: "ebNDS0TwQxpjL3VyQGuzb4O6", // Replace with your Razorpay secret
@@ -17,8 +13,7 @@ function PaymentComponent() {
         name: "STARTUP_PROJECTS",
         description: "for testing purpose",
         handler: function(response) { 
-        //   alert(response.razorpay_payment_id);
-        toast.success("succes")
+        handlePlaceOrder()
         },
         prefill: {
           name: "Velmurugan",
@@ -35,23 +30,17 @@ function PaymentComponent() {
 
       const pay = new window.Razorpay(options);
       pay.open();
-    }
-  };
+  }
 
   return (
-    <div className="App">
-      <h2>Razorpay Payment Integration Using React</h2>
-      <br />
-      <br />
-      <input
-        type="text"
-        placeholder="Enter Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
-      <br />
-      <br />
-      <button onClick={handleSubmit}>Submit</button>
+    <div >
+      
+      <button 
+        onClick={handleSubmit} 
+        className="bg-black text-white px-8 py-2 font-medium uppercase tracking-wide rounded"
+      >
+        Submit
+      </button>
     </div>
   );
 }
