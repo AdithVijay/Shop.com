@@ -107,8 +107,7 @@ const getOrderDetails = async (req, res) => {
       })
       .populate("shipping_address")
       .populate("user")
-      .skip(skip)   // Apply skip for pagination
-      .limit(limit);
+      
 
       const totalOrders = await Order.countDocuments({ user: id });
       const totalPages = Math.ceil(totalOrders / limit);

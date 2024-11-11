@@ -132,6 +132,7 @@ const OrderListing = () => {
                         className="border rounded px-2 py-1 text-xs"
                         value={order.order_status}
                         onChange={(e) => updateOrderStatus(e, order._id)}
+                        disabled={order.order_status === "Cancelled"}
                       >
                         <option value="Pending">Pending</option>
                         <option value="Shipped">Shipped</option>

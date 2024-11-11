@@ -10,9 +10,10 @@ import UserMenuDropdown from './Dropdow'
 import { useDispatch } from "react-redux"
 import { logoutUser } from '@/redux/Userslice'
 import DropdownMenu from './Dropdow'
+import axiosInstance from '@/config/axiosInstance'
 const Header = () => {
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch()  
   const [isSearchVisible, setSearchVisible] = useState(false)
   const navigate = useNavigate();
   const userData = useSelector((state)=>state.user.users)

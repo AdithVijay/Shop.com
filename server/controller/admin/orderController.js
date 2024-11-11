@@ -1,5 +1,7 @@
 const Order = require("../../models/order");
 
+const Wallet = require("../../models/wallet");
+
 //==================TO CHANGE THE ORDER STATUS ================
 
 const updateOrderStatus = async (req,res)=>{
@@ -59,6 +61,19 @@ const getOrderDetails = async (req, res) => {
     const id = req.params.id
     const order = await Order.findOne({_id:id})
     order.order_status = "Cancelled"
+    
+    const wallet = await Wallet.findOne({userId:order.user})
+
+    console.log(wallet.balance);
+
+    if(order.payment_method==="Wallet"){
+      wallet.balance = wallet.balance + +order.total_amount
+    }
+    
+    await wallet.save()
+    
+    console.log("Order cancellleddd");
+    
     await order.save()
     if(order){
       return res.status(200).json("cancelled")
