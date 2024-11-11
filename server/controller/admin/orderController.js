@@ -80,8 +80,39 @@ const getOrderDetails = async (req, res) => {
     }
   }
 
+
+  //========================TO FETCH THE SALES DETAILS ========================
+const getSalesDetails = async (req, res) => {
+  try {
+    const order = await Order.find()
+      .populate({
+        path: "order_items.product",
+      })
+      .populate("shipping_address")
+      .populate("user")
+
+      console.log(order);
+      
+    if (!order || order.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No orders found for this user." });
+    }
+
+    return res.status(200).json(
+      order
+    );
+
+  } catch (error) {
+    console.error("Error fetching order details:", error);
+    return res
+      .status(500)
+      .json({ message: "An error occurred while fetching order details." });
+  }
+};
 module.exports={
     updateOrderStatus,
     getOrderDetails,
-    cancelProduct
+    cancelProduct,
+    getSalesDetails
 }

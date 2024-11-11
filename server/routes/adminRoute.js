@@ -61,4 +61,8 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
   //========================COUPOUN MANAGMENT====================
   adminRoute.post("/create-coupon",coupounController.createCoupon)//TO CREATE A COUPOUN 
   adminRoute.get("/get-coupons",coupounController.getCoupons)//TO CREATE A COUPOUN 
+
+  //========================SALES REPORT====================
+  adminRoute.get("/retrieve-sale-report",orderController.getSalesDetails)//TO GET THE SALES REPORT
+
 module.exports = adminRoute;

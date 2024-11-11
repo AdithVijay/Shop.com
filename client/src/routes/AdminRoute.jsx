@@ -15,6 +15,7 @@ import ViewUserOrder from '@/pages/adminpages/orders/ViewUserOrder'
 import OfferModal from '@/shared/modal/OfferModal'
 import CouponList from '@/pages/adminpages/coupons/CouponList'
 import AddCoupoun from '@/pages/adminpages/coupons/AddCoupoun'
+import SalesReport from '@/pages/adminpages/salesreport/SalesReport'
 const AdminRoute = () => {
   return (
     <div>
@@ -80,6 +81,11 @@ const AdminRoute = () => {
               <Route path='/add-coupon' element={
                     <AdminHome>
                       <AddCoupoun/>
+              </AdminHome>
+              }></Route>
+              <Route path='/sales-report' element={
+                    <AdminHome>
+                      <SalesReport/>
               </AdminHome>
               }></Route>
           </Routes>

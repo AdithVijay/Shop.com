@@ -26,12 +26,13 @@ const UserLogin = () => {
     console.log("Submitting:", {  email, password }); 
     try {
       const response = await axiosInstance.post("/user/login",{ email, password });
-      console.log("response from server", response.data);
+      console.log("response from server", response);
       toast.success(response.data.message)
       navigate("/")
       dispatch(addUser(response.data.id))
     } catch (error) {
-      toast.error(error.response.data.message);
+      console.log(error);
+      toast(error.response.data.message)
     }
   };
 

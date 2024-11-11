@@ -49,6 +49,8 @@ const signup = async(req,res)=>{
                 email:email,
                 phoneNumber:phonenumber
             })
+            genarateAccesTocken(res,user._id)
+            genarateRefreshTocken(res,user._id)
             console.log(res.json);
             return res.status(200).json({ message: "User is registered", user });
     }catch(err){
@@ -189,7 +191,6 @@ const login = async(req,res)=>{
       const {email,password}= req.body
       const user = await User.findOne({email})
   
-      console.log(user)
       if(!user){
         res.status(401).json({message: "Invalid email or password"})
       }
@@ -199,9 +200,10 @@ const login = async(req,res)=>{
       }
   
       if(user){
-          if(await bcrypt.compare(password, user.password)){
+          if(bcrypt.compare(password, user.password)){
             genarateAccesTocken(res,user._id)
             genarateRefreshTocken(res,user._id)
+            console.log(user);
           return res.status(200).json({
               message: "Login successful",
               id: user._id,

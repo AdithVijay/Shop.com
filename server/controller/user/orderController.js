@@ -141,9 +141,7 @@ const viewOrderDetails = async(req,res)=>{
 const changeOrderStatus = async (req,res)=>{
     const {id,productId} = req.body
     console.log(req.body);
-    
     console.log(id);
-
 }
 module.exports = {
   submitCheckout,
