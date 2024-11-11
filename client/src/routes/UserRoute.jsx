@@ -19,6 +19,8 @@ import Shop1 from "@/pages/userpages/Shop1";
 import NewFilter from "@/shared/bars/NewFilter";
 import ProtectOther from "@/protect/ProtectOther";
 import UserWishList from "@/pages/userpages/UserWishList";
+import PaymentComponent from "@/shared/payment/PaymentComponent";
+
 
 const UserRoute = () => {
   return (
@@ -105,6 +107,15 @@ const UserRoute = () => {
           element={
             <ProtecHome>
                 <UserWishList/>
+            </ProtecHome>
+          }
+        ></Route>
+
+        <Route
+          path="/payment"
+          element={
+            <ProtecHome>
+                <PaymentComponent/>
             </ProtecHome>
           }
         ></Route>

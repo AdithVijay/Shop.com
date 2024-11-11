@@ -10,7 +10,7 @@ export default function Orders() {
   const user = useSelector((state) => state.user.users);
   const [orderData, setOrderData] = useState([]);
   const navigate = useNavigate();
-
+  //================WHEN USER CLICKS ORDER IN USER PROFILE==============
 //=========================USEEFFECT======================
   useEffect(() => {
     fetchOrderData();
