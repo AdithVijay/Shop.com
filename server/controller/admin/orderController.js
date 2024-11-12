@@ -98,8 +98,6 @@ const getSalesDetails = async (req, res) => {
       })
       .populate("shipping_address")
       .populate("user")
-
-      console.log(order);
       
     if (!order || order.length === 0) {
       return res
@@ -122,7 +120,7 @@ const getSalesDetails = async (req, res) => {
   //===================TO FETCH DATA BASED ON SALES DETAILS ===================
   const gethDataBasedOnDate = async (req, res) => {
     const { reportType, DateStart, endDate } = req.body;
-
+    
     // Set default date range if not using custom dates
     const now = new Date();
     let startDate;
@@ -167,6 +165,8 @@ const getSalesDetails = async (req, res) => {
         console.error('Error fetching orders:', error);
         res.status(500).json({ message: 'Error fetching orders' });
     }
+
+
 };
 
 

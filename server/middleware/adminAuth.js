@@ -32,7 +32,7 @@ const handleRefreshToken = async (refreshToken, req, res, next) => {
             const decodeRefresh = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
             const newAccessToken = jwt.sign({ admin: decodeRefresh.admin }, process.env.ACCESS_TOKEN_SECRET, {
                 expiresIn: "2m",
-            });
+            })
 
             res.cookie("accessToken", newAccessToken, {
                 httpOnly: true,

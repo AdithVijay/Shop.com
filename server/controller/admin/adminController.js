@@ -18,7 +18,7 @@ const adminLogin = async (req, res) => {
             return res.status(401).json({ message: "Invalid credentials" });
         }
          genarateAccesTocken(res,admin._id); 
-        genarateRefreshTocken(res,admin._id); 
+         genarateRefreshTocken(res,admin._id); 
 
         res.status(200).json({
             message: "Admin login successful",

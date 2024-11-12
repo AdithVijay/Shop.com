@@ -5,6 +5,8 @@ import Sidebar from '@/shared/bars/Sidebar'
 import axiosInstance from '@/config/axiosInstance'
 import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 export default function SalesReport() {
   const user = useSelector((state)=>state.user.users)
@@ -57,16 +59,9 @@ export default function SalesReport() {
     //============= FETCH DATA ACCORDING TO WEEK AND MONTH=========
       async function fetchDataBasedOnDate(DateStart,endDate){
         try {
-            if(!DateStart && !endDate){
-                const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType,DateStart:'',endDate:''})
-                setOrderData(response.data)
-                console.log(response)
-            }else{
-                const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType,DateStart,endDate})
-                setOrderData(response.data)
-                console.log(response)
-            }
-
+            const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType,DateStart: DateStart || '',endDate: endDate || ''})
+            setOrderData(response.data)
+            console.log(response)
         } catch (error) {
             console.log(error);
         }
@@ -82,7 +77,49 @@ export default function SalesReport() {
           console.log(DateStart,endDate);
         }
       }
-      
+      //============FUNCTION TO DOWNLOAD THE SALES REPORT==========
+        // PDF download function
+        const handleDownloadPDF = () => {
+          toast.success("please wait ....");
+          const doc = new jsPDF();
+          doc.text(`Sales Report - ${reportType}`, 14, 10);
+        
+          // Formatting the data for the table
+          const rows = orderData.map((order) => [
+            order.user?.name || 'N/A',
+            new Date(order.placed_at).toLocaleDateString(),
+            order.payment_method,
+            order.order_items.reduce((acc, item) => acc + item.qty, 0), // Total qty
+            order.total_price_with_discount || order.total_amount,
+          ]);
+        
+          // Calculate total amount and total discount
+          const totalAmount = orderData.reduce((sum, order) => sum + (order.total_price_with_discount || order.total_amount) , 0);
+          const totalDiscount = orderData.reduce((sum, order) => sum + (order.coupon_discount || 0), 0);
+        
+          // Adding the table with sales data
+          doc.autoTable({
+            head: [['User', 'Date', 'Payment Method', 'Quantity', 'Amount']],
+            body: rows,
+            startY: 20, // Position the table below the title
+          });
+        
+          // Adding totals at the bottom of the table
+          doc.autoTable({
+            body: [
+              ['Total', totalAmount.toFixed(2)],
+              ['Total Discount', totalDiscount.toFixed(2)],
+            ],
+            startY: doc.lastAutoTable.finalY + 10, // Position below the main table
+            theme: 'plain', // Make it stand out
+            styles: { fontStyle: 'bold', halign: 'right' }, // Right-align text
+            columnStyles: { 1: { halign: 'right' } }, // Right-align values
+          });
+        
+          // Save the PDF
+          doc.save(`Sales_Report_${reportType}.pdf`);
+        };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -97,7 +134,7 @@ export default function SalesReport() {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-3">Report Settings</h3>
               <div className="flex gap-2 flex-wrap">
-                {['Daily', 'Weekly', 'Monthly', 'Yearly', 'Custom'].map((type) => (
+                {['Daily', 'Weekly', 'Monthly', 'Custom'].map((type) => (
                   <button
                     key={type}
                     onClick={() => setReportType(type)}
@@ -139,8 +176,6 @@ export default function SalesReport() {
               )}
             </div>
 
-
-
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
@@ -177,15 +212,11 @@ export default function SalesReport() {
             </div>
 
             <div className="flex justify-end gap-4 mt-6">
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"
+            <button
+                onClick={handleDownloadPDF}
+                className="px-4 py-2 bg-green-500 text-white rounded-md"
               >
                 Download as PDF
-              </button>
-              <button
-                className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-              >
-                Download as Excel
               </button>
             </div>
           </div>
