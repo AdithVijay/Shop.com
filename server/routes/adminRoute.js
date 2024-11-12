@@ -64,5 +64,6 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
 
   //========================SALES REPORT====================
   adminRoute.get("/retrieve-sale-report",orderController.getSalesDetails)//TO GET THE SALES REPORT
+  adminRoute.post("/get-date-based-sales",orderController.gethDataBasedOnDate)//TO GET SALES BASED ON DATE
 
 module.exports = adminRoute;

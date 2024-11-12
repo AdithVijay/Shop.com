@@ -12,14 +12,14 @@ export default function SalesReport() {
   const [reportType, setReportType] = useState('daily')
   const [orderData, setOrderData] = useState([]);
 
-
-
-
   //======================================USEFFECT==================================
   useEffect(()=>{
     fetchOrderData()
   },[])
 
+  useEffect(()=>{
+    fetchDataBasedOnDate()
+  },[reportType])
 
     //=========================FETCHING THE DATA FROM BACKEND=======================
     async function fetchOrderData() {
@@ -33,7 +33,7 @@ export default function SalesReport() {
         return orderItems.reduce((total, item) => total + item.qty, 0);
       }
 
-
+    //==============TO CALCULATE TOATAL PRICE AND DISCOUNT==============
       if(orderData.length!=0){
         var totalamout = orderData && orderData?.reduce((acc,curr)=>{
             if(curr.total_price_with_discount){
@@ -48,10 +48,19 @@ export default function SalesReport() {
             return acc
         },0)
       }
-    console.log(totalamout);
+    console.log(totalamout)
+    console.log(reportType);
     
-
-
+    //============= FETCH DATA ACCORDING TO WEEK AND MONTH=========
+      async function fetchDataBasedOnDate(){
+        try {
+            const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType})
+            console.log(response);   
+        } catch (error) {
+            console.log(error);
+        }
+      }
+      
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -66,12 +75,12 @@ export default function SalesReport() {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-3">Report Settings</h3>
               <div className="flex gap-2 flex-wrap">
-                {['Daily', 'Weekly', 'Yearly', 'Custom'].map((type) => (
+                {['Daily', 'Weekly', 'Monthly'].map((type) => (
                   <button
                     key={type}
-                    onClick={() => setReportType(type.toLowerCase())}
+                    onClick={() => setReportType(type)}
                     className={`px-6 py-2 rounded-full transition-all duration-300 ${
-                      reportType === type.toLowerCase()
+                      reportType === type
                         ? 'bg-blue-600 text-white'
                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                     }`}

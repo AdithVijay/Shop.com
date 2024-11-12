@@ -110,9 +110,44 @@ const getSalesDetails = async (req, res) => {
       .json({ message: "An error occurred while fetching order details." });
   }
 };
+  //===================TO FETCH DATA BASED ON SALES DETAILS ===================
+  const gethDataBasedOnDate = async (req, res) => {
+    const { reportType } = req.body;
+    
+    const now = new Date();
+    let startDate;
+    
+    if (reportType === 'Daily') {
+
+      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    } else if (reportType === 'Weekly') {
+      const startOfWeek = now.getDate() - now.getDay(); 
+      startDate = new Date(now.getFullYear(), now.getMonth(), startOfWeek);
+    } else if (reportType === 'Monthly') {
+      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    } else {
+      return res.status(400).json({ message: 'Invalid report type' });
+    }
+  
+    try {
+      // Fetch orders within the specified date range
+      const orders = await Order.find({
+        placed_at: {
+          $gte: startDate,
+          $lt: now
+        }
+      });
+  
+      res.status(200).json(orders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).json({ message: 'Error fetching orders' });
+    }
+  };
 module.exports={
     updateOrderStatus,
     getOrderDetails,
     cancelProduct,
-    getSalesDetails
+    getSalesDetails,
+    gethDataBasedOnDate
 }
