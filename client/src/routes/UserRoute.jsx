@@ -33,45 +33,35 @@ const UserRoute = () => {
         <Route
           path="/home"
           element={
-            <ProtecHome>
               <Home />
-            </ProtecHome>
           }
         ></Route>
 
         <Route
           path="/signup"
           element={
-            <ProtectLanding>
               <UserSignup />
-            </ProtectLanding>
           }
         ></Route>
 
         <Route
           path="/login"
           element={
-            <ProtectLanding>
               <UserLogin />
-            </ProtectLanding>
           }
         ></Route>
 
         <Route
           path="/password-forgot"
           element={
-            <ProtectLanding>
               <ForgotPass />
-            </ProtectLanding>
           }
         ></Route>
 
         <Route
           path="/password-reset/:id"
           element={
-            <ProtectLanding>
               <ResetPassword />
-            </ProtectLanding>
           }
         ></Route>
 
@@ -120,7 +110,6 @@ const UserRoute = () => {
           }
         ></Route>
 
-        <Route path="/filter" element={<NewFilter />}></Route>
       </Routes>
 
       <Toaster />

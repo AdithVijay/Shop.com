@@ -115,6 +115,7 @@ async function fetchProduct(){
       const response = await axiosInstance.post("/user/addtowishlist",{id,userId})
       console.log(response)
       toast(response.data.message)
+      setdisplayWishlist(true)
     } catch (error) {
       console.log(error)
     }
@@ -207,20 +208,47 @@ async function fetchProduct(){
         </div>
 
             {/* Add to Wishlist Button */}
+              {!userId?
+              <button 
+              onClick={()=>(navigate("/login"))}
+              className="mt-4 w-full bg-gray-300 text-black py-2 rounded text-sm lg:text-base lg:py-3"
+            >
+              {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} 
+            </button> 
+              :
             <button 
             onClick={addToWishlist}
             className="mt-4 w-full bg-gray-300 text-black py-2 rounded text-sm lg:text-base lg:py-3"
           >
-            {/* {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} */} Wishlist
+            {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} 
           </button>
-        
+              }
+
         {/* Add to Cart Button */}
-        <button 
+
+              {!userId?
+                <button 
+                onClick={() => navigate('/login')} 
+                className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3"
+              >
+                Add to Cart
+                </button> 
+                 :
+                <button 
+                    onClick={() => displayCart ? navigate('/addtocart') : addtocart(id)} 
+                    className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3"
+                  >
+                    {displayCart ? "Go to Cart" : "Add to Cart"}
+              </button>
+
+            }
+
+        {/* <button 
             onClick={() => displayCart ? navigate('/addtocart') : addtocart(id)} 
             className="mt-4 w-full bg-black text-white py-2 rounded text-sm lg:text-base lg:py-3"
           >
             {displayCart ? "Go to Cart" : "Add to Cart"}
-        </button>
+        </button> */}
       </div>
 
       {/* Modal for Image */}
