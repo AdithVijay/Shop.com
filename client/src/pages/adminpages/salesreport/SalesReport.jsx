@@ -1,25 +1,28 @@
-'use client'
-
 import React, { useEffect, useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Sidebar from '@/shared/bars/Sidebar'
 import axiosInstance from '@/config/axiosInstance'
 import { useSelector } from 'react-redux'
+import { toast } from 'sonner'
 
 export default function SalesReport() {
   const user = useSelector((state)=>state.user.users)
   const [reportType, setReportType] = useState('daily')
   const [orderData, setOrderData] = useState([]);
+  const [DateStart, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
 
   //======================================USEFFECT==================================
-  useEffect(()=>{
+  useEffect(() => {
     fetchOrderData()
-  },[])
+    },[]);
 
-  useEffect(()=>{
-    fetchDataBasedOnDate()
-  },[reportType])
+ 
+        useEffect(() => {
+            fetchDataBasedOnDate();
+           },[reportType]);
+    
 
     //=========================FETCHING THE DATA FROM BACKEND=======================
     async function fetchOrderData() {
@@ -52,12 +55,31 @@ export default function SalesReport() {
     console.log(reportType);
     
     //============= FETCH DATA ACCORDING TO WEEK AND MONTH=========
-      async function fetchDataBasedOnDate(){
+      async function fetchDataBasedOnDate(DateStart,endDate){
         try {
-            const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType})
-            console.log(response);   
+            if(!DateStart && !endDate){
+                const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType,DateStart:'',endDate:''})
+                setOrderData(response.data)
+                console.log(response)
+            }else{
+                const response = await axiosInstance.post("/admin/get-date-based-sales",{reportType,DateStart,endDate})
+                setOrderData(response.data)
+                console.log(response)
+            }
+
         } catch (error) {
             console.log(error);
+        }
+      }
+
+      //============CUSTOM DATE===================
+      const handleApplyCustomDate = () => {
+        if (reportType === 'Custom') {
+            if (!DateStart || !endDate) {
+              return  toast.error("Select start and end date")
+              }
+          fetchDataBasedOnDate(DateStart,endDate)
+          console.log(DateStart,endDate);
         }
       }
       
@@ -75,7 +97,7 @@ export default function SalesReport() {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-3">Report Settings</h3>
               <div className="flex gap-2 flex-wrap">
-                {['Daily', 'Weekly', 'Monthly'].map((type) => (
+                {['Daily', 'Weekly', 'Monthly', 'Yearly', 'Custom'].map((type) => (
                   <button
                     key={type}
                     onClick={() => setReportType(type)}
@@ -89,7 +111,35 @@ export default function SalesReport() {
                   </button>
                 ))}
               </div>
+              
+              {reportType === 'Custom' && (
+                <div className="flex items-center gap-2 mt-4">
+                  <input
+                    type="date"
+                    value={DateStart}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="border rounded-md px-3 py-2"
+                    placeholder="Start Date"
+                  />
+                  <span>to</span>
+                  <input
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    className="border rounded-md px-3 py-2"
+                    placeholder="End Date"
+                  />
+                  <button
+                    onClick={handleApplyCustomDate}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
+                  >
+                    Apply
+                  </button>
+                </div>
+              )}
             </div>
+
+
 
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">

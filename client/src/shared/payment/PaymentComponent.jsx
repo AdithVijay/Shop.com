@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 
 function PaymentComponent({user,amount,handlePlaceOrder}) {
 
+
   const handleSubmit = () => {
 
       var options = {

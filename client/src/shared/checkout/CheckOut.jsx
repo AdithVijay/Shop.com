@@ -96,7 +96,7 @@ const CheckOut = () => {
             amount: actualCoupounDiscount||subtotal,
             expectedDelivery: "27 - September - 2024" 
           });
-         
+      
           setShowSuccessModal(true);
           setrelaod(true)
        } catch (error) {
@@ -295,7 +295,7 @@ const CheckOut = () => {
       </div>
       <OrderSuccessModal
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)}
+        // onClose={() => setShowSuccessModal(false)}
         orderDetails={orderDetails}
       />
     </div>

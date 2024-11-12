@@ -62,12 +62,20 @@ const getOrderDetails = async (req, res) => {
     const order = await Order.findOne({_id:id})
     order.order_status = "Cancelled"
     
-    const wallet = await Wallet.findOne({userId:order.user})
+    let wallet = await Wallet.findOne({userId:order.user})
+
+    if(!wallet){
+      wallet = await Wallet.create({
+        userId:order.user,
+        balance:0,
+      })
+    }
 
     console.log(wallet.balance);
 
-    if(order.payment_method==="Wallet"){
+    if(order.payment_method==="Wallet"||order.payment_method==="RazorPay"){
       wallet.balance = wallet.balance + +order.total_amount
+      wallet.transaction.push({transactionType:"credit",amount:+order.total_amount,status:"completed"})
     }
     
     await wallet.save()
@@ -110,40 +118,58 @@ const getSalesDetails = async (req, res) => {
       .json({ message: "An error occurred while fetching order details." });
   }
 };
+
   //===================TO FETCH DATA BASED ON SALES DETAILS ===================
   const gethDataBasedOnDate = async (req, res) => {
-    const { reportType } = req.body;
-    
+    const { reportType, DateStart, endDate } = req.body;
+
+    // Set default date range if not using custom dates
     const now = new Date();
     let startDate;
-    
-    if (reportType === 'Daily') {
+    let end = now; // Initialize `end` to `now` by default
 
-      startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    } else if (reportType === 'Weekly') {
-      const startOfWeek = now.getDate() - now.getDay(); 
-      startDate = new Date(now.getFullYear(), now.getMonth(), startOfWeek);
-    } else if (reportType === 'Monthly') {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    if (DateStart && endDate) {
+        // Convert DateStart and endDate to Date objects
+        startDate = new Date(DateStart);
+        end = new Date(endDate);
+        // Adjust endDate to include the entire day
+        end.setHours(23, 59, 59, 999);
     } else {
-      return res.status(400).json({ message: 'Invalid report type' });
-    }
-  
-    try {
-      // Fetch orders within the specified date range
-      const orders = await Order.find({
-        placed_at: {
-          $gte: startDate,
-          $lt: now
+        // Use preset ranges if custom dates are not provided
+        if (reportType === 'Daily') {
+            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        } else if (reportType === 'Weekly') {
+            const startOfWeek = now.getDate() - now.getDay(); 
+            startDate = new Date(now.getFullYear(), now.getMonth(), startOfWeek);
+        } else if (reportType === 'Monthly') {
+            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+        } else {
+            return res.status(400).json({ message: 'Invalid report type' });
         }
-      });
-  
-      res.status(200).json(orders);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      res.status(500).json({ message: 'Error fetching orders' });
     }
-  };
+
+    try {
+        // Fetch orders within the specified date range
+        const orders = await Order.find({
+            placed_at: {
+                $gte: startDate,
+                $lt: end
+            }
+        })
+        .populate({
+            path: "order_items.product",
+        })
+        .populate("shipping_address")
+        .populate("user");
+
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error('Error fetching orders:', error);
+        res.status(500).json({ message: 'Error fetching orders' });
+    }
+};
+
+
 module.exports={
     updateOrderStatus,
     getOrderDetails,
