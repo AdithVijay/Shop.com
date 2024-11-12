@@ -31,10 +31,12 @@ export default function UserProfile() {
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       newErrors.email = "Email is invalid.";
     }
-    if (!phoneNumber.trim()) {
-      newErrors.phoneNumber = "Phone number is required.";
-    } else if (!/^\d{10,15}$/.test(phoneNumber)) {
-      newErrors.phoneNumber = "Phone number must be between 10 and 15 digits.";
+    if(phoneNumber){
+      if (!phoneNumber?.trim()) {
+        newErrors.phoneNumber = "Phone number is required.";
+      } else if (!/^\d{10,15}$/.test(phoneNumber)) {
+        newErrors.phoneNumber = "Phone number must be between 10 and 15 digits.";
+      }
     }
     return newErrors;
   };
@@ -69,11 +71,8 @@ export default function UserProfile() {
       return;
     }
     
-   
-    console.log(personalData)
-    
     try {
-      const response = await axiosInstance.post(`/user/update/${id}`, personalData);
+      const response = await axiosInstance.post(`/user/update/${id}`,{name , phoneNumber:phoneNumber||''});
       console.log("Personal data to be sent:", response);
       toast.success("Personal information updated successfully");
       navigate("/profile");
@@ -132,7 +131,7 @@ export default function UserProfile() {
                       />
                       {errors.phoneNumber && <span className="text-red-500 text-sm">{errors.phoneNumber}</span>}
                     </div>
-                  ) : ""}
+                  ) : " "}
               </div>
 
               <div className="flex justify-end">

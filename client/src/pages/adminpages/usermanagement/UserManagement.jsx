@@ -44,9 +44,6 @@ export default function UserManagement() {
         }
     }
  
-
-
-
   async function handleList(id) {
     try {
       const response = await axiosInstance.put(`/admin/listuser/${id}`);
@@ -131,7 +128,7 @@ export default function UserManagement() {
                       <td className="border p-2">{index + 1}</td>
                       <td className="border p-2">{x.name}</td>
                       <td className="border p-2">{x.email}</td>
-                      <td className="border p-2">{x.phoneNumber}</td>
+                      <td className="border p-2">{x.phoneNumber||"no number"}</td>
                       <td className="border p-2 text-center">
                       <button
                           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300"

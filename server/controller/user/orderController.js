@@ -8,9 +8,22 @@ const submitCheckout = async (req, res) => {
   const { user, subtotal, payment_method, cartdata, shipping_address,coupon_discount,total_price_with_discount} =
     req.body;
     console.log(subtotal)
+      
+    let wallet = await Wallet.findOne({userId:user})
+
+    if(!wallet){
+       wallet = new Wallet({
+        balance:0,
+        userId:user,
+        transaction:[]
+      }) 
+      await wallet.save()
+    }
+    console.log(wallet);
     
+
     if(payment_method=="Wallet"){
-      const wallet = await Wallet.findOne({userId:user})
+
       if(wallet.balance>=subtotal){
         console.log(wallet)
         wallet.balance = wallet.balance - subtotal

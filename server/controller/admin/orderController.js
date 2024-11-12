@@ -137,7 +137,7 @@ const getSalesDetails = async (req, res) => {
         if (reportType === 'Daily') {
             startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         } else if (reportType === 'Weekly') {
-            const startOfWeek = now.getDate() - now.getDay(); 
+            const startOfWeek = now.getDate() - now.getDay();
             startDate = new Date(now.getFullYear(), now.getMonth(), startOfWeek);
         } else if (reportType === 'Monthly') {
             startDate = new Date(now.getFullYear(), now.getMonth(), 1);

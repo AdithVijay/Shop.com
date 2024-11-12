@@ -100,8 +100,9 @@ const CheckOut = () => {
           setShowSuccessModal(true);
           setrelaod(true)
        } catch (error) {
-        toast.error(error.response.data.message)
         console.log(error);
+        toast.error(error.response?.data?.message)
+        
        }
     }
 
@@ -140,7 +141,7 @@ const CheckOut = () => {
         setcoupoundiscount(a)//The amount to be displayed in Coupoun discount
         toast.success(response.data.message) 
     } catch (error) {
-      toast.error(error.response.data.message)
+      toast.error(error.response?.data?.message)
     }
   }
   console.log("coupoun discount",coupoundiscount)

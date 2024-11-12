@@ -370,7 +370,7 @@ const resetPassword = async(req,res)=>{
     console.log(name,phoneNumber);
     
     const updatedData = {
-      name,phoneNumber
+      name,phoneNumber:phoneNumber||''
     }
    const user = await User.findByIdAndUpdate(id,updatedData,{new:true})
    return res.json(user)
