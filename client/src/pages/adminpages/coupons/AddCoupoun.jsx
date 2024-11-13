@@ -172,7 +172,7 @@ export default function AddCoupon() {
                     placeholder='Brief Description'
                   />
                    {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
-                </div>
+                </div>      
               </div>
                 
               {/* Form Buttons */}
