@@ -31,6 +31,7 @@ const OrderListing = () => {
     }
   };
 
+  //===================FETCHING THE ORDER DETAILS====================
   async function fetchOrderData(page = 1) {
     try {
       const response = await axiosInstance.get(`admin/retrieveorder?page=${page}&limit=6`);

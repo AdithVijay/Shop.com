@@ -10,6 +10,8 @@ export default function Orders() {
   const user = useSelector((state) => state.user.users);
   const [orderData, setOrderData] = useState([]);
   const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   //================WHEN USER CLICKS ORDER IN USER PROFILE==============
 //=========================USEEFFECT======================
   useEffect(() => {
@@ -17,15 +19,28 @@ export default function Orders() {
   }, []);
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
-  async function fetchOrderData() {
-    const response = await axiosInstance.get(`user/retrieveorder/${user}`);
+  async function fetchOrderData(page=1) {
+    const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=2`);
     setOrderData(response.data);
+    setCurrentPage(response.data.currentPage);
+    setTotalPages(response.data.totalPages);
   }
   console.log("orderadta",orderData)
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
   function viewOrder(id){
     navigate(`/vieworders/${id}`)
+  }
+  //==========================FUNCTION TO HANDLE PAGENATION=======================
+  function handlePrevious(){
+    if (currentPage > 1) {
+      fetchOrderData(currentPage - 1);
+    }
+  }
+  function handleNext(){
+    if (currentPage < totalPages) {
+      fetchOrderData(currentPage + 1);
+    }
   }
 
   return (
@@ -64,7 +79,7 @@ export default function Orders() {
                             Price: {item.price}
                           </p>
                           <p className="text-xs text-red-500">
-                            Return eligible through {order.returnDate}
+                            {/* Return eligible through {order.returnDate} */}
                           </p>
                         </div>
                       </div>
@@ -124,13 +139,20 @@ export default function Orders() {
               ))}
             </div>
 
-            <div className="mt-6 flex justify-center">
-              <Button
-                variant="outline"
-                className="text-blue-600 border-blue-600"
-              >
-                View All
-              </Button>
+            <div className="mt-6 flex justify-between items-center">
+              <button 
+               disabled={currentPage === 1}
+              onClick={handlePrevious}
+              className=" px-4 py-2 bg-gray-200 rounded ">
+                Previous
+              </button>
+                <span>Page {currentPage} of {totalPages}</span>
+              <button 
+                disabled={currentPage === totalPages}
+                onClick={handleNext}
+                className=" px-4 py-2 bg-gray-200 rounded ">
+                Next 
+              </button>
             </div>
           </div>
         </div>

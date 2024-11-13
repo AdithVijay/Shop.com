@@ -105,7 +105,7 @@ const fetchProduct = async (req, res) => {
     console.log("product id", id);
     const product = await ProductData.findById({ _id: id }).populate(
       "category"
-    );
+    )
     if (!product) {
       return res
         .status(404)
@@ -281,15 +281,24 @@ const unListingProducts = async (req, res) => {
   }
 };
 
-// ==========================UNLISTING PRODUCT DATA IN PRODUCT PAGE===========================
+// ==========================ADDING OFFER IN PRODUCT===========================
 const addProductOffer = async (req, res) => {
   console.log(req.body);
   const { offerData, productId } = req.body;
-  const product = await ProductData.findById(productId);
+
+  const product = await ProductData.findById(productId).populate('category');
+
+  // Check if the category offer is higher and active
+  if (product.category.offerIsActive && product.category.offerPrice > offerData) {
+    console.log(`Product offer not applied as category offer is higher for product ${productId}.`);
+    return res.status(400).json({ message: "Higher category offer is active. Product offer not applied." });
+  }
+
   product.regularPrice = product.salePrice;
   const offerPrice = Math.round(
     product.salePrice - (product.salePrice * offerData) / 100
   );
+   
   await ProductData.findByIdAndUpdate(
     productId,
     {
@@ -300,19 +309,22 @@ const addProductOffer = async (req, res) => {
     },
     { new: true }
   );
-  return res.json({message:"Kiiti"})
+  return res.json({message:"Offer Added"})
 };
+
+// ==========================REMOVE OFFER IN PRODUCT===========================
 const removeProductOffer = async (req, res) => {
   try {
     const { productId, offerPrice } = req.body;
     console.log(req.body);
     const product = await ProductData.findById(productId);
+  
     const data = await ProductData.findByIdAndUpdate(
       productId,
       { salePrice: product.regularPrice, OfferIsActive: false, offerPrice: 0 },
       { new: true }
     );
-    return res.json({message:"Kiiti"})
+    return res.json({message:"Offer Removed"})
   } catch (error) {
     console.log(error);
   }

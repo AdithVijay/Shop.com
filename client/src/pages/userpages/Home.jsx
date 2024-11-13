@@ -18,6 +18,7 @@ const Home = () => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
       const data = response.data.data
+      
       setproductData(data)
     }
     fetchData()

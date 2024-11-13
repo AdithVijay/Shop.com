@@ -31,8 +31,9 @@ const getOrderDetails = async (req, res) => {
         })
         .populate("shipping_address")
         .populate("user")
+        .sort({placed_at:-1})
         .skip(skip)   // Apply skip for pagination
-        .limit(limit);
+        .limit(limit)
   
         const totalOrders = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrders / limit);
