@@ -28,7 +28,7 @@ const UserLogin = () => {
       const response = await axiosInstance.post("/user/login",{ email, password });
       console.log("response from server", response);
       toast.success(response.data.message)
-      navigate("/")
+      navigate("/home")
       dispatch(addUser(response.data.id))
     } catch (error) {
       console.log(error);

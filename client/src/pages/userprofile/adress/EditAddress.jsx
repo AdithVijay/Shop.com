@@ -21,20 +21,24 @@ export default function EditAddress() {
   const id = useParams()
   const adressId =  id.id
 //======================FORM VALIDATION==========================
-  const validateForm = () => {
-    const newErrors = {};
-    if (!name.trim()) newErrors.name = "Name is required.";
-    // if (!phonenumber.trim()) {
-    //   newErrors.phonenumber = "phonenumber is required.";
-    // } else if (!/\S+@\S+\.\S+/.test(phonenumber)) {
-    //   newErrors.phonenumber = "phonenumber is invalid.";
-    // }
-    if (!address.trim()) newErrors.address = "Address is required.";
-    if (!district.trim()) newErrors.district = "District/Town is required.";
-    if (!state.trim()) newErrors.state = "State is required.";
-    if (!pinCode.trim()) newErrors.pinCode = "Pin Code is required.";
-    return newErrors;
-  };
+const validateForm = () => {
+  const newErrors = {};
+
+  if (!name.trim()) newErrors.name = "Name is required.";
+  if (!phonenumber.trim() || !/^\d{10}$/.test(phonenumber)) {
+    newErrors.phonenumber = "Phone number must be 10 digits.";
+  }
+  if (!address.trim()) newErrors.address = "Address is required.";
+  if (!district.trim()) newErrors.district = "District is required.";
+  if (!state.trim()) newErrors.state = "State is required.";
+  if (!landmark.trim()) newErrors.landmark = "landmark is required.";
+  if (!pinCode.trim() || !/^\d{6}$/.test(pinCode)) {
+    newErrors.pinCode = "Pincode must be 6 digits.";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
 
   //======================FETCHING THE DATA==========================
   useEffect(()=>{
@@ -61,10 +65,8 @@ export default function EditAddress() {
   const handleUpdateAddress = async (e) => {
     e.preventDefault();    
     const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
+    if (!validateForm()) return;
+
     const addressData = {name,phonenumber,address,district,state,landmark,pinCode};
     console.log(addressData);
     
@@ -176,6 +178,7 @@ export default function EditAddress() {
                       className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                       placeholder="eg : Hospital"
                     />
+                      {errors.landmark && <p className="text-sm text-red-500">{errors.landmark}</p>}
                   </div>
                   <div>
                     <label htmlFor="pinCode" className="block text-sm font-medium text-gray-700">Pin Code</label>

@@ -170,6 +170,8 @@ const googleSignIn = async(req,res)=>{
           email: email,
         });
       }
+      genarateAccesTocken(res,user._id)
+      genarateRefreshTocken(res,user._id)
 
       return res.status(200).json({
         success: true,
@@ -198,9 +200,15 @@ const login = async(req,res)=>{
       if (user?.isListed==false) {
         return res.status(403).json({ message: "Your account is blocked. Contact support." });
       }
-  
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      
+      if(!isPasswordValid){
+        return res.status(400).json({ message: "Invalid email or password" });
+      }
+
       if(user){
-          if(bcrypt.compare(password, user.password)){
+          if(isPasswordValid){
             genarateAccesTocken(res,user._id)
             genarateRefreshTocken(res,user._id)
             console.log(user);
@@ -213,7 +221,7 @@ const login = async(req,res)=>{
             })
           }
       }else{
-          return res.status(500).json({ message: "Invalid email or password" });
+          return res.status(400).json({ message: "Invalid email or password" });
       }
   }catch(err){
       console.log(err);
@@ -245,9 +253,12 @@ const googleLogin = async(req,res)=>{
         });
         await user.save();
       }
+      
       if (user?.isListed==false) {
         return res.status(403).json({ message: "Your account is blocked. Contact support." });
       }
+      genarateAccesTocken(res,user._id)
+      genarateRefreshTocken(res,user._id)
   
       res.status(200).json({
         success: true,

@@ -40,14 +40,18 @@ const UserRoute = () => {
         <Route
           path="/signup"
           element={
+            <ProtectLanding>
               <UserSignup />
+              </ProtectLanding>
           }
         ></Route>
 
         <Route
           path="/login"
           element={
+            <ProtectLanding>
               <UserLogin />
+              </ProtectLanding>
           }
         ></Route>
 

@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 
 export function OTPVerification({ isOpen, onClose, onVerify, email }) {
   const [otp, setOtp] = useState(['', '', '', '', '','']);
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(60);
 
   useEffect(() => {
     let interval;
@@ -59,7 +59,7 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
           <DialogTitle className="text-center">Verify OTP</DialogTitle>
         </DialogHeader>
         <div className="text-center mb-4">
-          We've sent an email with an activation code to your email {email}
+          We've sent an email with an activation code to your email <br /> {email}
         </div>
         <div className="flex justify-center space-x-2 mb-4">
           {otp.map((digit, index) => (

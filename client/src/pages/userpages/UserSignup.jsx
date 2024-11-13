@@ -102,9 +102,9 @@ const UserSignup = () => {
       dispatch( addUser(response.data.user._id))
     } catch (error) {
       console.log("Error da response:", error.response);
-      alert( error.response.data.message); // Access the error message
+      toast.error( error.response.data.message); // Access the error message
     }
-    setIsOTPDialogOpen(false);
+    // setIsOTPDialogOpen(false)
   };
 
   return (

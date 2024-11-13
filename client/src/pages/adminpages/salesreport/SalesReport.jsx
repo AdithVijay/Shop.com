@@ -188,9 +188,9 @@ export default function SalesReport() {
                   </tr>
                 </thead>
                 <tbody>
-                  {orderData?.map((sale) => (
+                  {orderData && orderData?.map((sale) => (
                     <tr key={sale.id} className="border-b">
-                      <td className="border p-2">{sale.shipping_address.name}</td>
+                      <td className="border p-2">{sale?.shipping_address?.name || "Jisam"}</td>
                       <td className="border p-2">{ new Date(sale.placed_at).toLocaleDateString()}</td>
                       <td className="border p-2 text-center">{sale.payment_method }</td>
                       <td className="border p-2 text-center">

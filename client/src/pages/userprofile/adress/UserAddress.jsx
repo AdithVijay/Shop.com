@@ -13,6 +13,7 @@ export default function UserAddress() {
   const navigate = useNavigate()
   const [addresses, setAddresses] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [errors, setErrors] = useState({});
   const [newAddress, setNewAddress] = useState({
     name: "",
     phonenumber: "",
@@ -26,6 +27,27 @@ export default function UserAddress() {
   console.log(data);
 console.log(addresses);
 
+//=============FORM VALIDATION==============
+const validateForm = () => {
+  const newErrors = {};
+
+  if (!newAddress.name.trim()) newErrors.name = "Name is required.";
+  if (!newAddress.phonenumber.trim() || !/^\d{10}$/.test(newAddress.phonenumber)) {
+    newErrors.phonenumber = "Phone number must be 10 digits.";
+  }
+  if (!newAddress.address.trim()) newErrors.address = "Address is required.";
+  if (!newAddress.district.trim()) newErrors.district = "District is required.";
+  if (!newAddress.state.trim()) newErrors.state = "State is required.";
+  if (!newAddress.landmark.trim()) newErrors.landmark = "landmark is required.";
+  if (!newAddress.pincode.trim() || !/^\d{6}$/.test(newAddress.pincode)) {
+    newErrors.pincode = "Pincode must be 6 digits.";
+  }
+
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+  //============TO EDIT ============
   const handleEdit =async (id) => {
     console.log(id);
     navigate(`/edit/${id}`)
@@ -70,6 +92,8 @@ console.log(addresses);
 //==============================ADDING THE NEW ADDRESS============================
   const handleSubmitNewAddress =async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     try {
       const response =await axiosInstance.post("/user/useraddress",{id,newAddress})
       setShowAddForm(false);
@@ -139,6 +163,7 @@ console.log(addresses);
                       placeholder="Name"
                       required
                     />
+                     {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">Phone Number</label>
@@ -152,6 +177,7 @@ console.log(addresses);
                       placeholder="7736401120"
                       required
                     />
+                    {errors.phonenumber && <p className="text-sm text-red-500">{errors.phonenumber}</p>}
                   </div>
                   <div>
                     <label htmlFor="address" className="block text-sm font-medium text-gray-700">Address</label>
@@ -165,6 +191,7 @@ console.log(addresses);
                       placeholder="House Name, House Number, Locality"
                       required
                     />
+                       {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -179,6 +206,7 @@ console.log(addresses);
                         placeholder="eg : Ernakulam"
                         required
                       />
+                          {errors.district && <p className="text-sm text-red-500">{errors.district}</p>}
                     </div>
                     <div>
                       <label htmlFor="state" className="block text-sm font-medium text-gray-700">State</label>
@@ -192,6 +220,7 @@ console.log(addresses);
                         placeholder="eg : Kerala"
                         required
                       />
+                       {errors.state && <p className="text-sm text-red-500">{errors.state}</p>}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -206,6 +235,7 @@ console.log(addresses);
                         className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-black focus:border-black"
                         placeholder="eg : Hospital"
                       />
+                      {errors.landmark && <p className="text-sm text-red-500">{errors.landmark}</p>}
                     </div>
                     <div>
                       <label htmlFor="pincode" className="block text-sm font-medium text-gray-700">Pin Code</label>
@@ -219,6 +249,7 @@ console.log(addresses);
                         placeholder="eg : 689230"
                         required
                       />
+                      {errors.pincode && <p className="text-sm text-red-500">{errors.pincode}</p>}
                     </div>
                   </div>
                   <div className="flex justify-end">
