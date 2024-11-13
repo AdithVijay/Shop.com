@@ -15,11 +15,31 @@ export default function AddCoupon() {
   const [expirationDate, setExpirationDate] = useState('')
   const [usageLimit, setUsageLimit] = useState('')
   const [description , setdescription] = useState('')
+  const [errors, setErrors] = useState({})
   const navigate= useNavigate()
+
+
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!code.trim()) newErrors.code = "Coupon code is required."
+    if (!perPersonLimit || perPersonLimit <= 0) newErrors.perPersonLimit = "Limit per person must be greater than 0."
+    if (!usageLimit || usageLimit <= 0) newErrors.usageLimit = "Usage limit must be greater than 0."
+    if (!discountValue || discountValue <= 0) newErrors.discountValue = "Discount value must be greater than 0."
+    if (!minPurchaseAmount || minPurchaseAmount <= 0) newErrors.minPurchaseAmount = "Minimum purchase amount must be greater than 0."
+    if (!expirationDate) newErrors.expirationDate = "Expiration date is required."
+    if (!description.trim()) newErrors.description = "Description is required."
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
 
 //====================SUBMITTING THE COUPOUN=================
   const handleSubmit = async(e) => {
     e.preventDefault()
+
+    if (!validateForm()) return
+
     const formData = {
       code,
       perPersonLimit,
@@ -67,6 +87,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                     placeholder="Enter coupon code"
                   />
+                   {errors.code && <span className="text-red-500 text-sm">{errors.code}</span>}
                 </div>
                 <div>
                   <label htmlFor="description" className="block text-md font-semibold text-gray-700">Per Person Limit</label>
@@ -78,6 +99,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                     placeholder="Enter the Per Person limit"
                   />
+                   {errors.perPersonLimit && <span className="text-red-500 text-sm">{errors.perPersonLimit}</span>}
                 </div>
               </div>
 
@@ -93,6 +115,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                       placeholder="Enter the Usage Limit"
                   />
+                   {errors.usageLimit && <span className="text-red-500 text-sm">{errors.usageLimit}</span>}
                 </div>
                 <div>
                   <label htmlFor="discountValue" className="block text-md font-semibold text-gray-700">Discount Value</label>
@@ -104,6 +127,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                     placeholder="Enter discount value in Percentage"
                   />
+                  {errors.discountValue && <span className="text-red-500 text-sm">{errors.discountValue}</span>}
                 </div>
               </div>
 
@@ -119,6 +143,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                       placeholder="Enter discount value"
                   />
+                   {errors.minPurchaseAmount && <span className="text-red-500 text-sm">{errors.minPurchaseAmount}</span>}
                 </div>
                    {/* Expiration Date and Usage Limit */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -131,6 +156,7 @@ export default function AddCoupon() {
                     onChange={(e) => setExpirationDate(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                   />
+                   {errors.expirationDate && <span className="text-red-500 text-sm">{errors.expirationDate}</span>}
                 </div>
               </div>
               </div>
@@ -145,6 +171,7 @@ export default function AddCoupon() {
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
                     placeholder='Brief Description'
                   />
+                   {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
                 </div>
               </div>
                 

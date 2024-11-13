@@ -65,7 +65,7 @@ async function fetchProduct(){
 // ======================LOGIC TO DISPLAY THE SIZE OF THE PRODUCT ========================
    const data =productData.sizes?Object.keys( productData?.sizes).map((x)=>{
         return x
-    }):[]
+    }):[] 
 
 // ===================================ADD TO CART==============================
     const price = productData.salePrice
@@ -108,7 +108,7 @@ async function fetchProduct(){
         console.log(error);
       }
     }
-    
+
 //==================ADDING PROUDUCT TO WISHLIST=========================
    async function addToWishlist(){
     try {

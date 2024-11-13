@@ -257,13 +257,14 @@ const CheckOut = () => {
 
             {/* Coupon Display Area */}
                 <div className="border p-4 rounded-lg mt-4">
-                  {coupons.length === 0 && (
+                  {coupons.length === 0 ?
                     <h3 className="text-lg font-semibold mb-4">Coupons Not Available</h3>
-                  )}
-                  {coupons.length > 0 && (
-                    <h3 className="text-lg font-semibold mb-4">Available Coupons</h3>
-                  )}
-                  {coupons.map((coupon) => (
+                    :
+                    <div>
+                      <h3 className="text-lg font-semibold pb-4">Available Coupons</h3>
+                    </div>
+                  }
+                  {coupons.slice(0,3).map((coupon) => (
                     <div key={coupon?._id} className="flex justify-between items-center mb-2">
                       <div>
                         <p className="font-bold">{coupon?.code}</p>
@@ -278,6 +279,12 @@ const CheckOut = () => {
                       
                     </div>
                    ))} 
+                      {coupons.length === 0 ?
+                      " "
+                       :
+                    <Link to={"/"} className='underline text-sm flex justify-center pt-3 '>View all Coupouns</Link>
+                       }
+           
                 </div>
 
                    {/* PAYMENT SUBMISSION */}

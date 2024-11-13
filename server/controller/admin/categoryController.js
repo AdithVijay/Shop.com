@@ -168,7 +168,7 @@ const createCategoryOffer = async (req, res) => {
   };
 
   //================================TO REMOVE THE CATEGORY OFFER =======================
-  
+
   const removeCategoryOffer =async (req,res)=>{
     const {categoryId,offerPrice} = req.body
     console.log(req.body);
@@ -182,7 +182,13 @@ const createCategoryOffer = async (req, res) => {
     
     const Products = await ProductData.find({category:categoryId})
     console.log(Products)
+
     for(let product of Products){
+
+        if (product.OfferIsActive && product.offerPrice > offerPrice) {
+            console.log(`Skipping product ${product._id} with higher existing product-specific offer.`);
+            continue; 
+        }
             await ProductData.findByIdAndUpdate(
                 product._id,
                 { salePrice: product.regularPrice },

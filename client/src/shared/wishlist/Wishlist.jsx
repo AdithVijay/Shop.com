@@ -3,6 +3,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import axiosInstance from "@/config/axiosInstance"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
 
 export default function Wishlist() {
@@ -10,6 +11,8 @@ export default function Wishlist() {
   const [wishlist, setwishlist] = useState(null)
   const [size, setsize] = useState({})
   const [reload, setreload] = useState(false);
+  const [displayCart, setdisplayCart] = useState({});
+  const navigate = useNavigate()
   
   
   
@@ -34,11 +37,23 @@ export default function Wishlist() {
   console.log("This is the wishlist", wishlist)
 
   //==============HANDLING THE SIZE CHANGE================
-  function handlesizechange(productId,size){
+  async function handlesizechange(productId,size){
     console.log("product id", productId);
     setsize((prev)=>({...prev,[productId]:size}))
+    try {
+      const response = await axiosInstance.post("/user/checksizeexist",{selectedSize:size,productId:productId,userId})
+      console.log("==================",response)
+      if(response.data.success===true){
+        setdisplayCart((prev)=>({...prev,[productId]:response.data.success}))
+      }else{
+        setdisplayCart(false)
+      }
+    } catch (error){
+      console.log(error);
+    }
   }
-  
+   console.log(displayCart);
+   
   //==============ADDING THE DATA TO CART==================
   async function addtoCart(productId,price){
     try {
@@ -68,7 +83,7 @@ export default function Wishlist() {
       setwishlist(response.data.items)
     }
 
-    //===================FUNCTION TO REALOD=================
+   
  
 
   return (
@@ -123,9 +138,14 @@ export default function Wishlist() {
                 </svg>
               </div>
             </div>
-              <button onClick={()=>addtoCart(item?.productId._id,item?.productId?.salePrice)} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
-              Add to Cart
+            {displayCart[item.productId._id]?
+              <button onClick={()=>navigate("/addtocart")} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
+              Go to cart
+           </button>:
+            <button onClick={()=>addtoCart(item?.productId._id,item?.productId?.salePrice)} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
+            Add to cart
             </button>
+            }
           </div>
         ))}
       </div>
