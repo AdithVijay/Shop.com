@@ -55,9 +55,10 @@ userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WH
 //=============================TO DISPLAY THE FILTERED PRODUCTS==============================
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP
 
-//=============================TO ADD PRODUCT To WISHLIST==============================
+//=============================WISHLIST==============================
 userRoute.post("/addtowishlist",wishListController.addToWishlist)//ADDING THE DATA TO WISHLISH DB
 userRoute.get("/get-wishlist-data/:id",wishListController.gettingWishlistData)//FETCHING DATA IN WHISHLIST PAGE
+userRoute.post("/delete-wishlist",wishListController.deleteWishlistItem)//DELTE THE PRODUCT IN WISHLIST
 
 //============================APPLYING COUPOUN OFFER IN CHECKOUT========================
 userRoute.post("/apply-coupoun",couponController.applyCoupounOffer)//APPLYING COPOUN OFFER ON CHEFCKOUT ITMES

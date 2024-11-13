@@ -11,7 +11,7 @@ const Shop1 = () => {
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
-      const data = response.data.data
+      const data = response && response?.data?.data
       setproductData(data)
     }
     fetchData()

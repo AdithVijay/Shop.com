@@ -5,17 +5,16 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { toast } from "sonner"
 
-
-
-
 export default function Wishlist() {
 
   const [wishlist, setwishlist] = useState(null)
   const [size, setsize] = useState({})
+  const [reload, setreload] = useState(false);
+  
   
   
   const userId = useSelector((state)=>state.user.users)
-  console.log(userId);
+  console.log(userId,"user=================");
 
   //=========================USEFFECT========================
   useEffect(()=>{
@@ -39,9 +38,7 @@ export default function Wishlist() {
     console.log("product id", productId);
     setsize((prev)=>({...prev,[productId]:size}))
   }
-
   
-
   //==============ADDING THE DATA TO CART==================
   async function addtoCart(productId,price){
     try {
@@ -65,6 +62,15 @@ export default function Wishlist() {
     }
   }
 
+  //====================DELETING THE PRODUCT IN THE WISHLIST================
+    async function deleteItem(productId){
+      const response = await axiosInstance.post("/user/delete-wishlist",{productId,userId})
+      setwishlist(response.data.items)
+    }
+
+    //===================FUNCTION TO REALOD=================
+ 
+
   return (
     <div className="container mx-auto px-4 py-8 ">
       <h1 className="text-4xl font-bold mb-4 text-center">Favourites</h1>
@@ -74,13 +80,13 @@ export default function Wishlist() {
           <div key={item._id} className="flex flex-col transform transition-transform duration-200 hover:scale-105 ">
             <div className="relative aspect-[3/4] mb-4">
               <img
-                src={item.productId.images[0]}
+                src={item?.productId?.images[0]}
                 alt={item.name}
                 layout="fill"
                 style={{ objectFit: "cover" }} 
                 className="rounded-lg"
               />
-              <button className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-200 transition-colors">
+              <button onClick={()=>deleteItem(item?.productId._id)} className="absolute top-2 right-2 bg-white rounded-full p-2 shadow-md hover:bg-gray-200 transition-colors">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -98,15 +104,15 @@ export default function Wishlist() {
               </button>
             </div>
             <div className=" flex flex-col items-center">
-              <h2 className="text-md font-semibold mb-2">{item.productId.productName}</h2>
-              <p className="text-gray-600 mb-2">₹{item.productId.salePrice}</p>
+              <h2 className="text-md font-semibold mb-2">{item?.productId?.productName}</h2>
+              <p className="text-gray-600 mb-2">₹{item?.productId?.salePrice}</p>
             </div>
             <div className="relative w-full mb-4">
                 <select onChange={(e)=>handlesizechange(item.productId._id,e.target.value)} className=" flex text-center appearance-none w-full bg-gray-100 text-gray-700 py-2 px-4 pr-8 rounded-lg leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                 <option value="">Select Size</option>
-                {Object.entries(item.productId.sizes).map(([size,stock])=>(
+                {Object.entries(item?.productId?.sizes).map(([size,stock])=>(
                   <option value={size} key={size}  disabled={stock==0} >
-                      {size} {stock > 0 ?`(${stock} stocks available)`:"Out Of Stock"}
+                      {size} {stock > 0 ?`( stocks available)`:"Out Of Stock"}
                   </option>
                 ))}
                 </select>
@@ -117,7 +123,7 @@ export default function Wishlist() {
                 </svg>
               </div>
             </div>
-              <button onClick={()=>addtoCart(item.productId._id,item.productId.salePrice)} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
+              <button onClick={()=>addtoCart(item?.productId._id,item?.productId?.salePrice)} className="w-full bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800  transition duration-200">
               Add to Cart
             </button>
           </div>

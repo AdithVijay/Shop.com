@@ -30,8 +30,7 @@ const addToWishlist = async(req,res)=>{
     }
 }
 
-//====================GETTING DATA TO DISPLAY IN WISHLIST====================
-
+//====================GETTING DATA TO DISPLAY IN WISHLIST===================
 const gettingWishlistData = async(req,res)=>{
     const {id} = req.params
     console.log(id)
@@ -39,7 +38,20 @@ const gettingWishlistData = async(req,res)=>{
     return res.json(wishlist)
 }
 
+//=====================TO DELTE THE DATA IN WISHLIST====================
+const deleteWishlistItem = async(req,res)=>{ 
+    const {productId,userId} = req.body;
+    const wishlist = await Wishlist.findOne({ user:userId})
+    console.log("======",wishlist);
+    
+    wishlist.items =  wishlist.items.filter((x)=>x.productId != productId)
+    console.log(wishlist);
+    await wishlist.save()
+    return res.json(wishlist)
+}
+
 module.exports = {
     addToWishlist,
-    gettingWishlistData
+    gettingWishlistData,
+    deleteWishlistItem
 }

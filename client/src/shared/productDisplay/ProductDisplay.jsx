@@ -217,10 +217,10 @@ async function fetchProduct(){
             </button> 
               :
             <button 
-            onClick={addToWishlist}
+            onClick={displayWishlist?()=>navigate("/wishlist"):()=>addToWishlist()}
             className="mt-4 w-full bg-gray-300 text-black py-2 rounded text-sm lg:text-base lg:py-3"
           >
-            {displayWishlist ? "Go to Wishlist" : "Add to Wishlist"} 
+            {displayWishlist ?`Go to Wishlist` : "Add to Wishlist"} 
           </button>
               }
 
