@@ -39,6 +39,10 @@ export default function Cart() {
   useEffect(() => {
     fetchProduct();
   }, [relaod]);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   //=====================IF SCREEN NOT LOADING===================
   if (productDetails?.length == 0) {

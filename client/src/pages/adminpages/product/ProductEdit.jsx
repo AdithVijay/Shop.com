@@ -8,6 +8,7 @@ import Cropper from 'react-easy-crop'
 import { getCroppedImg } from './ImageCropper';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 export default function ProductEdit() {
     const { id } = useParams();
@@ -94,15 +95,11 @@ const validateForm = () => {
         newErrors.productName = "ProductName is required.";
       } else if (productName.length < 5) {
         newErrors.productName = "ProductName must be at least 5 characters.";
-      } else if (!letterRegex.test(productName)) {
-        newErrors.productName = "Category can only contain letters.";
-      }
+      } 
       if (!description.trim()) {
         newErrors.description = "description is required.";
       } else if (description.length < 5) {
         newErrors.description = "description must be at least 5 characters.";
-      } else if (!letterRegex.test(description)) {
-        newErrors.description = "description can only contain letters.";
       }
 
       if (!additionalInfo.trim()) {
@@ -110,9 +107,7 @@ const validateForm = () => {
       } else if (additionalInfo.length < 5) {
         newErrors.additionalInfo =
           "additionalInfo must be at least 5 characters.";
-      } else if (!letterRegex.test(additionalInfo)) {
-        newErrors.additionalInfo = "additionalInfo can only contain letters.";
-      }
+      } 
 
       if (regularPrice === "" || isNaN(regularPrice)) {
         newErrors.regularPrice =
@@ -221,7 +216,7 @@ const validateForm = () => {
       setErrors(validationErrors);
       return;
     }
-
+    toast.success("Please Wait")
     if (product.images.filter((image) => image !== null).length < 4) {
       toast.error("Please add exactly 4 images before submitting.");
       return; // Prevent form submission
@@ -252,6 +247,7 @@ const validateForm = () => {
       const response = await axiosInstance.put(`/admin/updateproduct/${id}`,productData);
       console.log(response);
       navigate("/productlist")
+      toast.success("Product edited")
     } catch (error) {
       console.error(error);
     }

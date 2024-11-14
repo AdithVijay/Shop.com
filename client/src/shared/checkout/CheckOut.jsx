@@ -282,7 +282,7 @@ const CheckOut = () => {
                       {coupons.length === 0 ?
                       " "
                        :
-                    <Link to={"/"} className='underline text-sm flex justify-center pt-3 '>View all Coupouns</Link>
+                    <Link to={"/user-coupons"} className='underline text-sm flex justify-center pt-3 '>View all Coupouns</Link>
                        }
            
                 </div>

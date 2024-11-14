@@ -8,6 +8,11 @@ import React, { useEffect, useState } from 'react'
 
 const Shop1 = () => {
   const [productData, setproductData] = useState([]);
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     async function fetchData(){
       const response = await axiosInstance.get("admin/getproducts")
@@ -16,6 +21,7 @@ const Shop1 = () => {
     }
     fetchData()
   }, []);
+
 
   return (
     <div>

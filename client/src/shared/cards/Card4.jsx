@@ -43,6 +43,12 @@ export default function Card4() {
     fetchFilteredProducts();
   }, [searchQuery, selectedFilters,sortOrder]);
 
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+
 //=================FILTERCHANGE==============
   const handleFilterChange = (title, value) => {
     console.log(title, value)
@@ -133,21 +139,21 @@ export default function Card4() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 justify-center sm:justify-start mx-auto">
             {productData.map((product) => (
               product.isListed && (
-                <Link key={product._id} to={`/display/${product._id}`}>
+                <Link key={product?._id} to={`/display/${product?._id}`}>
                   <div
                     className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col items-center transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg mx-auto"
                     style={{ maxWidth: '290px', maxHeight: '850px' }}
                   >
                     <img
-                      src={product.images[0]}
-                      alt={product.title}
+                      src={product?.images[0]}
+                      alt={product?.title}
                       className="w-full h-96 object-cover"
                     />
                     <div className="p-3 text-center">
-                      <h3 className="text-sm mb-1 text-gray-800">{product.productName}</h3>
-                      <p className="text-sm mb-1 text-gray-600">{product.category.category}</p>
+                      <h3 className="text-sm mb-1 text-gray-800">{product?.productName}</h3>
+                      <p className="text-sm mb-1 text-gray-600">{product?.category?.category}</p>
                       {/* <p className="text-sm text-gray-600">X M S L XL XXL</p> */}
-                      <p className="text-sm mb-1 text-gray-600">₹{product.salePrice}</p>
+                      <p className="text-sm mb-1 text-gray-600">₹{product?.salePrice}</p>
                     </div>
                   </div>
                 </Link>

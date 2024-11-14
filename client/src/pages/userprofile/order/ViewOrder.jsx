@@ -8,7 +8,7 @@ const ViewOrder = () => {
     const {id} = useParams()
     console.log("order id :",id);
     const [orderData, setOrderData] = useState([]);
-
+    const [showConfirmation, setShowConfirmation] = useState(false);
  
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
@@ -46,6 +46,7 @@ const ViewOrder = () => {
   try {
     const response = await axiosInstance.post(`/admin/cancelorder/${productId}`)
     fetchViewOrderData()
+    setShowConfirmation(false)
   } catch (error) {
     console.error("Error canceling product:", error);
   }
@@ -80,7 +81,7 @@ const ViewOrder = () => {
           </div>
 
           <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-gray-500">Order# {orderData._id} | Delivery By {new Date(orderData.delivery_by).toDateString()} </p>
+            <p className="text-sm text-gray-500">Order# {orderData?._id} | Delivery By {new Date(orderData?.delivery_by).toDateString()} </p>
             <button className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
           </div>
 
@@ -97,7 +98,7 @@ const ViewOrder = () => {
             
             <div className="space-y-2">
               <h3 className="font-semibold text-lg text-gray-800">Payment Method</h3>
-              <p className="text-sm text-gray-600">{orderData.payment_method}</p>
+              <p className="text-sm text-gray-600">{orderData?.payment_method}</p>
             </div>
 
             <div className="space-y-2">
@@ -140,22 +141,46 @@ const ViewOrder = () => {
         ))}
         <div className="flex items-center p-5 space-x-4 mt-4 sm:mt-0">
                   <span className={`text-sm font-medium ${
-                   orderData.order_status === "Pending" ? "text-yellow-600" : "text-red-500" 
+                   orderData?.order_status === "Pending" ? "text-yellow-600" : "text-red-500" 
                   }`}>
-                    Status: {orderData.order_status}
+                    Status: {orderData?.order_status}
                   </span>
                 </div>
           <button 
-              onClick={()=>cancelProduct(orderData._id)}
+              onClick={()=> setShowConfirmation(true)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
-                  orderData.order_status === "Pending" 
+                  orderData?.order_status === "Pending" 
                     ? "bg-red-600 text-white hover:bg-red-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                  }`}
-                disabled={orderData.order_status === "Cancelled"}  
+                disabled={orderData?.order_status === "Cancelled"}  
               >
-                {orderData.order_status === "Pending" ? "Cancel" : "Cancelled"}
+                {orderData?.order_status === "Pending" ? "Cancel" : "Cancelled"}
             </button>
+                    {/* Confirmation Modal */}
+        {showConfirmation && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-lg font-semibold mb-4">Confirm Cancellation</h2>
+              <p className="text-sm text-gray-600 mb-6">Are you sure you want to cancel this order?</p>
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setShowConfirmation(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg"
+                >
+                  No
+                </button>
+                <button
+                  onClick={()=>cancelProduct(orderData?._id)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg"
+                >
+                  Yes, Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         </div>
       </div>
      

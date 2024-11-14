@@ -5,8 +5,9 @@ import axiosInstance from "@/config/axiosInstance";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import OfferModal from "@/shared/modal/OfferModal";
+import UserSideBar from "@/shared/bars/UserSideBar";
 
-export default function CouponList() {
+export default function UserCoupoun() {
   const [products, setProducts] = useState([])
   const [coupons, setcoupon] = useState([]);
   
@@ -44,19 +45,14 @@ export default function CouponList() {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+        <UserSideBar/>
       <div className="flex-grow p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
         <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h2 className="text-2xl font-bold mb-2">Coupon Management</h2>
-                <div className="text-sm text-gray-500">
-                  <Link to="/dashboard" className="hover:underline">
-                    Dashboard
-                  </Link>{" "}
-                  &gt; Product Management
-                </div>
+              
               </div>
             </div>
 
@@ -67,10 +63,10 @@ export default function CouponList() {
                     <th className="border p-2 text-center">Coupon Code</th>
                     <th className="border p-2 text-center">DiscoutAmount</th>
                     <th className="border p-2 text-center">MinPurchase </th>
-                    <th className="border p-2 text-center">Usagelimit</th>
-                    <th className="border p-2 text-center">PerPersonLimit</th>
-                    <th className="border p-2 text-center">expDate</th>
-                    <th className="border p-2 text-center">Edit</th>
+                    {/* <th className="border p-2 text-center">Usagelimit</th>
+                    <th className="border p-2 text-center">PerPersonLimit</th> */}
+                    <th className="border p-2 text-center">expDate</th> 
+                     {/* <th className="border p-2 text-center">Edit</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -87,12 +83,12 @@ export default function CouponList() {
                       </td>
 
                       {/* This is the place where  */}
-                      <td className="border p-2 text-center">
+                      {/* <td className="border p-2 text-center">
                         {coupon.usageLimit}
                       </td>
                       <td className="border p-2 text-center">
                       {coupon.perPersonLimit}
-                      </td>
+                      </td> */}
                       <td className="border p-2 text-center">
                       {new Date(coupon.expirationDate).toLocaleDateString("en-US", {
                             year: "numeric",
@@ -100,14 +96,14 @@ export default function CouponList() {
                             day: "numeric",
                         })}
                       </td>
-                      <td>
+                      {/* <td>
                         <button
                           onClick={() => handleEdit(coupon._id)}
                           className="text-blue-600 pl-6 hover:text-blue-800 mr-2"
                         >
                           <Edit2 size={18} />
                         </button>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -134,12 +130,12 @@ export default function CouponList() {
                   Next
                 </button>
               </div> */}
-              <Link
+              {/* <Link
                 to="/add-coupon"
                 className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
               >
                 + Add Coupon
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

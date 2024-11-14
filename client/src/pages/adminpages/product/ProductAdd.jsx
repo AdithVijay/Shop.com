@@ -64,16 +64,12 @@ export default function ProductAdd() {
       newErrors.productName = "ProductName is required.";
     } else if (productName.length < 5) {
       newErrors.productName = "ProductName must be at least 5 characters.";
-    } else if (!letterRegex.test(productName)) {
-      newErrors.productName = "Category can only contain letters.";
-    }
+    } 
     if (!description.trim()) {
       newErrors.description = "description is required.";
     } else if (description.length < 5) {
       newErrors.description = "description must be at least 5 characters.";
-    } else if (!letterRegex.test(description)) {
-      newErrors.description = "description can only contain letters.";
-    }
+    } 
 
     if (!additionalInfo.trim()) {
       newErrors.additionalInfo = "additionalInfo is required.";
@@ -182,13 +178,15 @@ export default function ProductAdd() {
   const handleAddProduct = async (e) => {
    
     e.preventDefault();
-    toast.success("addimng  the product please wait");
+   
     const validationErrors = validateForm();
 
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
+
+    toast.success("adding  the product please wait");
 
     if (product.images.filter((image) => image !== null).length < 4) {
       toast.error("Please add exactly 4 images before submitting.");
@@ -216,7 +214,6 @@ export default function ProductAdd() {
       images: filteredImages,
     };
 
-    toast.success("added the product please wait");
     try {
       const response = await axiosInstance.post(
         "/admin/addproduct",
@@ -224,6 +221,8 @@ export default function ProductAdd() {
       );
       console.log(response);
       navigate("/productlist");
+    toast.success("added the product");
+
     } catch (error) {
       if (error.response && error.response.status === 400) {
         toast.error(error.response.data.message);

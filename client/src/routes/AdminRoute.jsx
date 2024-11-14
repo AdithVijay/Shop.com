@@ -16,7 +16,12 @@ import OfferModal from '@/shared/modal/OfferModal'
 import CouponList from '@/pages/adminpages/coupons/CouponList'
 import AddCoupoun from '@/pages/adminpages/coupons/AddCoupoun'
 import SalesReport from '@/pages/adminpages/salesreport/SalesReport'
+import ConfirmationModal from '@/shared/modal/ConfirmationModal'
 const AdminRoute = () => {
+
+  const handleDelete = () => {
+    console.log("Item deleted");
+  };
   return (
     <div>
 
@@ -86,6 +91,15 @@ const AdminRoute = () => {
               <Route path='/sales-report' element={
                     <AdminHome>
                       <SalesReport/>
+              </AdminHome>
+              }></Route>
+
+              <Route path='/confirm' element={
+                    <AdminHome>
+                      <ConfirmationModal
+                         message="Are you sure you want to delete this item?"
+                         onConfirm={handleDelete}
+                      />
               </AdminHome>
               }></Route>
           </Routes>

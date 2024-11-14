@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Card1({ productData, name }) {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <section className="py-12">
@@ -9,7 +12,7 @@ function Card1({ productData, name }) {
         <h2 className="text-2xl font-bold mb-6">{name}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-6">
           {productData.slice(0, 4).map((product, index) => {
-            if (product.isListed && product.category.isListed) {
+            if (product?.isListed && product?.category?.isListed) {
               return (
                 <Link to={`/display/${product._id}`} className="card-link" key={index}>
                   <div

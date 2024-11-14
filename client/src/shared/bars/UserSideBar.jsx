@@ -44,7 +44,7 @@ const UserSideBar = () => {
     { name: 'Address', icon: <MapPin size={16} />, path: '/address' },
     { name: 'My Orders', icon: <Package size={16} />, path: '/orders' },
     { name: 'My Wallet', icon: <Wallet size={16} />, path: '/wallet' },
-    { name: 'Coupons', icon: <Ticket size={16} />, path: '/coupons' },
+    { name: 'Coupons', icon: <Ticket size={16} />, path: '/user-coupons' },
     { name: 'Change Password', icon: <Key size={16} />, path: '/change-password' },
     { name: 'Delete Account', icon: <Trash2 size={16} />, path: '/delete-account' },
   ];

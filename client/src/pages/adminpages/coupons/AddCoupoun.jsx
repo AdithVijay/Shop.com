@@ -55,7 +55,7 @@ export default function AddCoupon() {
         const response = await axiosInstance.post('/admin/create-coupon', formData)
         console.log('Coupon added:', response.data)
         toast(response.data.message)
-        navigate("/coupon")
+        navigate("/coupons")
       } catch (error) {
         console.error('Error adding coupon:', error)
         toast(error.response.data.message)
@@ -125,7 +125,7 @@ export default function AddCoupon() {
                     value={discountValue}
                     onChange={(e) => setDiscountValue(e.target.value)}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-md p-2.5"
-                    placeholder="Enter discount value in Percentage"
+                    placeholder="Enter discount value in Rupees"
                   />
                   {errors.discountValue && <span className="text-red-500 text-sm">{errors.discountValue}</span>}
                 </div>

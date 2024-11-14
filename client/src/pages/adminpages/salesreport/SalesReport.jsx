@@ -177,39 +177,49 @@ export default function SalesReport() {
             </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="border p-2 text-left">User</th>
-                    <th className="border p-2 text-left">Date</th>
-                    <th className="border p-2 text-center">Payment  Method</th>
-                    <th className="border p-2 text-left">Product <br/> Qty</th>
-                    <th className="border p-2 text-right">Amount</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {orderData && orderData?.map((sale) => (
-                    <tr key={sale.id} className="border-b">
-                      <td className="border p-2">{sale?.shipping_address?.name || "Jisam"}</td>
-                      <td className="border p-2">{ new Date(sale.placed_at).toLocaleDateString()}</td>
-                      <td className="border p-2 text-center">{sale.payment_method }</td>
-                      <td className="border p-2 text-center">
-                        {calculateTotalQty(sale.order_items)}
-                      </td>
-                      <td className="border p-2 text-right">{  sale.total_price_with_discount||sale.total_amount}</td>
-                    </tr>
-                  ))}
-                  <tr className="bg-gray-50 font-semibold">
-                    <td colSpan="4" className="border p-2">Total</td>
-                    <td className="border p-2 text-right">{totalamout||0}</td>
-                  </tr>
-                  <tr className="bg-gray-50 font-semibold">
-                    <td colSpan="4" className="border p-2">Total Discount</td>
-                    <td className="border p-2 text-right">{toatalDiscount||0}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+  <table className="w-full table-fixed border-collapse">
+    <thead>
+      <tr className="bg-gray-100">
+        <th className="border p-2 text-left">User</th>
+        <th className="border p-2 text-left">Date</th>
+        <th className="border p-2 text-center">Payment Method</th>
+        <th className="border p-2 text-center">Product Qty</th>
+        <th className="border p-2 text-right">Amount</th>
+      </tr>
+    </thead>
+  </table>
+  
+  <div className="max-h-64 overflow-y-auto"> {/* Set fixed height for scroll */}
+    <table className="w-full table-fixed border-collapse">
+      <tbody>
+        {orderData && orderData.map((sale) => (
+          <tr key={sale.id} className="border-b">
+            <td className="border p-2">{sale?.shipping_address?.name || "N/A"}</td>
+            <td className="border p-2">{new Date(sale.placed_at).toLocaleDateString()}</td>
+            <td className="border p-2 text-center">{sale.payment_method}</td>
+            <td className="border p-2 text-center">
+              {calculateTotalQty(sale.order_items)}
+            </td>
+            <td className="border p-2 text-right">{sale.total_price_with_discount || sale.total_amount}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  
+  <table className="w-full table-fixed border-collapse">
+    <tfoot>
+      <tr className="bg-gray-50 font-semibold">
+        <td colSpan="4" className="border p-2">Total</td>
+        <td className="border p-2 text-right">{totalamout || 0}</td>
+      </tr>
+      <tr className="bg-gray-50 font-semibold">
+        <td colSpan="4" className="border p-2">Total Discount</td>
+        <td className="border p-2 text-right">{toatalDiscount || 0}</td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 
             <div className="flex justify-end gap-4 mt-6">
             <button

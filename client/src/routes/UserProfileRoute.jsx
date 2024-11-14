@@ -8,6 +8,7 @@ import ViewOrder from '@/pages/userprofile/order/ViewOrder'
 import ProtecHome from '@/protect/ProtectedHome'
 import ProtectOther from '@/protect/ProtectOther'
 import Wallet from '@/pages/userprofile/wallet/Wallet'
+import UserCoupoun from '@/pages/userprofile/coupoun/UserCoupoun'
 const UserProfileRoute = () => {
   return (
     <div>
@@ -41,6 +42,11 @@ const UserProfileRoute = () => {
               <Route path='/wallet' element={
                <ProtecHome>
                 <Wallet/>
+              </ProtecHome>
+              }></Route>
+              <Route path='/user-coupons' element={
+               <ProtecHome>
+                <UserCoupoun/>
               </ProtecHome>
               }></Route>
           </Routes>

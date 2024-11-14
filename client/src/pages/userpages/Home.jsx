@@ -13,6 +13,9 @@ const Home = () => {
   const [productData, setproductData] = useState([]);
   const [categoryData, setcategoryData] = useState([]);
   console.log("home");
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   useEffect(() => {
     async function fetchData(){
@@ -40,7 +43,6 @@ console.log("home",productData);
       <Header/>
       <HeroSection/>
       <Card1 productData={productData} name={"Related Category"}/>
-  
       <Card3 productData ={productData}  />
       <Footer/>
     </div>
