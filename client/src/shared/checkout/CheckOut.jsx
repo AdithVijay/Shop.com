@@ -22,7 +22,11 @@ const CheckOut = () => {
   const [selectedCoupun, setselectedCoupun] = useState("");
   const [coupoundiscount,setcoupoundiscount] = useState();
   const [actualCoupounDiscount, setactualCoupounDiscount] = useState(null);
+  const [paymentfail,setPaymentFail]=useState(false)
   
+  // console.log("thiissisivjgfjdsgfdsgjhfgjklds",paymentfail);
+  
+
   const [a, seta] = useState(null);
   const shipping = 'Free';
 
@@ -33,6 +37,10 @@ const CheckOut = () => {
         fetchProduct() 
         fetchCoupuns()
     },[relaod]);
+
+    useEffect(()=>{
+      submitCheckout
+    },[paymentfail])
 
 //=======================FETCHING ADRESS======================
     async function fetchAdress(){
@@ -50,8 +58,8 @@ const CheckOut = () => {
     async function fetchProduct() {
         try {
           const response = await axiosInstance.get(`/user/cartdata/${user}`);
-          console.log("resposnsss",response)
-          console.log("response from the server", response.data.items)
+          // console.log("resposnsss",response)
+          // console.log("response from the server", response.data.items)
           setcartdata(response.data.items)         
           const calculatedSubtotal = response.data.items.reduce(
             (acc, item) => acc + item.totalItemPrice,
@@ -65,7 +73,7 @@ const CheckOut = () => {
       }
 
   //=======================SUBITING CHECKOUT DETAILS TO BACKEND==================
-    async function submitCheckout() {
+    async function submitCheckout(orderStatus,paymentstatus) {
       if(!paymentMethod){
         return toast.error("choose a payment method")
       }
@@ -74,24 +82,26 @@ const CheckOut = () => {
        }
 
        try {
-        console.log("inside the try catch", actualCoupounDiscount)
-        console.log(cartdata);
-        
         // IF COUPOUN APPLIED THEN THIS FUNCTION 
-        const response =await axiosInstance.post("/user/checkout",{
-          user,
-          subtotal,
-          total_price_with_discount:actualCoupounDiscount||0,
-          payment_method:paymentMethod,
-          cartdata,
-          coupon_discount:coupoundiscount,
-          shipping_address:selectedAddress
-        })
+          console.log("payment successs")
+          
+          const response =await axiosInstance.post("/user/checkout",{
+            user,
+            subtotal,
+            total_price_with_discount:actualCoupounDiscount||0,
+            payment_method:paymentMethod,
+            cartdata,
+            order_status: orderStatus || "Pending",
+            payment_status: paymentstatus || "Paid",
+            coupon_discount:coupoundiscount,
+            shipping_address:selectedAddress
+          })
+          setShowSuccessModal(true)
+          setrelaod(true)
 
-          console.log("order db scess",response);
           // MODAL PROPS 
           setOrderDetails({
-            orderId: response.data.orderId || `ORD${Date.now()}`,
+            orderId: `ORD${Date.now()}`,
             date: new Date().toLocaleDateString(),
             time: new Date().toLocaleTimeString(),
             paymentMethod: paymentMethod,
@@ -99,8 +109,7 @@ const CheckOut = () => {
             expectedDelivery: "27 - September - 2024" 
           });
       
-          setShowSuccessModal(true);
-          setrelaod(true)
+         
        } catch (error) {
         console.log(error);
         toast.error(error.response?.data?.message)
@@ -113,7 +122,7 @@ const CheckOut = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
       const response = await axiosInstance.get("/admin/get-coupons");
-      console.log(response, "Data reciving");
+      // console.log(response, "Data reciving");
       setcoupon(response.data.coupouns)
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -146,7 +155,7 @@ const CheckOut = () => {
       toast.error(error.response?.data?.message)
     }
   }
-  console.log("coupoun discount",coupoundiscount)
+
   
 //==========================FUNCTION TO REMOVE COUPOUN========================
   function handleDeleteCoupon(){
@@ -154,8 +163,8 @@ const CheckOut = () => {
     setactualCoupounDiscount(null)
     setselectedCoupun("")
   }
-  
-  console.log("tis is the subtoatl", subtotal);
+
+
 
 
   return (
@@ -295,7 +304,9 @@ const CheckOut = () => {
            user={user}
            amount={subtotal}
            handlePlaceOrder={submitCheckout}
-            />
+           setPaymentFail={setPaymentFail}
+           paymentfail={paymentfail}
+          />
           }
 
         </div>

@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import React, { useState } from 'react';
 
-function PaymentComponent({amount,handlePlaceOrder}) {
+function PaymentInOrder({user,amount,handlePlaceOrder,setPaymentFail,paymentfail}) {
 
 
   const handleSubmit = () => {
@@ -16,7 +16,9 @@ function PaymentComponent({amount,handlePlaceOrder}) {
         handler: function(response) { 
           if (response.razorpay_payment_id) {
             toast.success('Payment successful!');
-            handlePlaceOrder()
+            let orderStatus = "Pending"
+            let paymentstatus = "Paid"
+            handlePlaceOrder(orderStatus,paymentstatus)
           }
         },
         modal: {
@@ -77,4 +79,4 @@ function PaymentComponent({amount,handlePlaceOrder}) {
   );
 }
 
-export default PaymentComponent;
+export default PaymentInOrder;

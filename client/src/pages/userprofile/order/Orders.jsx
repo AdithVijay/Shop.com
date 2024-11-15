@@ -122,7 +122,7 @@ export default function Orders() {
 
                   <p
                     className={`text-sm font-semibold ${
-                      order.payment_status === "Pending"
+                      order.order_status === "Pending"
                         ? "text-yellow-600"
                         : "text-green-600"
                     }`}

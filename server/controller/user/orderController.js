@@ -5,9 +5,10 @@ const Wallet = require("../../models/wallet");
 
 //======================CHECKOUT WHEN USER PRESS CHECKOUT========================
 const submitCheckout = async (req, res) => {
-  const { user, subtotal, payment_method, cartdata, shipping_address,coupon_discount,total_price_with_discount} =
+  const { user, subtotal, payment_method, cartdata, shipping_address,coupon_discount,total_price_with_discount,
+    order_status,payment_status} =
     req.body;
-    console.log(subtotal)
+    console.log("================Ithane paymnet", order_status,payment_status)
       
     let wallet = await Wallet.findOne({userId:user})
 
@@ -23,7 +24,6 @@ const submitCheckout = async (req, res) => {
 
     if(payment_method=="Wallet"){
       if(wallet.balance>=subtotal){
-        console.log(wallet)
         wallet.balance = wallet.balance - subtotal
         wallet.transaction.push({transactionType:"debit",amount:subtotal})
         await wallet.save()
@@ -41,16 +41,17 @@ const submitCheckout = async (req, res) => {
        discount: 0,
        total_price: item.price,
      }))
-     
+
     // // Create a new order
    const order = new Order({
      user,
        order_items: products,
-       order_status: "Pending",
+       order_status,
        total_amount: subtotal,
        shipping_address,
        coupon_discount,
         payment_method,
+        payment_status,
        total_price_with_discount,
        shipping_fee: 0,
      });

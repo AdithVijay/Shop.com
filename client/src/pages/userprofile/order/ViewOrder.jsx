@@ -3,13 +3,14 @@ import { ChevronRight, Home, User } from "lucide-react";
 import UserSideBar from '@/shared/bars/UserSideBar';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
+import PaymentInOrder from '@/shared/payment/PaymentInOrder';
 
 const ViewOrder = () => {
     const {id} = useParams()
     console.log("order id :",id);
     const [orderData, setOrderData] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
- 
+    
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
     fetchViewOrderData()
@@ -28,16 +29,7 @@ const ViewOrder = () => {
   })
   console.log("this is the da5taz",data);
   
- //===================== CHANGING THE STATUS ======================
- async function statusChange(productId){
-  try {
-    console.log(productId);
-    // const response = await axiosInstance.post(`user/changestatus`,{id,productId})
-    // console.log(response);
-  } catch (error) {
-    console.log(error)
-  }
- }
+
 
  //===================CANCEL THE PRODUCT ==================
  async function cancelProduct(productId) {
@@ -51,6 +43,11 @@ const ViewOrder = () => {
     console.error("Error canceling product:", error);
   }
 }
+//================FUNCTION TO CHANGE THE PAYMENT=============
+
+  async function PlaceOrder(){
+    const response = await axiosInstance.post("/user/change-payment-status")
+  }
  
 
   return (
@@ -99,7 +96,15 @@ const ViewOrder = () => {
             <div className="space-y-2">
               <h3 className="font-semibold text-lg text-gray-800">Payment Method</h3>
               <p className="text-sm text-gray-600">{orderData?.payment_method}</p>
+              <h3 className="font-semibold text-lg text-gray-800">Payment Status</h3>
+              <p className="text-sm text-gray-600">{orderData?.payment_status}</p>
+              {orderData?.payment_status=="Failed"?<PaymentInOrder
+                amount={orderData?.total_price_with_discount ||orderData?.total_amount}
+                handlePlaceOrder={PlaceOrder}
+              />:" "}
+              
             </div>
+            
 
             <div className="space-y-2">
               <h3 className="font-semibold text-lg text-gray-800">Order Summary</h3>
@@ -129,8 +134,8 @@ const ViewOrder = () => {
                     <h4 className="font-medium text-lg text-gray-800">{item.product.productName}</h4>
                     <div className="flex items-baseline space-x-2 mt-1">
                       <span className="text-xl font-semibold text-gray-900">₹{item.product.salePrice}</span>
-                      <span className="text-sm text-gray-500 line-through">₹{item.product.salePrice}</span>
-                      <span className="text-sm text-green-600">{item.product.salePrice}% Off</span>
+                      {/* <span className="text-sm text-gray-500 line-through">₹{item.product.salePrice}</span> */}
+                      {/* <span className="text-sm text-green-600">{item.product.salePrice}% Off</span> */}
                     </div>
                   </div>
                 </div>
