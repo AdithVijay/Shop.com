@@ -160,9 +160,22 @@ const changeOrderStatus = async (req,res)=>{
     console.log(req.body);
     console.log(id);
 }
+
+//=============================TO CHANGE THE STATUS OF THE PAYMENT =============
+const changePaymentStatus = async(req,res)=>{
+    const {id} =req.body
+    const order = await Order.findById({_id:id})
+    order.payment_status = "Paid"
+    order.order_status = "Pending"
+    order.save()
+    return res.json({message:"Paymnet Success"})
+    console.log(order)
+}
+
 module.exports = {
   submitCheckout,
   getOrderDetails,
   viewOrderDetails,
-  changeOrderStatus
+  changeOrderStatus,
+  changePaymentStatus
 };

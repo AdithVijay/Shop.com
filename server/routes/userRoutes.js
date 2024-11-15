@@ -52,6 +52,7 @@ userRoute.post("/check-cart-item-size",verifyAdmin,cartController.checkSizeInCar
 userRoute.post("/checkout",verifyAdmin, orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
 userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE DETAILS OF ORDER IN ORDER.JSX
 userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
+userRoute.post("/change-payment-status",verifyAdmin,orderController.changePaymentStatus)//WHEN USER PRESS PAY BUTTON IN VIEWORDER.JSX
 
 //=============================TO DISPLAY THE FILTERED PRODUCTS==============================
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP

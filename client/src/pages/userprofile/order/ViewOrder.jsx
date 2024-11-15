@@ -44,9 +44,12 @@ const ViewOrder = () => {
   }
 }
 //================FUNCTION TO CHANGE THE PAYMENT=============
-
   async function PlaceOrder(){
-    const response = await axiosInstance.post("/user/change-payment-status")
+    try {
+      const response = await axiosInstance.post("/user/change-payment-status",{id}) 
+    } catch (error) {
+      console.log(error);
+    }
   }
  
 
