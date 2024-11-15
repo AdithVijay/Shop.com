@@ -85,8 +85,6 @@ const UserRoute = () => {
           }
         ></Route>
 
-
-
         <Route
           path="/checkout"
           element={

@@ -45,10 +45,11 @@ userRoute.post("/incrementproduct",verifyAdmin,cartController.incrementProductCo
 userRoute.post("/decrementproduct",verifyAdmin,cartController.decrementProductCount)//DECREASING THE COUNT OF PRODUCT 
 userRoute.post("/checksizeexist",cartController.checkSizeExist)//TO CHECK THE CART ITEM ALREADY IN CART PRODUCTDISPALY.JSX
 userRoute.delete("/deleteCart",verifyAdmin,cartController.delteCartItem)//TO DELTE THE ITEM IN THE CART
+userRoute.post("/check-cart-item-size",verifyAdmin,cartController.checkSizeInCartExists)//TO DELTE THE ITEM IN THE CART
 
 //=============================CHECKOUT/ORDER==============================
 //user address fetched using the route @line 21 addressController.fetchUserAddresses
-userRoute.post("/checkout",verifyAdmin,orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
+userRoute.post("/checkout",verifyAdmin, orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
 userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE DETAILS OF ORDER IN ORDER.JSX
 userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
 

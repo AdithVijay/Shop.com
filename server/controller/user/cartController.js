@@ -1,4 +1,6 @@
 const Cart = require('../../models/cart'); 
+const ProductData =require("../../models/productModel")
+
 
 // ==========================ADDING DATA TO CART============================
 const addItemToCart = async (req, res) => {
@@ -131,7 +133,6 @@ const checkSizeExist = async(req,res)=>{
 }
 
 // ==========================TO DELETE THE ITEMS IN THE CART============================
-
 const delteCartItem = async (req, res) => {
   const {userId, productId, selectedSize } = req.body;
 
@@ -160,11 +161,44 @@ const delteCartItem = async (req, res) => {
   }
 };
 
+// ====================TO CHECK WHETHER THE SIZE EXISTS OF THE PRODUCT IN CART==================
+  const checkSizeInCartExists= async(req,res)=>{
+
+    try {
+      const {cartItems} = req.body
+    console.log(cartItems);
+    
+    for(item of cartItems){
+      const { productId, selectedSize, quantity } = item;
+
+      const product = await ProductData.findById(productId);
+      console.log(product);
+
+        const sizeStock = product.sizes[selectedSize]; 
+
+        if (sizeStock < quantity) {
+          return res.status(400).json({
+            error: `Insufficient stock for ${product.productName} in size ${selectedSize}. Available: ${sizeStock}`,
+          });
+        }else{
+          return res.status(200).json({message:"success"})
+        }
+      }
+    } catch (error) {
+        console.log(error);
+    }
+    
+      
+  }
+
+  
+
 
   module.exports = { addItemToCart,
     getCartItems,
     incrementProductCount,
     decrementProductCount,
     checkSizeExist,
-    delteCartItem
+    delteCartItem,
+    checkSizeInCartExists
   };

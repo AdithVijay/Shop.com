@@ -103,7 +103,7 @@ export default function Orders() {
                     </button>
                       
 
-                      {order.status === "PROCESSING" ? (
+                      {order.payment_status === "Pending"  && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -111,13 +111,7 @@ export default function Orders() {
                         >
                           Cancel Order
                         </Button>
-                      ) : (
-                        <button 
-                        className="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-100 transition-colors"
-                      >
-                        Return
-                      </button>
-                      )}    
+                      ) }    
                       <button 
                           className="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
                         >

@@ -32,6 +32,7 @@ const OrderListing = () => {
     }
   };
 
+  //=====================FETCHING ORDER DATA================
   async function fetchOrderData(page = 1) {
     try {
       const response = await axiosInstance.get(`admin/retrieveorder?page=${page}&limit=6`);
@@ -43,6 +44,7 @@ const OrderListing = () => {
     }
   }
 
+  //====================TO CHANGE ORDER STAUTS==============
   async function updateOrderStatus(e, orderId) {
     const newStatus = e.target.value;
     const response = await axiosInstance.patch("/admin/change-status", {
@@ -60,6 +62,7 @@ const OrderListing = () => {
     }
   }
 
+  //======================TO CANCEL THE PRODUCT=================
   async function cancelProduct() {
     try {
       const response = await axiosInstance.post(`/admin/cancelorder/${selectedOrderId}`);
@@ -74,6 +77,7 @@ const OrderListing = () => {
     }
   }
 
+  //====================FUNCTIONS FOR MODAL========================
   function openModal(orderId) {
     setSelectedOrderId(orderId);
     setShowConfirmation(true);
@@ -84,6 +88,7 @@ const OrderListing = () => {
     setSelectedOrderId(null);
   }
 
+  //========================VIEW ORDER======================
   function viewOrder(id) {
     navigate(`/admin-view-order/${id}`);
   }

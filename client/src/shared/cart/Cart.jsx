@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
@@ -9,13 +9,22 @@ export default function Cart() {
   const [productDetails, setproductDetails] = useState(null);
   const [subtotal, setSubtotal] = useState(0);
   const userId = useSelector((state) => state.user.users);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState({});
   const [relaod, setrelaod] = useState(false);
+  const navigate = useNavigate()
+  const [products, setProducts] = useState([]);
 
   //==============================RELOADDING===========================
   function pageReloading(){
     setrelaod(!relaod)
   }
+
+   //===========================USEFFECT=======================
+   useEffect(() => {
+    fetchProduct();
+    fetchTotalProductData();
+    window.scrollTo(0, 0);
+  }, [relaod]);
 
   //=================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE =================
   async function fetchProduct() {
@@ -35,14 +44,6 @@ export default function Cart() {
       toast.error("cart is empty");
     }
   }
-
-  useEffect(() => {
-    fetchProduct();
-  }, [relaod]);
-  
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
 
   //=====================IF SCREEN NOT LOADING===================
   if (productDetails?.length == 0) {
@@ -96,6 +97,36 @@ export default function Cart() {
       pageReloading()
     } catch (error) {
       console.error("Error deleting item:", error);
+    }
+  }
+
+  //================FETCHING FULL PRODUCT DATA=================
+    async function fetchTotalProductData() {
+      try {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        const response = await axiosInstance.get("/admin/getproducts");
+        console.log(response.data.data, "Full Product Data");
+        setProducts(response.data.data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    }
+
+    const check =productDetails && productDetails.map((x)=>{
+      return x
+    })
+    console.log(check,"======>");
+    
+   
+  //=================CHEKOUT================
+  async function submitCheckOut(){
+    try {
+      const response  = await axiosInstance.post("/user/check-cart-item-size",{cartItems: productDetails})
+      console.log(response);
+      navigate("/checkout")
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response.data.error)
     }
   }
 
@@ -214,11 +245,11 @@ export default function Cart() {
             {/* subtotal */}
             <span>${subtotal}</span>
           </div>
-          <Link to={"/checkout"}>
-          <button  className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
+
+          <button onClick={()=>submitCheckOut()}  className="w-full bg-black text-white py-3 mb-4 text-sm font-medium">
             CHECKOUT
           </button>
-          </Link>
+
           <p className="text-center mb-4 text-sm">OR</p>
           <button className="w-full border border-gray-300 py-2 mb-2 text-sm font-medium">
             PAY WITH PayPal
