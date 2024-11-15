@@ -22,7 +22,7 @@ export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
           </div>
           <div className="flex flex-col items-center mb-6">
             <CheckCircle className="text-green-500 w-16 h-16 mb-4" />
-            <h2 className="text-2xl font-bold text-center">Payment successfully Completed</h2>
+            <h2 className="text-2xl font-bold text-center">Order successfully Placed</h2>
           </div>
           <div className="space-y-4">
             <div className="flex justify-between">

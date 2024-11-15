@@ -75,6 +75,8 @@ const CheckOut = () => {
 
        try {
         console.log("inside the try catch", actualCoupounDiscount)
+        console.log(cartdata);
+        
         // IF COUPOUN APPLIED THEN THIS FUNCTION 
         const response =await axiosInstance.post("/user/checkout",{
           user,
@@ -136,7 +138,7 @@ const CheckOut = () => {
         }    
 
         const response = await axiosInstance.post("/user/apply-coupoun",{selectedCoupun,user,subtotal})
-        console.log(response)
+        console.log("coupoun db response",response)
         setactualCoupounDiscount(response.data.newSubtotal)//The price displayed as total 
         setcoupoundiscount(a)//The amount to be displayed in Coupoun discount
         toast.success(response.data.message) 
@@ -148,14 +150,11 @@ const CheckOut = () => {
   
 //==========================FUNCTION TO REMOVE COUPOUN========================
   function handleDeleteCoupon(){
-    console.log("delet")
     setcoupoundiscount(null)
     setactualCoupounDiscount(null)
     setselectedCoupun("")
   }
-
-  console.log(coupoundiscount);
-  console.log("Paymet menthod", paymentMethod);
+  
   console.log("tis is the subtoatl", subtotal);
 
 

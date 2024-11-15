@@ -14,8 +14,16 @@ function PaymentComponent({user,amount,handlePlaceOrder}) {
         name: "STARTUP_PROJECTS",
         description: "for testing purpose",
         handler: function(response) { 
-        handlePlaceOrder()
+          if (response.razorpay_payment_id) {
+            toast.success('Payment successful!');
+            handlePlaceOrder();
+          }
         },
+        modal: {
+          ondismiss: function() {
+            toast.error('Payment cancelled');
+          }
+        },      
         prefill: {
           name: "Velmurugan",
           email: "mvel1620r@gmail.com",
@@ -29,8 +37,29 @@ function PaymentComponent({user,amount,handlePlaceOrder}) {
         },
       };
 
-      const pay = new window.Razorpay(options);
-      pay.open();
+      try {
+        const pay = new window.Razorpay(options);
+        // Handle payment failures
+        pay.on('payment.failed', function(response) {
+          const { error } = response;
+          toast.error(`Payment failed: ${error.description}`);
+          
+          // You might want to log the full error details
+          console.error('Payment failed:', {
+            code: error.code,
+            description: error.description,
+            source: error.source,
+            step: error.step,
+            reason: error.reason,
+          });
+        });
+  
+        pay.open();
+      } catch (error) {
+        toast.error('Failed to initialize payment. Please try again.');
+        console.error('Razorpay initialization error:', error);
+      }
+
   }
 
   return (

@@ -19,11 +19,9 @@ const submitCheckout = async (req, res) => {
       }) 
       await wallet.save()
     }
-    console.log(wallet);
     
 
     if(payment_method=="Wallet"){
-
       if(wallet.balance>=subtotal){
         console.log(wallet)
         wallet.balance = wallet.balance - subtotal
@@ -43,6 +41,7 @@ const submitCheckout = async (req, res) => {
        discount: 0,
        total_price: item.price,
      }))
+     
     // // Create a new order
    const order = new Order({
      user,
@@ -57,7 +56,7 @@ const submitCheckout = async (req, res) => {
      });
 
      await order.save();
-     // console.log("Order created:", order)
+
      // Update the cart to remove purchased items
      const productIds = cartdata.map((item) => item.productId._id.toString());
      const selectedSizes = cartdata.map((item) => item.selectedSize)
