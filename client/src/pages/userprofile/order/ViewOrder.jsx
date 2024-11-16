@@ -10,12 +10,19 @@ const ViewOrder = () => {
     console.log("order id :",id);
     const [orderData, setOrderData] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [reload, setreload] = useState(false);
     
+    
+
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
     fetchViewOrderData()
-  }, []);
+  }, [reload]);
 
+  //======================FUNCTION TO RELOAD ===================
+   function reloadData(){
+    setreload(!reload)
+  }
   
   //===================== FETCHING THE ORDER DATA =====================
   async function fetchViewOrderData() {
@@ -37,7 +44,7 @@ const ViewOrder = () => {
   console.log(productId);
   try {
     const response = await axiosInstance.post(`/admin/cancelorder/${productId}`)
-    fetchViewOrderData()
+    reloadData()
     setShowConfirmation(false)
   } catch (error) {
     console.error("Error canceling product:", error);
@@ -47,6 +54,7 @@ const ViewOrder = () => {
   async function PlaceOrder(){
     try {
       const response = await axiosInstance.post("/user/change-payment-status",{id}) 
+      reloadData()
     } catch (error) {
       console.log(error);
     }
