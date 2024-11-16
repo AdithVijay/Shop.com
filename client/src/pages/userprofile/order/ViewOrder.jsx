@@ -4,6 +4,8 @@ import UserSideBar from '@/shared/bars/UserSideBar';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import PaymentInOrder from '@/shared/payment/PaymentInOrder';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const ViewOrder = () => {
     const {id} = useParams()
@@ -60,6 +62,82 @@ const ViewOrder = () => {
     }
   }
  
+  
+  //==================FUNCTION TO DOWNLOAD PDF========🀞✜✝︎✧☽⛪︎⛲︎➤⬇︎😍
+  function handleDownloadPdf() {
+    const doc = new jsPDF();
+
+    // Title
+    doc.setFontSize(22).setFont('helvetica', 'bold');
+    doc.text('Order Invoice', 105, 20, { align: 'center' });
+
+    // Order Details
+    doc.setFontSize(12).setFont('helvetica', 'normal');
+    doc.text(`Order Date: ${new Date(orderData?.delivery_by).toDateString()}`, 14, 30);
+    doc.text(`Order ID: ${orderData?._id}`, 14, 40);
+
+    // Shipping Address
+    doc.setFontSize(14).setFont('helvetica', 'bold').text('Shipping Address:', 14, 50);
+    doc.setFontSize(12).setFont('helvetica', 'normal');
+    const address = [
+        `${orderData?.shipping_address?.name}`,
+        `${orderData?.shipping_address?.address}`,
+        `${orderData?.shipping_address?.district}, ${orderData?.shipping_address?.pincode}`,
+        `Phone: ${orderData?.shipping_address?.phonenumber}`
+    ];
+    address.forEach((line, index) => doc.text(line, 14, 60 + index * 6));
+
+    // Decorative Line
+    doc.setDrawColor(0).setLineWidth(0.5).line(14, 90, 200, 90);
+
+    // Payment Details
+    doc.setFontSize(14).setFont('helvetica', 'bold').text('Payment Details:', 14, 100);
+    doc.setFontSize(12).setFont('helvetica', 'normal');
+    const paymentDetails = [
+        `Payment Method: ${orderData?.payment_method}`,
+        `Payment Status: ${orderData?.payment_status}`
+    ];
+    paymentDetails.forEach((line, index) => doc.text(line, 14, 110 + index * 6));
+
+    // Order Summary
+    doc.setFontSize(14).setFont('helvetica', 'bold').text('Order Summary:', 14, 130);
+    doc.setFontSize(12).setFont('helvetica', 'normal');
+    const summary = [
+        `Items Total: Rs${orderData?.total_amount}`,
+        `Coupon Discount: Rs${orderData?.coupon_discount || 0}`,
+        `Shipping Fee: Rs${orderData?.shipping_fee}`,
+        `Grand Total: Rs${orderData?.total_price_with_discount || orderData?.total_amount}`
+    ];
+    summary.forEach((line, index) => doc.text(line, 14, 140 + index * 6));
+
+    // Decorative Line
+    doc.line(14, 170, 200, 170);
+
+    // Order Items
+    doc.setFontSize(14).setFont('helvetica', 'bold').text('Order Items:', 14, 180);
+    doc.setFontSize(12).setFont('helvetica', 'normal');
+    let yPosition = 190;
+    orderData?.order_items?.forEach((item, index) => {
+        if (yPosition > 280) {  // Add new page if content overflows
+            doc.addPage();
+            yPosition = 20;
+        }
+        doc.text(
+            `${index + 1}. ${item.product.productName} - Rs${item.product.salePrice} `,
+            14,
+            yPosition
+        );
+        yPosition += 10;
+    });
+
+    // Footer
+    doc.setFontSize(10).setFont('helvetica',);
+    doc.text('Thank you for shopping with us!', 105, 290, { align: 'center' });
+
+    // Save PDF
+    doc.save(`Order_Invoice_${orderData?._id}.pdf`);
+}
+
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -90,7 +168,8 @@ const ViewOrder = () => {
 
           <div className="flex justify-between items-center mb-6">
             <p className="text-sm text-gray-500">Order# {orderData?._id} | Delivery By {new Date(orderData?.delivery_by).toDateString()} </p>
-            <button className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
+            {/* Download invoice */}
+            <button onClick={handleDownloadPdf} className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
