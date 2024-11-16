@@ -20,7 +20,7 @@ export default function Orders() {
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
   async function fetchOrderData(page=1) {
-    const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=2`);
+    const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=3`);
     setOrderData(response.data);
     setCurrentPage(response.data.currentPage);
     setTotalPages(response.data.totalPages);
@@ -41,6 +41,12 @@ export default function Orders() {
     if (currentPage < totalPages) {
       fetchOrderData(currentPage + 1);
     }
+  }
+  //==========================FUNCTION TO HANDLE ORDER RETURN=======================
+  async function returnOrder(orderId){
+    console.log(orderId);
+    const response = await axiosInstance.post("/user/return-order",{orderId})
+    console.log(response);
   }
 
   return (
@@ -103,15 +109,17 @@ export default function Orders() {
                     </button>
                       
 
-                      {order.payment_status === "Pending"  && (
+                      {order.order_status === "Shipped"||"Delivered"? 
                         <Button
+                          onClick={()=>returnOrder(order._id)}
                           variant="outline"
                           size="sm"
                           className="text-red-600 border-red-600"
                         >
-                          Cancel Order
+                          Return Order
                         </Button>
-                      ) }    
+                          : ""
+                       }    
                       <button 
                           className="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
                         >
@@ -122,12 +130,16 @@ export default function Orders() {
 
                   <p
                     className={`text-sm font-semibold ${
-                      order.order_status === "Pending"
+                      order.order_status === "Pending" 
                         ? "text-yellow-600"
-                        : "text-green-600"
+                        : order.order_status === "Failed" ||order.order_status === "Cancelled" 
+                        ? "text-red-600" 
+                        : order.order_status === "Delivered" || order.order_status === "Shipped"
+                        ?"text-green-600" 
+                        :""
                     }`}
                   >
-                    Status: {order.order_status}
+                  Order Status: {order.order_status}
                   </p>
                 </div>
               ))}

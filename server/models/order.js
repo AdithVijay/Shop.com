@@ -45,7 +45,7 @@ const order_schema = new mongoose.Schema({
   order_status: {
     type: String,
     required: true,
-    enum: ["Pending", "Shipped", "Delivered", "Cancelled","Failed"],
+    enum: ["Pending", "Shipped", "Delivered", "Cancelled","Failed","Returned"]
  
   },
   total_amount: {
@@ -63,7 +63,7 @@ const order_schema = new mongoose.Schema({
     required: true,
     enum: [
       "RazorPay",
-      "Wallet",
+      "Wallet", 
       "Cash on delivery",
     ],
   },
@@ -102,7 +102,11 @@ const order_schema = new mongoose.Schema({
   updatedAt: {
     type: Date,
     default: Date.now,
-  },
+  }, 
+  return_request:{
+    type:Boolean,
+    default:false
+  }
 });
 
 order_schema.pre("save", function (next) {

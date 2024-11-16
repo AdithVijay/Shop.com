@@ -192,7 +192,6 @@ const ViewOrder = () => {
                 amount={orderData?.total_price_with_discount ||orderData?.total_amount}
                 handlePlaceOrder={PlaceOrder}
               />:" "}
-              
             </div>
             
 
@@ -238,7 +237,7 @@ const ViewOrder = () => {
                   <span className={`text-sm font-medium ${
                    orderData?.order_status === "Pending" ? "text-yellow-600" : "text-red-500" 
                   }`}>
-                    Status: {orderData?.order_status}
+                   Order Status: {orderData?.order_status}
                   </span>
                 </div>
           <button 

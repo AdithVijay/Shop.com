@@ -20,7 +20,11 @@ const submitCheckout = async (req, res) => {
       }) 
       await wallet.save()
     }
-    
+    if(payment_method=="Cash on delivery"){
+      if(subtotal>1000){
+        return res.status(400).json({message:"Cash on delivery allowed for orders below ₹1000"})
+      }
+    }
 
     if(payment_method=="Wallet"){
       if(wallet.balance>=subtotal){
@@ -172,10 +176,26 @@ const changePaymentStatus = async(req,res)=>{
     console.log(order)
 }
 
+//===============================TSENDING RETURN REQUEST=======================
+const returnOrderRequest = async(req,res)=>{
+  try {
+    const {orderId} = req.body
+    const order = await Order.findById({_id:orderId})
+    console.log(order);
+    order.return_request = true;
+    order.save
+    console.log(order);
+    
+  } catch (error) {
+    console.log(error)
+  } 
+}
+
 module.exports = {
   submitCheckout,
   getOrderDetails,
   viewOrderDetails,
   changeOrderStatus,
-  changePaymentStatus
+  changePaymentStatus,
+  returnOrderRequest
 };
