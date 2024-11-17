@@ -176,16 +176,15 @@ const changePaymentStatus = async(req,res)=>{
     console.log(order)
 }
 
-//===============================TSENDING RETURN REQUEST=======================
+//===============================SENDING RETURN REQUEST=======================
 const returnOrderRequest = async(req,res)=>{
   try {
     const {orderId} = req.body
     const order = await Order.findById({_id:orderId})
     console.log(order);
     order.return_request = true;
-    order.save
+    order.save()
     console.log(order);
-    
   } catch (error) {
     console.log(error)
   } 

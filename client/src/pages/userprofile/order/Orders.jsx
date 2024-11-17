@@ -109,7 +109,7 @@ export default function Orders() {
                     </button>
                       
 
-                      {order.order_status === "Shipped"||"Delivered"? 
+                      {order.order_status === "Shipped" ||order.order_status === "Delivered"? 
                         <Button
                           onClick={()=>returnOrder(order._id)}
                           variant="outline"
