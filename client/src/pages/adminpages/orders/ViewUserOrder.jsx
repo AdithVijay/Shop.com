@@ -8,10 +8,8 @@ import { toast } from 'sonner';
 
 const ViewUserOrder = () => {
     const {id} = useParams()
-    // console.log("order id :",id);
+    const [confirmReturn, setconfirmReturn] = useState(false);
     const [orderData, setOrderData] = useState([]);
-    
- 
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
     fetchViewOrderData()
@@ -27,8 +25,9 @@ const ViewUserOrder = () => {
    
  //===================== RETURN ITEMS ========================
  async function returnAccept(id){
+  setconfirmReturn(true)
   const returnRequest = true
-  returnAceeptOrRejectRequest(id,returnRequest)
+  // returnAceeptOrRejectRequest(id,returnRequest)
  }
 
  async function returnReject(id){
@@ -147,6 +146,46 @@ const ViewUserOrder = () => {
             ))}
           </div>
         </div>
+        {confirmReturn && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-lg font-semibold mb-4">Confirm Cancellation</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                Are you sure you want to return this order?
+              </p>
+
+              {/* Styled Select Dropdown */}
+              <select
+                onChange={(e) => setreturnReason(e.target.value)}
+                className="w-full p-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+              >
+                <option  disabled selected>
+                  Select Reasons
+                </option>
+                <option value="Defective Product">Defective Product</option>
+                <option value="Size Mismatch">Size Mismatch</option>
+                <option value="Changed Mind">I changed My Mind</option>
+                <option value="Other">Other Reasons</option>
+              </select>
+
+              {/* Buttons */}
+              <div className="flex justify-end space-x-2 mt-4">
+                <button
+                  onClick={() => setconfirmReturn(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                >
+                  No
+                </button>
+                <button
+                  onClick={() => returnOrder(itemId)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Yes,Return
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

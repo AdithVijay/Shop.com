@@ -179,12 +179,15 @@ const changePaymentStatus = async(req,res)=>{
 //===============================SENDING RETURN REQUEST=======================
 const returnOrderRequest = async(req,res)=>{
   try {
-    const {orderId} = req.body
-    const order = await Order.findOne({"order_items._id":orderId})
-    const product = order.order_items.find((x)=>x._id==orderId)
+    const {itemId,returnReason} = req.body
+    const order = await Order.findOne({"order_items._id":itemId})
+    const product = order.order_items.find((x)=>x._id==itemId)
     product.return_request = true
-    product.return_message = true
+    product.return_message_dispaly = true
+    product.return_reason = returnReason
     await order.save()
+    console.log(order)
+    return res.json({message:"Return request send"})
   } catch (error) {
     console.log(error)
   } 

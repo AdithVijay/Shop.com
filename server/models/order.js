@@ -48,9 +48,12 @@ const order_schema = new mongoose.Schema({
         type:Boolean,
         default:false
       },
-      return_message:{
+      return_message_dispaly:{
         type:Boolean,
         default:false
+      },
+      return_reason:{
+        type:String,
       }
     },
   ],

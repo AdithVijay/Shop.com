@@ -7,6 +7,7 @@ import PaymentInOrder from '@/shared/payment/PaymentInOrder';
 import { Button } from '@nextui-org/react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { toast } from 'sonner';
 
 const ViewOrder = () => {
     const {id} = useParams()
@@ -14,9 +15,12 @@ const ViewOrder = () => {
     const [orderData, setOrderData] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [confirmReturn, setconfirmReturn] = useState(false);
-    
+    const [itemId, setitemId] = useState(null);
+    const [returnReason, setreturnReason] = useState("");
+        
     const [reload, setreload] = useState(false);
     
+    console.log("================>>>>",returnReason);
     
 
   //===================== FETCHING THE ORDER DATA =====================
@@ -39,9 +43,6 @@ const ViewOrder = () => {
   const data = orderData?.order_items?.map((x)=>{
     return x
   })
-  console.log("this is the da5taz",data);
-  
-
 
  //===================CANCEL THE PRODUCT ==================
  async function cancelProduct(productId) {
@@ -66,12 +67,22 @@ const ViewOrder = () => {
   }
 
   //==========================FUNCTION TO HANDLE ORDER RETURN=======================
-  async function returnOrder(orderId){
-    console.log(orderId);
-    const response = await axiosInstance.post("/user/return-order",{orderId})
+  async function returnOrder(){
+    if(!returnReason){
+      return toast.error("chooses a reason for returning")
+    }
+    const response = await axiosInstance.post("/user/return-order",{itemId,returnReason})
     console.log(response);
+    toast.success("return request send")
+    reloadData()
+    setconfirmReturn(false)
   }
-  
+
+  //=====================WHEN YES PRESSED IN RETURN MODAL ORDER=============
+  function returModal(orderId){
+     setitemId(orderId)
+    setconfirmReturn(true)
+  }
  
   
   //==================FUNCTION TO DOWNLOAD PDF========🀞✜✝︎✧☽⛪︎⛲︎➤⬇︎😍
@@ -241,19 +252,16 @@ const ViewOrder = () => {
                 </div>
               <div>
                 {/* RETURN ORDER */}
-              <button
-                onClick={()=>returnOrder(item._id)}
-                variant="outline"
-                size="sm"
-                  className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
-              >
-                Return Order
-                </button>
-                { item.return_request==true ?
-                 item.return_active==true?
-                <p>Return Request Acceptd</p>:
-                <p>Return Request Rejected</p>
-                :" "
+                
+                {item.return_message_dispaly?<p>Return request send</p>:
+                  <button
+                  onClick={()=>returModal(item._id)}
+                  variant="outline"
+                  size="sm"
+                    className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+                >
+                  Return Order
+                  </button> 
                 }
               </div>
               </div>
@@ -296,6 +304,48 @@ const ViewOrder = () => {
                   className="px-4 py-2 bg-red-600 text-white rounded-lg"
                 >
                   Yes, Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* RETURN CONFIRMATION */}
+        {confirmReturn && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
+              <h2 className="text-lg font-semibold mb-4">Confirm Cancellation</h2>
+              <p className="text-sm text-gray-600 mb-6">
+                Are you sure you want to return this order?
+              </p>
+
+              {/* Styled Select Dropdown */}
+              <select
+                onChange={(e) => setreturnReason(e.target.value)}
+                className="w-full p-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+              >
+                <option  disabled selected>
+                  Select Reasons
+                </option>
+                <option value="Defective Product">Defective Product</option>
+                <option value="Size Mismatch">Size Mismatch</option>
+                <option value="Changed Mind">I changed My Mind</option>
+                <option value="Other">Other Reasons</option>
+              </select>
+
+              {/* Buttons */}
+              <div className="flex justify-end space-x-2 mt-4">
+                <button
+                  onClick={() => setconfirmReturn(false)}
+                  className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+                >
+                  No
+                </button>
+                <button
+                  onClick={() => returnOrder(itemId)}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                >
+                  Yes,Return
                 </button>
               </div>
             </div>
