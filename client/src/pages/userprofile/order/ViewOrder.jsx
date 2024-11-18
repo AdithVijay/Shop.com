@@ -4,6 +4,7 @@ import UserSideBar from '@/shared/bars/UserSideBar';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import PaymentInOrder from '@/shared/payment/PaymentInOrder';
+import { Button } from '@nextui-org/react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
@@ -61,6 +62,14 @@ const ViewOrder = () => {
       console.log(error);
     }
   }
+
+  //==========================FUNCTION TO HANDLE ORDER RETURN=======================
+  async function returnOrder(orderId){
+    console.log(orderId);
+    const response = await axiosInstance.post("/user/return-order",{orderId})
+    console.log(response);
+  }
+  
  
   
   //==================FUNCTION TO DOWNLOAD PDF========🀞✜✝︎✧☽⛪︎⛲︎➤⬇︎😍
@@ -228,7 +237,17 @@ const ViewOrder = () => {
                     </div>
                   </div>
                 </div>
-              
+              <div>
+                {/* RETURN ORDER */}
+              <button
+                onClick={()=>returnOrder(item._id)}
+                variant="outline"
+                size="sm"
+                className="text-red-600 border-red-600"
+              >
+                Return Order
+                </button>
+              </div>
               </div>
           </div>
           </div>

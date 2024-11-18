@@ -57,6 +57,7 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
   //============LISTING ORDER IN THE ORDER LISTING PAGE========
   adminRoute.get("/retrieveorder",orderController.getOrderDetails)
   adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct)
+  adminRoute.post("/return-order",verifyAdmin,orderController.returnOrderRequest)
 
   //========================COUPOUN MANAGMENT====================
   adminRoute.post("/create-coupon",coupounController.createCoupon)//TO CREATE A COUPOUN 

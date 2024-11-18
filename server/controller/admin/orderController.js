@@ -166,15 +166,25 @@ const getSalesDetails = async (req, res) => {
         console.error('Error fetching orders:', error);
         res.status(500).json({ message: 'Error fetching orders' });
     }
-
-
 };
 
-
+const returnOrderRequest = async(req,res)=>{
+  try {
+    // const {orderId} = req.body
+    // const order = await Order.findOne({"order_items._id":orderId})
+    // console.log(order);
+    // order.return_request = true
+    // order.save()
+    // console.log(order);
+  } catch (error) {
+    console.log(error)
+  } 
+}
 module.exports={
     updateOrderStatus,
     getOrderDetails,
     cancelProduct,
     getSalesDetails,
-    gethDataBasedOnDate
+    gethDataBasedOnDate,
+    returnOrderRequest
 }

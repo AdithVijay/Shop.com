@@ -42,12 +42,6 @@ export default function Orders() {
       fetchOrderData(currentPage + 1);
     }
   }
-  //==========================FUNCTION TO HANDLE ORDER RETURN=======================
-  async function returnOrder(orderId){
-    console.log(orderId);
-    const response = await axiosInstance.post("/user/return-order",{orderId})
-    console.log(response);
-  }
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -106,20 +100,7 @@ export default function Orders() {
 
                     <button onClick={()=>viewOrder(order._id)} className="text-blue-600 border border-blue-600 px-3 py-1 rounded-md hover:bg-blue-50">
                       View order
-                    </button>
-                      
-
-                      {order.order_status === "Shipped" ||order.order_status === "Delivered"? 
-                        <Button
-                          onClick={()=>returnOrder(order._id)}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 border-red-600"
-                        >
-                          Return Order
-                        </Button>
-                          : ""
-                       }    
+                    </button>   
                       <button 
                           className="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
                         >

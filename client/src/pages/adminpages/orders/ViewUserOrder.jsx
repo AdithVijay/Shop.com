@@ -35,6 +35,12 @@ const ViewUserOrder = () => {
     console.log(response);
  }
  
+ //===================== RETURN ITEMS ========================
+ async function returnAccept(id){
+    console.log(orderId);
+    const response = await axiosInstance.post("/admin/return-order",{id})
+    console.log(response);
+ }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -116,6 +122,24 @@ const ViewUserOrder = () => {
                       <span className="text-sm text-green-600">{item?.product?.salePrice}% Off</span>
                     </div>
                   </div>
+                </div>
+                <div>
+                  {item.return_request && (
+                    <div className="flex space-x-4">
+                      <button
+                        onClick={() => returnAccept(item._id)}
+                        className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+                      >
+                        ACCEPT RETURN
+                      </button>
+                      <button
+                        onClick={() => returnReject(item._id)}
+                        className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+                      >
+                        REJECT RETURN
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -180,11 +180,10 @@ const changePaymentStatus = async(req,res)=>{
 const returnOrderRequest = async(req,res)=>{
   try {
     const {orderId} = req.body
-    const order = await Order.findById({_id:orderId})
-    console.log(order);
-    order.return_request = true;
-    order.save()
-    console.log(order);
+    const order = await Order.findOne({"order_items._id":orderId})
+    const product = order.order_items.find((x)=>x._id==orderId)
+    product.return_request = true
+    await order.save()
   } catch (error) {
     console.log(error)
   } 

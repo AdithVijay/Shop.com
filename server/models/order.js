@@ -40,6 +40,14 @@ const order_schema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      return_request:{
+        type:Boolean,
+        default:false
+      },
+      return_active:{
+        type:Boolean,
+        default:false
+      }
     },
   ],
   order_status: {
@@ -103,10 +111,6 @@ const order_schema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   }, 
-  return_request:{
-    type:Boolean,
-    default:false
-  }
 });
 
 order_schema.pre("save", function (next) {
