@@ -17,6 +17,7 @@ import CouponList from '@/pages/adminpages/coupons/CouponList'
 import AddCoupoun from '@/pages/adminpages/coupons/AddCoupoun'
 import SalesReport from '@/pages/adminpages/salesreport/SalesReport'
 import ConfirmationModal from '@/shared/modal/ConfirmationModal'
+import ChartDash from '@/pages/adminpages/dashboard/ChartDash'
 const AdminRoute = () => {
 
   const handleDelete = () => {
@@ -88,6 +89,7 @@ const AdminRoute = () => {
                       <AddCoupoun/>
               </AdminHome>
               }></Route>
+
               <Route path='/sales-report' element={
                     <AdminHome>
                       <SalesReport/>
@@ -102,6 +104,13 @@ const AdminRoute = () => {
                       />
               </AdminHome>
               }></Route>
+              
+              <Route path='/dashboard' element={
+                    <AdminHome>
+                      <ChartDash/>
+              </AdminHome>
+              }></Route>
+
           </Routes>
         <Toaster/>
     </div>

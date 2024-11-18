@@ -39,6 +39,8 @@ const OrderListing = () => {
       setOrderData(response.data.order);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
+      console.log(response);
+      
     } catch (error) {
       console.log(error);
     }
@@ -124,15 +126,19 @@ const OrderListing = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(order.placed_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">₹{order.total_amount}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled"}>
+                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled" ||order.order_status === "Returned"}>
                         <option value="Pending">Pending</option>
                         <option value="Shipped">Shipped</option>
                         <option value="Delivered">Delivered</option>
                         <option value="Cancelled">Cancelled</option>
+                        <option value="Returned" disabled selected>Returned</option>
                       </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <button onClick={() => openModal(order._id)} className={`px-4 py-2 rounded text-sm ${order.order_status === "Cancelled" || order.order_status === "Delivered" ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`} disabled={order.order_status === "Cancelled" || order.order_status === "Delivered"}>Cancel</button>
+                      <button onClick={() => openModal(order._id)} className={`px-4 py-2 rounded text-sm ${order.order_status === "Cancelled"
+                         || order.order_status === "Delivered" ||order.order_status === "Returned"? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
+                          disabled={order.order_status === "Cancelled" || order.order_status === "Delivered" ||order.order_status === "Returned"}>Cancel</button>
+
                       <button onClick={() => viewOrder(order._id)} className="text-blue-600 border border-blue-600 ml-3 px-2 py-1 rounded-md hover:bg-blue-50">View order</button>
                     </td>
                   </tr>

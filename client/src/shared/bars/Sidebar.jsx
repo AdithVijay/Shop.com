@@ -12,7 +12,7 @@ const Sidebar = () => {
   const location = useLocation();
   const dispatch = useDispatch()
   const menuItems = [
-    { name: 'Dashboard', icon: <Home size={16} />, path: '/login' },
+    { name: 'Dashboard', icon: <Home size={16} />, path: '/dashboard' },
     { name: 'Products', icon: <Package size={16} />, path: '/productlist' },
     { name: 'Order Lists', icon: <List size={16} />, path: '/admin-orders' },
     { name: 'Users', icon: <Users size={16} />, path: '/usermanagement' },

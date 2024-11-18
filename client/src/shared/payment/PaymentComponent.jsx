@@ -10,7 +10,7 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress}) {
     if(!selectedAddress){
       return toast.error("Select address")
     }
-    
+
       var options = {
         key: "rzp_test_qCInnPOVC7vtPP", // Replace with your Razorpay key
         key_secret: "ebNDS0TwQxpjL3VyQGuzb4O6", // Replace with your Razorpay secret

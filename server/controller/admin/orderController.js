@@ -179,7 +179,7 @@ const returnOrderRequest = async(req,res)=>{
     product.return_active =returnRequest
     product.return_message_dispaly = false
     product.dispalay_return_result = true
-
+    order.order_status = "Returned"
     //===wlaeet money reduction
     if(returnRequest==true){
       const wallet = await Wallet.findOne({userId})
