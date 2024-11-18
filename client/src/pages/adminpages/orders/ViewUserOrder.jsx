@@ -4,12 +4,13 @@ import UserSideBar from '@/shared/bars/UserSideBar';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import Sidebar from '@/shared/bars/Sidebar';
+import { toast } from 'sonner';
 
 const ViewUserOrder = () => {
     const {id} = useParams()
-    console.log("order id :",id);
+    // console.log("order id :",id);
     const [orderData, setOrderData] = useState([]);
-
+    
  
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
@@ -20,27 +21,28 @@ const ViewUserOrder = () => {
   //===================== FETCHING THE ORDER DATA =====================
   async function fetchViewOrderData() {
     const response = await axiosInstance.get(`user/vieworder/${id}`);
-    console.log("response from the serveer",response);
+    // console.log("response from the serveer",response);
     setOrderData(response.data)
   }
-  console.log("order data ", orderData);
-  const data = orderData?.order_items?.map((x)=>{
-    return x
-  })
-  console.log("this is the da5taz",data);
-  
- //===================== CHANGING THE STATUS ======================
- async function statusChange(productId){
-    const response = await axiosInstance.post(`user/changestatus`,{id,productId})
-    console.log(response);
- }
- 
+   
  //===================== RETURN ITEMS ========================
  async function returnAccept(id){
-    console.log(orderId);
-    const response = await axiosInstance.post("/admin/return-order",{id})
-    console.log(response);
+  const returnRequest = true
+  returnAceeptOrRejectRequest(id,returnRequest)
  }
+
+ async function returnReject(id){
+  const returnRequest = false
+  returnAceeptOrRejectRequest(id,returnRequest)
+  }
+
+  async function returnAceeptOrRejectRequest(id,returnRequest) {
+    console.log(id,returnRequest);
+    const response = await axiosInstance.post("/admin/return-order",{id,returnRequest})
+    console.log(response)
+    toast.success(response.data.message)
+    fetchViewOrderData()
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">

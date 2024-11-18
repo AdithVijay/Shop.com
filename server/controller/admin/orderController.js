@@ -170,12 +170,20 @@ const getSalesDetails = async (req, res) => {
 
 const returnOrderRequest = async(req,res)=>{
   try {
-    // const {orderId} = req.body
-    // const order = await Order.findOne({"order_items._id":orderId})
-    // console.log(order);
-    // order.return_request = true
-    // order.save()
-    // console.log(order);
+    const {id,returnRequest} = req.body
+    const order = await Order.findOne({"order_items._id":id})
+    const product = order.order_items.find((x)=>x._id==id)
+    product.return_request = false
+    product.return_active =returnRequest
+    product.return_message = false
+    await order.save()
+    if(returnRequest){
+      return res.json({message:"Return request accepted"})
+    }else{
+      return res.json({message:"Return request rejected"})
+    }
+    
+   
   } catch (error) {
     console.log(error)
   } 

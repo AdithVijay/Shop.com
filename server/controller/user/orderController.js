@@ -183,6 +183,7 @@ const returnOrderRequest = async(req,res)=>{
     const order = await Order.findOne({"order_items._id":orderId})
     const product = order.order_items.find((x)=>x._id==orderId)
     product.return_request = true
+    product.return_message = true
     await order.save()
   } catch (error) {
     console.log(error)

@@ -47,6 +47,10 @@ const order_schema = new mongoose.Schema({
       return_active:{
         type:Boolean,
         default:false
+      },
+      return_message:{
+        type:Boolean,
+        default:false
       }
     },
   ],

@@ -13,6 +13,8 @@ const ViewOrder = () => {
     console.log("order id :",id);
     const [orderData, setOrderData] = useState([]);
     const [showConfirmation, setShowConfirmation] = useState(false);
+    const [confirmReturn, setconfirmReturn] = useState(false);
+    
     const [reload, setreload] = useState(false);
     
     
@@ -243,10 +245,16 @@ const ViewOrder = () => {
                 onClick={()=>returnOrder(item._id)}
                 variant="outline"
                 size="sm"
-                className="text-red-600 border-red-600"
+                  className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
               >
                 Return Order
                 </button>
+                { item.return_request==true ?
+                 item.return_active==true?
+                <p>Return Request Acceptd</p>:
+                <p>Return Request Rejected</p>
+                :" "
+                }
               </div>
               </div>
           </div>
