@@ -306,6 +306,7 @@ const CheckOut = () => {
            handlePlaceOrder={submitCheckout}
            setPaymentFail={setPaymentFail}
            paymentfail={paymentfail}
+           selectedAddress = {selectedAddress}
           />
           }
 

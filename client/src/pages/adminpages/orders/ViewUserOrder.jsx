@@ -5,12 +5,18 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import Sidebar from '@/shared/bars/Sidebar';
 import { toast } from 'sonner';
+import { useSelect } from '@nextui-org/react';
 
 const ViewUserOrder = () => {
     const {id} = useParams()
     const [confirmReturn, setconfirmReturn] = useState(false);
     const [orderData, setOrderData] = useState([]);
-    const [itemId, setitemId] = useState(null);
+    const [itemId, setitemId] = useState(null)
+    const [userId, setuserId] = useState(null);
+    const [productPrice, setproductPrice] = useState(null);
+    const [coupondiscount, setcoupondiscount] = useState(null);
+    const [length, setlength] = useState(null);
+    
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
     fetchViewOrderData()
@@ -39,7 +45,7 @@ const ViewUserOrder = () => {
   async function returnAceeptOrRejectRequest(returnRequest) {
     try {
       console.log(id,returnRequest);
-      const response = await axiosInstance.post("/admin/return-order",{itemId,returnRequest})
+      const response = await axiosInstance.post("/admin/return-order",{itemId,returnRequest,userId,productPrice,coupondiscount,length})
       console.log(response)
       toast.success(response.data.message)
       setconfirmReturn(false)
@@ -50,10 +56,16 @@ const ViewUserOrder = () => {
   }
 
   //========TO OPEN RETURN MODAL========
-  function openReturnModal(itemId){
+  function openReturnModal(itemId,userId,coupondiscount,productPrice,length){
+    setlength(length)
     setitemId(itemId)
+    setuserId(userId)
     setconfirmReturn(true)
+    setproductPrice(productPrice)
+    setcoupondiscount(coupondiscount)
   }
+  console.log(productPrice);
+  
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -136,11 +148,12 @@ const ViewUserOrder = () => {
                     </div>
                   </div>
                 </div>
+              {( orderData.order_status === "Delivered")&&(
                 <div>
                 {item.return_request && (
                     <div className="flex flex-col space-y-2">
                       <button
-                        onClick={() => openReturnModal(item._id)}
+                        onClick={() => openReturnModal(item._id,orderData.user,orderData.coupon_discount,item.total_price,orderData.order_items.length)}
                         className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
                       >
                         RETURN REQUEST RECEIVED
@@ -154,6 +167,7 @@ const ViewUserOrder = () => {
                         </p>
                       )}
                 </div>
+              )}
               </div>
             ))}
           </div>

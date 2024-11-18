@@ -170,15 +170,26 @@ const getSalesDetails = async (req, res) => {
 
 const returnOrderRequest = async(req,res)=>{
   try {
-    const {itemId,returnRequest} = req.body
+    const {itemId,returnRequest,userId,coupondiscount,productPrice,length} = req.body
     
-    console.log("===============>>>>",returnRequest);
+    console.log("===============>>>>",returnRequest,userId,"cp",coupondiscount,productPrice);
     const order = await Order.findOne({"order_items._id":itemId})
     const product = order.order_items.find((x)=>x._id==itemId)
     product.return_request = false
     product.return_active =returnRequest
     product.return_message_dispaly = false
     product.dispalay_return_result = true
+
+    //===wlaeet money reduction
+    if(returnRequest==true){
+      const wallet = await Wallet.findOne({userId})
+      const actualPrice = productPrice -coupondiscount/length
+      console.log( "========/////",actualPrice);
+      wallet.balance = wallet.balance + actualPrice
+      wallet.transaction.push({transactionType:"credit",amount:actualPrice,status:"completed"})
+      wallet.save()
+    }
+
     await order.save()
     if(returnRequest){
       return res.json({message:"Return request accepted"})

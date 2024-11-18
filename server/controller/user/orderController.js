@@ -35,7 +35,7 @@ const submitCheckout = async (req, res) => {
         return res.status(404).json({message:"Insufficient balence in wallet"})
       }
     }
-
+   
   try {
      const products = cartdata.map((item) => ({
        product: item.productId._id,
@@ -43,7 +43,7 @@ const submitCheckout = async (req, res) => {
        size:item.selectedSize,
        price: item.price,
        discount: 0,
-       total_price: item.price,
+       total_price: item.price*item.quantity,
      }))
 
     // // Create a new order
