@@ -173,7 +173,6 @@ const changePaymentStatus = async(req,res)=>{
     order.order_status = "Pending"
     order.save()
     return res.json({message:"Paymnet Success"})
-    console.log(order)
 }
 
 //===============================SENDING RETURN REQUEST=======================

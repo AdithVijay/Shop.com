@@ -170,24 +170,26 @@ const getSalesDetails = async (req, res) => {
 
 const returnOrderRequest = async(req,res)=>{
   try {
-    const {id,returnRequest} = req.body
-    const order = await Order.findOne({"order_items._id":id})
-    const product = order.order_items.find((x)=>x._id==id)
+    const {itemId,returnRequest} = req.body
+    
+    console.log("===============>>>>",returnRequest);
+    const order = await Order.findOne({"order_items._id":itemId})
+    const product = order.order_items.find((x)=>x._id==itemId)
     product.return_request = false
     product.return_active =returnRequest
-    product.return_message = false
+    product.return_message_dispaly = false
+    product.dispalay_return_result = true
     await order.save()
     if(returnRequest){
       return res.json({message:"Return request accepted"})
     }else{
       return res.json({message:"Return request rejected"})
     }
-    
-   
   } catch (error) {
     console.log(error)
-  } 
+  }       
 }
+
 module.exports={
     updateOrderStatus,
     getOrderDetails,

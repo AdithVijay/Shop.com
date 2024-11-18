@@ -10,6 +10,7 @@ const ViewUserOrder = () => {
     const {id} = useParams()
     const [confirmReturn, setconfirmReturn] = useState(false);
     const [orderData, setOrderData] = useState([]);
+    const [itemId, setitemId] = useState(null);
   //===================== FETCHING THE ORDER DATA =====================
   useEffect(() => {
     fetchViewOrderData()
@@ -19,28 +20,39 @@ const ViewUserOrder = () => {
   //===================== FETCHING THE ORDER DATA =====================
   async function fetchViewOrderData() {
     const response = await axiosInstance.get(`user/vieworder/${id}`);
-    // console.log("response from the serveer",response);
+    console.log("response from the serveer",response);
     setOrderData(response.data)
   }
    
  //===================== RETURN ITEMS ========================
- async function returnAccept(id){
-  setconfirmReturn(true)
+ async function returnAccept(){
   const returnRequest = true
-  // returnAceeptOrRejectRequest(id,returnRequest)
+  returnAceeptOrRejectRequest(returnRequest)
  }
 
- async function returnReject(id){
+ async function returnReject(){
   const returnRequest = false
-  returnAceeptOrRejectRequest(id,returnRequest)
+  returnAceeptOrRejectRequest(returnRequest)
   }
 
-  async function returnAceeptOrRejectRequest(id,returnRequest) {
-    console.log(id,returnRequest);
-    const response = await axiosInstance.post("/admin/return-order",{id,returnRequest})
-    console.log(response)
-    toast.success(response.data.message)
-    fetchViewOrderData()
+  //===============SENDING RETURN REQUEST TO BACKEND=========
+  async function returnAceeptOrRejectRequest(returnRequest) {
+    try {
+      console.log(id,returnRequest);
+      const response = await axiosInstance.post("/admin/return-order",{itemId,returnRequest})
+      console.log(response)
+      toast.success(response.data.message)
+      setconfirmReturn(false)
+      fetchViewOrderData() 
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //========TO OPEN RETURN MODAL========
+  function openReturnModal(itemId){
+    setitemId(itemId)
+    setconfirmReturn(true)
   }
 
   return (
@@ -125,22 +137,22 @@ const ViewUserOrder = () => {
                   </div>
                 </div>
                 <div>
-                  {item.return_request && (
-                    <div className="flex space-x-4">
+                {item.return_request && (
+                    <div className="flex flex-col space-y-2">
                       <button
-                        onClick={() => returnAccept(item._id)}
+                        onClick={() => openReturnModal(item._id)}
                         className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
                       >
-                        ACCEPT RETURN
+                        RETURN REQUEST RECEIVED
                       </button>
-                      <button
-                        onClick={() => returnReject(item._id)}
-                        className="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
-                      >
-                        REJECT RETURN
-                      </button>
+                      <p className=" text-sm">Reason:{ item.return_reason}</p>
                     </div>
                   )}
+                  {item.dispalay_return_result && (
+                        <p className="text-red-600">
+                          {item.return_active ? "Product Return request accepted" : "Product Return Request Rejected"}
+                        </p>
+                      )}
                 </div>
               </div>
             ))}
@@ -150,34 +162,22 @@ const ViewUserOrder = () => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-4 rounded-lg shadow-lg max-w-sm w-full">
               <h2 className="text-lg font-semibold mb-4">Confirm Cancellation</h2>
-              <p className="text-sm text-gray-600 mb-6">
-                Are you sure you want to return this order?
+              <p className="text-sm text-gray-600 ">
+                Are you sure you want to confirm return?
               </p>
 
               {/* Styled Select Dropdown */}
-              <select
-                onChange={(e) => setreturnReason(e.target.value)}
-                className="w-full p-2 border rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
-              >
-                <option  disabled selected>
-                  Select Reasons
-                </option>
-                <option value="Defective Product">Defective Product</option>
-                <option value="Size Mismatch">Size Mismatch</option>
-                <option value="Changed Mind">I changed My Mind</option>
-                <option value="Other">Other Reasons</option>
-              </select>
 
               {/* Buttons */}
               <div className="flex justify-end space-x-2 mt-4">
                 <button
-                  onClick={() => setconfirmReturn(false)}
+                  onClick={() => returnReject()}
                   className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
                 >
                   No
                 </button>
                 <button
-                  onClick={() => returnOrder(itemId)}
+                  onClick={() => returnAccept()}
                   className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                 >
                   Yes,Return

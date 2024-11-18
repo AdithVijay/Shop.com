@@ -250,31 +250,51 @@ const ViewOrder = () => {
                     </div>
                   </div>
                 </div>
-              <div>
-                {/* RETURN ORDER */}
-                
-                {item.return_message_dispaly?<p>Return request send</p>:
-                  <button
-                  onClick={()=>returModal(item._id)}
-                  variant="outline"
-                  size="sm"
-                    className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
-                >
-                  Return Order
-                  </button> 
-                }
-              </div>
+                {( orderData.order_status === "Delivered") && (
+                    <div>
+                      {/* RETURN ORDER */}
+
+                      {!item.return_message_dispaly && !item.dispalay_return_result && (
+                        <button
+                          onClick={() => returModal(item._id)} // Trigger the return modal
+                          variant="outline"
+                          size="sm"
+                          className="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-700"
+                        >
+                          Return Order
+                        </button>
+                      )}
+
+                      {item.return_message_dispaly && !item.dispalay_return_result && (
+                        <p>Return request sent</p>
+                      )}
+
+                      {item.dispalay_return_result && (
+                        <p className="text-red-600">
+                          {item.return_active ? "Return request accepted" : "Return Request Rejected"}
+                        </p>
+                      )}
+                    </div>
+                  )}
               </div>
           </div>
           </div>
         ))}
-        <div className="flex items-center p-5 space-x-4 mt-4 sm:mt-0">
-                  <span className={`text-sm font-medium ${
-                   orderData?.order_status === "Pending" ? "text-yellow-600" : "text-red-500" 
-                  }`}>
-                   Order Status: {orderData?.order_status}
-                  </span>
-                </div>
+       <div className="flex items-center p-5 space-x-4 mt-4 sm:mt-0">
+          <span
+            className={`text-sm font-medium ${
+              orderData?.order_status === "Pending"
+                ? "text-orange-600"
+                : orderData?.order_status === "Shipped" || orderData?.order_status === "Delivered"
+                ? "text-green-600"
+                : orderData?.order_status === "Canceled"
+                ? "text-red-600"
+                : "text-gray-600" // Default color for unknown statuses
+            }`}
+          >
+            Order Status: {orderData?.order_status}
+          </span>
+        </div>
           <button 
               onClick={()=> setShowConfirmation(true)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-150 ${
@@ -284,7 +304,7 @@ const ViewOrder = () => {
                  }`}
                 disabled={orderData?.order_status === "Cancelled"}  
               >
-                {orderData?.order_status === "Pending" ? "Cancel" : "Cancelled"}
+                {orderData?.order_status === "Pending" ? "Cancel" : "Cancel"}
             </button>
                     {/* Confirmation Modal */}
         {showConfirmation && (
