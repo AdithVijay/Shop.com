@@ -33,7 +33,7 @@ export default function UserManagement() {
 
     async function fetUser(page=1){
         try{
-            const response = await axiosInstance.get(`/admin/fetchuserdata?page=${page}&limit=4`)
+            const response = await axiosInstance.get(`/admin/fetchuserdata?page=${page}&limit=6`)
             console.log(response.data.data);
             console.log(response);
             setuserData(response.data.data)
@@ -96,7 +96,7 @@ export default function UserManagement() {
             </div>
 
             <div className="mb-6 flex justify-between items-center">
-              <div className="relative">
+              {/* <div className="relative">
                 <select
                   value={filterBy}
                   onChange={(e) => setFilterBy(e.target.value)}
@@ -107,7 +107,7 @@ export default function UserManagement() {
                   <option value="active">Active Users</option>
                 </select>
                 <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-              </div>
+              </div> */}
             </div>
 
             <div className="overflow-x-auto">

@@ -10,7 +10,8 @@ const fetchUser = async(req,res)=>{
 
         const users = await User.find()
         .skip(skip)   
-        .limit(limit);
+        .limit(limit)
+        .sort({createdA:-1})
 
         const totalusers = await User.countDocuments();
         const totalPages = Math.ceil(totalusers / limit);

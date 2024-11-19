@@ -70,7 +70,7 @@ export default function CouponList() {
                     <th className="border p-2 text-center">Usagelimit</th>
                     <th className="border p-2 text-center">PerPersonLimit</th>
                     <th className="border p-2 text-center">expDate</th>
-                    <th className="border p-2 text-center">Edit</th>
+                    {/* <th className="border p-2 text-center">Edit</th> */}
                   </tr>
                 </thead>
                 <tbody>
@@ -101,12 +101,12 @@ export default function CouponList() {
                         })}
                       </td>
                       <td>
-                        <button
+                        {/* <button
                           onClick={() => handleEdit(coupon._id)}
                           className="text-blue-600 pl-6 hover:text-blue-800 mr-2"
                         >
                           <Edit2 size={18} />
-                        </button>
+                        </button> */}
                       </td>
                     </tr>
                   ))}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Home, User } from "lucide-react";
 import UserSideBar from '@/shared/bars/UserSideBar';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import PaymentInOrder from '@/shared/payment/PaymentInOrder';
 import { Button } from '@nextui-org/react';
@@ -125,10 +125,10 @@ const ViewOrder = () => {
     doc.setFontSize(14).setFont('helvetica', 'bold').text('Order Summary:', 14, 130);
     doc.setFontSize(12).setFont('helvetica', 'normal');
     const summary = [
-        `Items Total: Rs${orderData?.total_amount}`,
-        `Coupon Discount: Rs${orderData?.coupon_discount || 0}`,
-        `Shipping Fee: Rs${orderData?.shipping_fee}`,
-        `Grand Total: Rs${orderData?.total_price_with_discount || orderData?.total_amount}`
+        `Items Total: Rs ${orderData?.total_amount}`,
+        `Coupon Discount: Rs ${orderData?.coupon_discount || 0}`,
+        `Shipping Fee: Rs ${orderData?.shipping_fee}`,
+        `Grand Total: Rs ${orderData?.total_price_with_discount || orderData?.total_amount}`
     ];
     summary.forEach((line, index) => doc.text(line, 14, 140 + index * 6));
 
@@ -168,7 +168,7 @@ const ViewOrder = () => {
         
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-1 text-sm text-gray-600 mb-8">
-          <a href="/" className="flex items-center hover:text-blue-600">
+          {/* <a href="/" className="flex items-center hover:text-blue-600">
             <Home className="h-5 w-5" />
             <span className="ml-1">Home</span>
           </a>
@@ -176,9 +176,9 @@ const ViewOrder = () => {
           <a href="/account" className="flex items-center hover:text-blue-600">
             <User className="h-4 w-4" />
             <span className="ml-1">Account</span>
-          </a>
+          </a> */}
           <ChevronRight className="h-4 w-4" />
-          <a href="/orders" className="hover:text-blue-600">My Orders</a>
+          <Link to={"/orders"} className="hover:text-blue-600">My Orders</Link>
           <ChevronRight className="h-4 w-4" />
           <span className="text-gray-800 font-semibold">Order Details</span>
         </nav>
@@ -222,10 +222,10 @@ const ViewOrder = () => {
               <div className="text-sm space-y-1">
                 <div className="flex justify-between"><span>Items Total</span><span>₹{orderData?.total_amount}</span></div>
                 <div className="flex justify-between"><span>Coupon</span><span>₹{orderData?.coupon_discount}</span></div>
-                <div className="flex justify-between"><span>Shipping Charge</span><span>₹{orderData?.shipping_fee}</span></div>
+                {/* <div className="flex justify-between"><span>Shipping Charge</span><span>₹{orderData?.shipping_fee}</span></div> */}
                 <div className="flex justify-between"><span>Total Discount</span><span>₹{orderData?.total_price_with_discount}</span></div>
                 <hr className="my-2" />
-                <div className="flex justify-between font-semibold"><span>Total</span><span>₹{orderData?.total_price_with_discount}</span></div>
+                {/* <div className="flex justify-between font-semibold"><span>Total</span><span>₹{orderData?.total_price_with_discount}</span></div> */}
                 <div className="flex justify-between font-semibold text-lg"><span>Grand Total</span><span>₹{orderData?.total_price_with_discount ||orderData?.total_amount}</span></div>
               </div>
             </div>

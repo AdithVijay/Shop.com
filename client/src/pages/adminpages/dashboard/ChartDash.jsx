@@ -1,193 +1,228 @@
-"use client";
+'use client'
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Sidebar from "@/shared/bars/Sidebar";
+import { User, ShoppingBasket, DollarSign, Clock } from 'lucide-react';
 import axiosInstance from "@/config/axiosInstance";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 
-const getDateParts = (dateString) => {
-  const date = new Date(dateString);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = date.toLocaleString("default", { month: "short" });
-  const year = date.getFullYear();
-  return { day, month, year };
-};
+// Months mapping
+const months = [
+  "All Months",
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
+const years = [2024, 2023, 2022];
 
 export default function ChartDash() {
+  const [selectedYear, setSelectedYear] = useState("2024");
+  const [selectedMonth, setSelectedMonth] = useState("All Months");
   const [orderDatas, setOrderData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedMonth, setSelectedMonth] = useState("");
-  const [selectedDay, setSelectedDay] = useState("");
+  const [salesData, setSalesData] = useState([]);
 
   useEffect(() => {
     fetchOrderData();
   }, []);
 
   useEffect(() => {
-    processChartData();
-  }, [orderDatas, selectedYear, selectedMonth, selectedDay]);
+    processOrderData(orderDatas);
+  }, [orderDatas]);
 
-  const fetchOrderData = async () => {
+  async function fetchOrderData() {
     try {
       const response = await axiosInstance.get(`admin/retrieve-chart-data`);
-      setOrderData(response.data.order);
+      setOrderData(response.data.order); // Assuming the orders come under `response.data.order`
+      console.log(response);
+      
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.log(error);
     }
-  };
+  }
 
-  const processChartData = () => {
-    const aggregation = {};
+  function processOrderData(orders) {
+    // Initialize data structure for months
+    const monthlyData = Array(12).fill(0).map((_, i) => ({
+      month: months[i + 1], // Map to month names
+      sales: 0,
+      customers: new Set(),
+      orders: 0,
+    }));
 
-    orderDatas.forEach((order) => {
-      const { day, month, year } = getDateParts(order.placed_at);
+    orders.forEach((order) => {
+      const date = new Date(order.placed_at);
+      const monthIndex = date.getMonth(); // Get month index (0-11)
+      const year = date.getFullYear();
 
-      if (!aggregation[year]) aggregation[year] = {};
-      if (!aggregation[year][month]) aggregation[year][month] = {};
-      if (!aggregation[year][month][day])
-        aggregation[year][month][day] = { revenue: 0, totalOrders: 0 };
-
-      aggregation[year][month][day].revenue += order.total_amount;
-      aggregation[year][month][day].totalOrders += 1;
+      // Only process data for the selected year
+      if (year === parseInt(selectedYear)) {
+        monthlyData[monthIndex].sales += order.total_amount;
+        monthlyData[monthIndex].orders += 1;
+        monthlyData[monthIndex].customers.add(order?.user?._id);
+      }
     });
 
-    let chartArray = [];
+    // Convert customer sets to counts
+    const formattedData = monthlyData.map((data) => ({
+      ...data,
+      customers: data.customers.size,
+    }));
 
-    Object.keys(aggregation).forEach((year) => {
-      Object.keys(aggregation[year]).forEach((month) => {
-        Object.keys(aggregation[year][month]).forEach((day) => {
-          chartArray.push({
-            date: `${year}-${month}-${day}`,
-            revenue: aggregation[year][month][day].revenue,
-            totalOrders: aggregation[year][month][day].totalOrders,
-          });
-        });
-      });
-    });
+    setSalesData(formattedData);
+  }
 
-    chartArray.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (selectedYear) {
-      chartArray = chartArray.filter((data) =>
-        data.date.startsWith(selectedYear)
-      );
+  const filteredData = salesData?.filter((item) => {
+    if (selectedMonth === "All Months") {
+      return true;
     }
-    if (selectedMonth) {
-      chartArray = chartArray.filter((data) =>
-        data.date.includes(selectedMonth)
-      );
-    }
-    if (selectedDay) {
-      chartArray = chartArray.filter((data) =>
-        data.date.includes(`-${selectedDay}`)
-      );
-    }
+    return item.month === selectedMonth;
+  });
 
-    setFilteredData(chartArray);
-  };
+  const totals = filteredData?.reduce(
+    (acc, curr) => ({
+      sales: acc.sales + curr.sales,
+      customers: acc.customers + curr.customers,
+      orders: acc.orders + curr.orders,
+    }),
+    { sales: 0, customers: 0, orders: 0 }
+  );
 
-  const uniqueYears = [
-    ...new Set(orderDatas.map((order) => getDateParts(order.placed_at).year)),
-  ];
-  const uniqueMonths = [
-    ...new Set(orderDatas.map((order) => getDateParts(order.placed_at).month)),
-  ];
-  const uniqueDays = [
-    ...new Set(orderDatas.map((order) => getDateParts(order.placed_at).day)),
-  ];
+
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
-        <CardTitle>Order Details</CardTitle>
-        <CardDescription>Filter orders by year, month, and day</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4">
-          <div className="flex-1">
-            <label htmlFor="year-select" className="block mb-2 text-sm font-medium">
-              Select Year
-            </label>
-            <select
-              id="year-select"
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="border rounded-md p-2 w-full"
-            >
-              <option value="">All Years</option>
-              {uniqueYears.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-1">
-            <label htmlFor="month-select" className="block mb-2 text-sm font-medium">
-              Select Month
-            </label>
-            <select
-              id="month-select"
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="border rounded-md p-2 w-full"
-            >
-              <option value="">All Months</option>
-              {uniqueMonths.map((month) => (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="flex-1">
-            <label htmlFor="day-select" className="block mb-2 text-sm font-medium">
-              Select Day
-            </label>
-            <select
-              id="day-select"
-              value={selectedDay}
-              onChange={(e) => setSelectedDay(e.target.value)}
-              className="border rounded-md p-2 w-full"
-            >
-              <option value="">All Days</option>
-              {uniqueDays.map((day) => (
-                <option key={day} value={day}>
-                  {day}
-                </option>
-              ))}
-            </select>
+    <div className="flex min-h-screen bg-gray-100">
+      <Sidebar />
+      <div className="flex-grow p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
+        <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+
+        {/* Top Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Card className="bg-white">
+            <CardContent className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-sm text-gray-500">Total Users</p>
+                <p className="text-2xl font-bold">{totals.customers}</p>
+              </div>
+              <User className="h-8 w-8 text-gray-400" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-sm text-gray-500">Total Orders</p>
+                <p className="text-2xl font-bold">{totals.orders}</p>
+              </div>
+              <ShoppingBasket className="h-8 w-8 text-gray-400" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-sm text-gray-500">Total Sales</p>
+                <p className="text-2xl font-bold">₹ {totals.sales.toFixed(1)}</p>
+              </div>
+              <DollarSign className="h-8 w-8 text-gray-400" />
+            </CardContent>
+          </Card>
+
+          <Card className="bg-white">
+            <CardContent className="flex items-center justify-between p-6">
+              <div>
+                <p className="text-sm text-gray-500">Pending Orders</p>
+                <p className="text-2xl font-bold">
+                {
+          orderDatas.filter((orderItem) => orderItem.order_status === "Pending").length
+        }
+                </p>
+              </div>
+              <Clock className="h-8 w-8 text-gray-400" />
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Chart Section */}
+        <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
+          <div className="p-4 sm:p-6 lg:p-8">
+            <h2 className="text-2xl font-bold mb-2">Sales Dashboard</h2>
+
+            <div className="mb-8 p-4 border border-gray-200 rounded-md">
+              <h3 className="text-lg font-semibold mb-4">Sales vs Customers</h3>
+              <div className="flex justify-end gap-4 mb-4">
+                <Select value={selectedYear} onValueChange={setSelectedYear}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select year" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {years.map((year) => (
+                      <SelectItem key={year} value={year.toString()}>
+                        {year}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={selectedMonth} onValueChange={setSelectedMonth}>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Select month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {months.map((month) => (
+                      <SelectItem key={month} value={month}>
+                        {month}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="h-[400px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={filteredData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis yAxisId="left" />
+                    <YAxis yAxisId="right" orientation="right" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="sales" fill="#000000" name="Sales" />
+                    <Bar yAxisId="right" dataKey="customers" fill="#4ade80" name="Customers" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <Card>
+                <CardContent className="p-6">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold">Best selling Category</h3>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold">Best selling Category</h3>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                  </div>
+                </CardContent>
+              </Card>
+              
+            </div>
+
           </div>
         </div>
-        <ResponsiveContainer width="100%" height={400}>
-          <BarChart data={filteredData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Bar dataKey="revenue" fill="#8884d8" name="Revenue" />
-            <Bar dataKey="totalOrders" fill="#82ca9d" name="Total Orders" />
-          </BarChart>
-        </ResponsiveContainer>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
-     

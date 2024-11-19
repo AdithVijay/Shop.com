@@ -106,7 +106,7 @@ const CheckOut = () => {
             time: new Date().toLocaleTimeString(),
             paymentMethod: paymentMethod,
             amount: actualCoupounDiscount||subtotal,
-            expectedDelivery: "27 - September - 2024" 
+            // expectedDelivery: "27 - September - 2024" 
           });
       
          
@@ -302,7 +302,7 @@ const CheckOut = () => {
           
           <PaymentComponent
            user={user}
-           amount={subtotal}
+           amount={actualCoupounDiscount || subtotal }
            handlePlaceOrder={submitCheckout}
            setPaymentFail={setPaymentFail}
            paymentfail={paymentfail}

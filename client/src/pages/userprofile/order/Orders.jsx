@@ -20,7 +20,7 @@ export default function Orders() {
 
   //=========================FETCHING THE DATA FROM BACKEND=======================
   async function fetchOrderData(page=1) {
-    const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=3`);
+    const response = await axiosInstance.get(`user/retrieveorder/${user}?page=${page}&limit=2`);
     setOrderData(response.data);
     setCurrentPage(response.data.currentPage);
     setTotalPages(response.data.totalPages);
@@ -101,11 +101,7 @@ export default function Orders() {
                     <button onClick={()=>viewOrder(order._id)} className="text-blue-600 border border-blue-600 px-3 py-1 rounded-md hover:bg-blue-50">
                       View order
                     </button>   
-                      <button 
-                          className="border border-gray-500 text-gray-500 px-3 py-1 text-sm rounded hover:bg-gray-100 transition-colors"
-                        >
-                          Invoice
-                        </button>
+                      
                     </div>
                   </div>
 

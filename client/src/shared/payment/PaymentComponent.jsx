@@ -74,9 +74,9 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress}) {
       
       <button 
         onClick={handleSubmit} 
-        className="bg-black text-white px-8 py-2 font-medium uppercase tracking-wide rounded"
+        className="bg-black text-white px-4 py-2 w-full mt-4"
       >
-        Submit
+        Razor Pay
       </button>
     </div>
   );

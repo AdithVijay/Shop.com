@@ -89,12 +89,12 @@ const validateForm = () => {
           <div className="p-4 sm:p-6 lg:p-8">
             <div className="flex justify-between items-center mb-4">
               <div className="text-sm text-gray-500">
-                <Link to="/addresses" className="hover:underline">My Addresses</Link> / Add New Address
+                <Link to="/address" className="hover:underline"> Addresses</Link> / Add New Address
               </div>
               <div className="text-sm">Welcome! Customer Name</div>
             </div>
 
-            <h2 className="text-2xl font-bold mb-2 text-red-500">EDIT ADRESS</h2>
+            <h2 className="text-2xl font-bold mb-2 text-black">EDIT ADRESS</h2>
             <div className="text-sm text-gray-500 mb-6">
               Personal Information
             </div>

@@ -88,7 +88,7 @@ export default function UserProfile() {
       <div className="flex-grow mt-10 p-4 sm:p-6 lg:p-8 transition-all duration-300 ease-in-out ml-12 sm:ml-64">
         <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,139,0.4)] overflow-hidden">
           <div className="p-4 sm:p-6 lg:p-8">
-            <h2 className="text-2xl font-bold mb-2 text-red-500">Your Details</h2>
+            <h2 className="text-2xl font-bold mb-2 text-black">Your Details</h2>
             <div className="text-sm text-gray-500 mb-6">
               Personal Information
             </div>
