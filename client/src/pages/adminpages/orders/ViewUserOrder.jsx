@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ChevronRight, Home, User } from "lucide-react";
 import UserSideBar from '@/shared/bars/UserSideBar';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '@/config/axiosInstance';
 import Sidebar from '@/shared/bars/Sidebar';
 import { toast } from 'sonner';
@@ -74,15 +74,11 @@ const ViewUserOrder = () => {
         
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-1 text-sm text-gray-600 mb-8">
-          <a href="/" className="flex items-center hover:text-blue-600">
-          
-            <span className="ml-1">Dashboard</span>
-          </a>
-          <ChevronRight className="h-4 w-4" />
-          <a href="/admin-orders" className="flex items-center hover:text-blue-600">
+    
+          <Link to={"/admin-orders"} className="flex items-center hover:text-blue-600">
 
             <span className="ml-1">Orders</span>
-          </a>
+          </Link>
           <ChevronRight className="h-4 w-4" />
          
           <span className="text-gray-800 font-semibold">Order Details</span>
@@ -98,7 +94,6 @@ const ViewUserOrder = () => {
 
           <div className="flex justify-between items-center mb-6">
             <p className="text-sm text-gray-500">Order# {orderData?._id} | Delivery By {new Date(orderData?.delivery_by).toDateString() } </p>
-            <button className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
           </div>
 
           <div className="grid gap-6 md:grid-cols-3">
@@ -115,6 +110,8 @@ const ViewUserOrder = () => {
             <div className="space-y-2">
               <h3 className="font-semibold text-lg text-gray-800">Payment Method</h3>
               <p className="text-sm text-gray-600">{orderData?.payment_method}</p>
+              <h3 className="font-semibold text-lg text-gray-800">Payment Status</h3>
+              <p className="text-sm text-gray-600">{orderData?.payment_status}</p>
             </div>
 
             <div className="space-y-2">
@@ -143,8 +140,8 @@ const ViewUserOrder = () => {
                     <h4 className="font-medium text-lg text-gray-800">{item?.product?.productName}</h4>
                     <div className="flex items-baseline space-x-2 mt-1">
                       <span className="text-xl font-semibold text-gray-900">₹{item?.product?.salePrice}</span>
-                      <span className="text-sm text-gray-500 line-through">₹{item?.product?.salePrice}</span>
-                      <span className="text-sm text-green-600">{item?.product?.salePrice}% Off</span>
+                      {/* <span className="text-sm text-gray-500 line-through">₹{item?.product?.salePrice}</span>
+                      <span className="text-sm text-green-600">{item?.product?.salePrice}% Off</span> */}
                     </div>
                   </div>
                 </div>

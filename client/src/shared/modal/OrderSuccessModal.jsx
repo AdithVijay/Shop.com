@@ -47,7 +47,7 @@ export default function OrderSuccessModal({ isOpen, onClose, orderDetails }) {
             </div>
           </div>
           <div className="text-center text-green-600 mt-6">
-            Arriving By {orderDetails.expectedDelivery}
+            {/* Arriving By {orderDetails.expectedDelivery} */}
           </div>
         </div>
         <div className="flex flex-col sm:flex-row gap-4 p-6 bg-gray-50 rounded-b-lg">

@@ -8,6 +8,8 @@ const submitCheckout = async (req, res) => {
   const { user, subtotal, payment_method, cartdata, shipping_address,coupon_discount,total_price_with_discount,
     order_status,payment_status} =
     req.body;
+    console.log(cartdata)
+    
     console.log("================Ithane paymnet", order_status,payment_status)
       
     let wallet = await Wallet.findOne({userId:user})
@@ -86,7 +88,8 @@ const submitCheckout = async (req, res) => {
       {
         $inc: {
           [`sizes.${selectedSize}`]: -quantity, // Reduce size-specific stock
-          totalStock: -quantity,                 // Reduce total stock
+          totalStock: -quantity,         // Reduce total stock
+          units_sold:+quantity
          },
       }
     );

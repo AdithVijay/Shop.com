@@ -64,6 +64,10 @@ const productSchema = new Schema({
   OfferIsActive:{
     type:Boolean,
     default:false
+  },
+  units_sold:{
+    type:Number,
+    default:0
   }
 });
 const ProductData = mongoose.model('Product', productSchema);

@@ -10,7 +10,7 @@ const orderController = require("../controller/user/orderController")
 const wishListController = require("../controller/user/wishListController")
 const couponController = require('../controller/user/couponController')
 const walletController = require("../controller/user/walletController")
-
+const sizeExist = require("../middleware/sizeExist")
 
 //=================USERLOGIN AND SIGNUP=============
 userRoute.post("/create",userController.signup );
@@ -49,7 +49,7 @@ userRoute.post("/check-cart-item-size",verifyAdmin,cartController.checkSizeInCar
 
 //=============================CHECKOUT/ORDER==============================
 //user address fetched using the route @line 21 addressController.fetchUserAddresses
-userRoute.post("/checkout",verifyAdmin, orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
+userRoute.post("/checkout",verifyAdmin,sizeExist.checkSizeInCartExists, orderController.submitCheckout)//WHWN USER PRESS PLACEORDER /SUBMIT DATA TO ORDER DB
 userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE DETAILS OF ORDER IN ORDER.JSX
 userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
 userRoute.post("/change-payment-status",verifyAdmin,orderController.changePaymentStatus)//WHEN USER PRESS PAY BUTTON IN VIEWORDER.JSX

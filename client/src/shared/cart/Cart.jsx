@@ -56,7 +56,13 @@ export default function Cart() {
     const product = productDetails.find((x)=>x.productId._id==productId)
     console.log(product);
     const availableStock = product.productId.sizes[selectedSize]
-    console.log(availableStock);
+    console.log(availableStock); 
+    if(qty==availableStock ){
+      return toast.error(`Only ${qty} Stock left`)
+    }
+    if(qty==5 ){
+      return toast.error(`Only 5 Products could be buyed at a time `)
+    }
     if (qty < 5 && qty<availableStock ) {
       try {
         const response = await axiosInstance.post("user/incrementproduct", {
@@ -74,6 +80,9 @@ export default function Cart() {
 
 //=====================DECREASE THE COUNT===================
   async function minus(productId, selectedSize, qty) {
+    if(qty == 1){
+      return toast.error("Minimum One quantity Should be left")
+    }
     if (qty > 1) {
       try {
         console.log("minus calll.......");
@@ -188,20 +197,7 @@ export default function Cart() {
               </div>
               <div className="flex flex-col items-center sm:items-start">
                 <div className="flex items-center space-x-2 justify-center">
-                  <button
-                    onClick={() =>
-                      plus(
-                        product.productId._id,
-                        product.selectedSize,
-                        product.quantity
-                      )
-                    }
-                    className="border border-gray-300 rounded  text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100"
-                  >
-                    +
-                  </button>
-                  <p>{product.quantity}</p>
-                  <button
+                <button
                     onClick={() => {
                       console.log("minus button click..");
                       minus(
@@ -213,6 +209,19 @@ export default function Cart() {
                     className="border border-gray-300 rounded text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100"
                   >
                     -
+                  </button>
+                  <p>{product.quantity}</p>
+                  <button
+                    onClick={() =>
+                      plus(
+                        product.productId._id,
+                        product.selectedSize,
+                        product.quantity
+                      )
+                    }
+                    className="border border-gray-300 rounded  text-sm font-semibold w-8 h-8 flex items-center justify-center hover:bg-gray-100"
+                  >
+                    +
                   </button>
                 </div>
                 <p className="font-medium text-lg text-center pt-3">

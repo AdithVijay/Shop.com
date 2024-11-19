@@ -102,9 +102,7 @@ const OrderListing = () => {
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6 lg:p-8 border-b border-gray-200">
             <h2 className="text-2xl font-bold text-gray-800">Orders Management</h2>
-            <div className="text-sm text-gray-500">
-              <Link to="/dashboard" className="hover:underline">Dashboard</Link> &gt; <Link to={"/admin-orders"}>Order Management</Link>
-            </div>
+            
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -126,18 +124,17 @@ const OrderListing = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(order.placed_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">₹{order.total_amount}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled"}>
+                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled"||order.order_status === "Failed"}>
                         <option value="Pending">Pending</option>
                         <option value="Shipped">Shipped</option>
                         <option value="Delivered">Delivered</option>
                         <option value="Cancelled">Cancelled</option>
-                        <option value="Returned" disabled selected>Returned</option>
                       </select>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <button onClick={() => openModal(order._id)} className={`px-4 py-2 rounded text-sm ${order.order_status === "Cancelled"
-                         || order.order_status === "Delivered" ||order.order_status === "Returned"? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
-                          disabled={order.order_status === "Cancelled" || order.order_status === "Delivered" ||order.order_status === "Returned"}>Cancel</button>
+                         || order.order_status === "Delivered" ? "bg-gray-200 text-gray-500 cursor-not-allowed" : "bg-red-500 text-white hover:bg-red-600"}`}
+                          disabled={order.order_status === "Cancelled" || order.order_status === "Delivered" }>Cancel</button>
 
                       <button onClick={() => viewOrder(order._id)} className="text-blue-600 border border-blue-600 ml-3 px-2 py-1 rounded-md hover:bg-blue-50">View order</button>
                     </td>

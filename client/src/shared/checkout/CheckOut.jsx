@@ -82,7 +82,6 @@ const CheckOut = () => {
        }
 
        try {
-        // IF COUPOUN APPLIED THEN THIS FUNCTION 
           console.log("payment successs")
           
           const response =await axiosInstance.post("/user/checkout",{
@@ -112,7 +111,7 @@ const CheckOut = () => {
          
        } catch (error) {
         console.log(error);
-        toast.error(error.response?.data?.message)
+        toast.error(error.response.data.message)
         
        }
     }
@@ -163,9 +162,6 @@ const CheckOut = () => {
     setactualCoupounDiscount(null)
     setselectedCoupun("")
   }
-
-
-
 
   return (
     <div className="container mx-auto px-4 py-8">

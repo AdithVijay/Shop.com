@@ -163,16 +163,14 @@ const delteCartItem = async (req, res) => {
 
 // ====================TO CHECK WHETHER THE SIZE EXISTS OF THE PRODUCT IN CART==================
   const checkSizeInCartExists= async(req,res)=>{
-
     try {
       const {cartItems} = req.body
-    console.log(cartItems);
-    
+      console.log("====>CartItem",cartItems);
+      
     for(item of cartItems){
       const { productId, selectedSize, quantity } = item;
 
       const product = await ProductData.findById(productId);
-      console.log(product);
 
         const sizeStock = product.sizes[selectedSize]; 
 
@@ -186,13 +184,9 @@ const delteCartItem = async (req, res) => {
       }
     } catch (error) {
         console.log(error);
-    }
-    
-      
+    } 
   }
-
   
-
 
   module.exports = { addItemToCart,
     getCartItems,
