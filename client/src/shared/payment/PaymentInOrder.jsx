@@ -1,7 +1,7 @@
 import { toast } from 'sonner';
 import React, { useState } from 'react';
 
-function PaymentInOrder({user,amount,handlePlaceOrder,setPaymentFail,paymentfail}) {
+function PaymentInOrder({amount,handlePlaceOrder}) {
 
 
   const handleSubmit = () => {

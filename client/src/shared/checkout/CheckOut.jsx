@@ -112,7 +112,9 @@ const CheckOut = () => {
        } catch (error) {
         console.log(error);
         toast.error(error.response.data.message)
-        
+        if(error.status==403){
+          toast.error(error.response.data.message)
+        }
        }
     }
 

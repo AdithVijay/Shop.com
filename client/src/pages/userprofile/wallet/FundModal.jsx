@@ -21,6 +21,9 @@ export default function FundModal({user,reload}) {
         console.log("ithane responsess",response)        
     } catch (error) {
         console.log(error)
+        if(error.status==403){
+          toast.error(error.response.data.message)
+        }
     }
   }
 

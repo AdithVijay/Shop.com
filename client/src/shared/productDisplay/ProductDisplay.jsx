@@ -1,6 +1,6 @@
 import axiosInstance from '@/config/axiosInstance';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams ,Link} from 'react-router-dom';
 import { toast } from 'sonner';
 import { CiHeart } from "react-icons/ci";
@@ -39,6 +39,7 @@ const ProductDetail = () => {
   const[displayCart,setdisplayCart]=useState(false)
   const [selectedQuantity, setSelectedQuantity] = useState(0); 
   const userId =  useSelector(state=>state.user.users)
+  const dispatch = useDispatch()
   console.log("userid", userId);
   console.log("product id",id);
 
@@ -88,6 +89,9 @@ async function fetchProduct(){
         }
       } catch (error) {
         console.log(error)
+        if(error.status==403){
+          toast.error(error.response.data.message)
+        }
       }
     }
     console.log(size);
@@ -106,6 +110,9 @@ async function fetchProduct(){
         }
       } catch (error){
         console.log(error);
+        if(error.status==403){
+          toast.error(error.response.data.message)
+        }
       }
     }
 
@@ -118,6 +125,9 @@ async function fetchProduct(){
       setdisplayWishlist(true)
     } catch (error) {
       console.log(error)
+      if(error.status==403){
+        toast.error(error.response.data.message)
+      }
     }
     }
 // ======================================================================================================================================================================================================

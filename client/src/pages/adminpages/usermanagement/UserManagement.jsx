@@ -71,12 +71,12 @@ export default function UserManagement() {
         if (x._id === id) {
           return { ...x, isListed: false };  // Set to false when unlisting
         }
-        if(x?.isListed==false){
+
           console.log(x);
           console.log("hhh",x.isListed);
           dispatch(logoutUser())
-      }
-        return x;
+
+        return x
       }));  
  
     } catch (error) {

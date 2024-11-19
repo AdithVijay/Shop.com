@@ -8,7 +8,7 @@ const productController = require("../controller/admin/productController")
 const userController = require("../controller/admin/userController")
 const orderController = require("../controller/admin/orderController")
 const coupounController = require("../controller/admin/coupounController")
-
+const userBlock = require('../middleware/userBlock');
 
 //==================ADMIN LOGIN===========================
  adminRoute.post("/login", adminController.adminLogin);
@@ -56,7 +56,7 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
 
   //============LISTING ORDER IN THE ORDER LISTING PAGE========
   adminRoute.get("/retrieveorder",orderController.getOrderDetails)
-  adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct)
+  adminRoute.post("/cancelorder/:id",userBlock.checkUserStatus,verifyAdmin, orderController.cancelProduct)
   adminRoute.post("/return-order",verifyAdmin,orderController.returnOrderRequest)
   adminRoute.get("/retrieve-chart-data",orderController.getOrderDetailsInChart)
 

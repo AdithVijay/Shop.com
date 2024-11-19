@@ -54,6 +54,9 @@ const ViewOrder = () => {
     setShowConfirmation(false)
   } catch (error) {
     console.error("Error canceling product:", error);
+    if(error.status==403){
+      toast.error(error.response.data.message)
+    }
   }
 }
 //================FUNCTION TO CHANGE THE PAYMENT=============
@@ -68,14 +71,22 @@ const ViewOrder = () => {
 
   //==========================FUNCTION TO HANDLE ORDER RETURN=======================
   async function returnOrder(){
-    if(!returnReason){
-      return toast.error("chooses a reason for returning")
+    try {
+      if(!returnReason){
+        return toast.error("chooses a reason for returning")
+      }
+      const response = await axiosInstance.post("/user/return-order",{itemId,returnReason})
+      console.log(response);
+      toast.success("return request send")
+      reloadData()
+      setconfirmReturn(false)
+    } catch (error) {
+      console.log(error);
+      if(error.status==403){
+        toast.error(error.response.data.message)
+      }
     }
-    const response = await axiosInstance.post("/user/return-order",{itemId,returnReason})
-    console.log(response);
-    toast.success("return request send")
-    reloadData()
-    setconfirmReturn(false)
+   
   }
 
   //=====================WHEN YES PRESSED IN RETURN MODAL ORDER=============
