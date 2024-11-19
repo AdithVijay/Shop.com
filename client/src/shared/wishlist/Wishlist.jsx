@@ -5,6 +5,8 @@ import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
 import { toast } from "sonner"
+import CartEmpty from "../emptycart/CartEmpty"
+import EmptyWishlist from "../emptycart/EmptyWishlist"
 
 export default function Wishlist() {
 
@@ -24,12 +26,17 @@ export default function Wishlist() {
     fetchData()
   },[userId])
 
+  if (!wishlist || (Array.isArray(wishlist) && wishlist.length === 0)) {
+    return <EmptyWishlist />;
+  }
+  
+
   //================DATA FETCHING FOR WISHLIST==============
   async function fetchData(){
     try {
       const response  = await axiosInstance.get(`/user/get-wishlist-data/${userId}`)
       console.log(response)
-      setwishlist(response.data.items)
+      setwishlist(response?.data?.items)
     } catch (error) {
       console.log(error)
     }

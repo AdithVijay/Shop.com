@@ -4,6 +4,7 @@ import axiosInstance from "@/config/axiosInstance";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
 import { Construction } from "lucide-react";
+import CartEmpty from "../emptycart/CartEmpty";
 
 export default function Cart() {
   const [productDetails, setproductDetails] = useState(null);
@@ -47,7 +48,7 @@ export default function Cart() {
 
   //=====================IF SCREEN NOT LOADING===================
   if (productDetails?.length == 0) {
-    return <p>Cart is empty</p>;
+    return <CartEmpty/>;
   }
 
   //=====================INCREASE THE COUNT===================

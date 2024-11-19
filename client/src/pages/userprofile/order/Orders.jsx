@@ -12,7 +12,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  //================WHEN USER CLICKS ORDER IN USER PROFILE==============
+
 //=========================USEEFFECT======================
   useEffect(() => {
     fetchOrderData();
