@@ -126,7 +126,7 @@ const OrderListing = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{new Date(order.placed_at).toLocaleDateString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-gray-900">₹{order.total_amount}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center text-sm">
-                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled" ||order.order_status === "Returned"}>
+                      <select className="border rounded px-2 py-1 text-xs" value={order.order_status} onChange={(e) => updateOrderStatus(e, order._id)} disabled={order.order_status === "Cancelled"}>
                         <option value="Pending">Pending</option>
                         <option value="Shipped">Shipped</option>
                         <option value="Delivered">Delivered</option>
