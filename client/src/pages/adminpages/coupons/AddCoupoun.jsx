@@ -71,7 +71,7 @@ export default function AddCoupon() {
           <div className="p-8 lg:p-10">
             <h2 className="text-2xl font-medium text-gray-900 mb-6">Add New Coupon</h2>
             <div className="text-sm text-gray-500 mb-8">
-              <Link to="/coupon" className="hover:underline">Coupoun</Link> &gt; Add New Coupon
+              <Link to="/coupons" className="hover:underline">Coupoun</Link> &gt; Add New Coupon
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">

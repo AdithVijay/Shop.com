@@ -22,9 +22,13 @@ export default function ChartDash() {
   const [selectedMonth, setSelectedMonth] = useState("All Months");
   const [orderDatas, setOrderData] = useState([]);
   const [salesData, setSalesData] = useState([]);
+  const [bestProduct, setBestProduct] = useState(null);
+  const [bestCategories, setBestCategories] = useState([]);
 
   useEffect(() => {
     fetchOrderData();
+    bestSellinProduct()
+    bestSellinCategory()
   }, []);
 
   useEffect(() => {
@@ -34,13 +38,26 @@ export default function ChartDash() {
   async function fetchOrderData() {
     try {
       const response = await axiosInstance.get(`admin/retrieve-chart-data`);
-      setOrderData(response.data.order); // Assuming the orders come under `response.data.order`
-      console.log(response);
-      
+      setOrderData(response.data.order); // Assuming the orders come under `response.data.order`      
     } catch (error) {
       console.log(error);
     }
   }
+
+  async function bestSellinProduct() {
+      const response  =await axiosInstance.get("/admin/best-selling-product")
+      console.log("THis isteresponse",response);
+      setBestProduct(response.data);
+  }
+  async function bestSellinCategory() {
+    const response  =await axiosInstance.get("/admin/best-selling-categories")
+    setBestCategories(response.data);
+}
+console.log(bestCategories);
+console.log(bestProduct);
+
+
+
 
   function processOrderData(orders) {
     // Initialize data structure for months
@@ -89,7 +106,17 @@ export default function ChartDash() {
     { sales: 0, customers: 0, orders: 0 }
   );
 
-
+  const pendingOrders = filteredData?.reduce((acc, curr) => {
+    return (
+      acc +
+      orderDatas.filter(
+        (order) =>
+          new Date(order.placed_at).getMonth() === months.indexOf(curr.month) - 1 &&
+          new Date(order.placed_at).getFullYear() === parseInt(selectedYear) &&
+          order.order_status?.toLowerCase() === "pending"
+      ).length
+    );
+  }, 0);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -134,9 +161,7 @@ export default function ChartDash() {
               <div>
                 <p className="text-sm text-gray-500">Pending Orders</p>
                 <p className="text-2xl font-bold">
-                {
-          orderDatas.filter((orderItem) => orderItem.order_status === "Pending").length
-        }
+                  {pendingOrders}
                 </p>
               </div>
               <Clock className="h-8 w-8 text-gray-400" />
@@ -194,26 +219,24 @@ export default function ChartDash() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className=" grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardContent className="p-6">
                   <div className="space-y-2">
-                    <h3 className="text-xl font-bold">Best selling Category</h3>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                    <h3 className="text-xl font-bold">Best selling Product</h3>
+                    {bestProduct?.map((x)=>
+                       <p className="text-sm text-muted-foreground ">{x.productName}</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
               <Card>
                 <CardContent className="p-6">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-bold">Best selling Category</h3>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
-                    <p className="text-sm text-muted-foreground ">CATEGory</p>
+                <div className="space-y-2">
+                    <h3 className="text-xl font-bold">Best selling Product</h3>
+                    {bestCategories?.map((x)=>
+                       <p className="text-sm text-muted-foreground ">{x. name}</p>
+                    )}
                   </div>
                 </CardContent>
               </Card>

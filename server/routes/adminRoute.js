@@ -68,4 +68,9 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
   adminRoute.get("/retrieve-sale-report",orderController.getSalesDetails)//TO GET THE SALES REPORT
   adminRoute.post("/get-date-based-sales",orderController.gethDataBasedOnDate)//TO GET SALES BASED ON DATE
 
+  //==================BEST SELLING PRODUCT CATEGORY=========
+
+  adminRoute.get('/best-selling-product',productController.getBestSellingProducts ); // Route to get best-selling product
+  adminRoute.get('/best-selling-categories',productController.getBestSellingCategories);
+
 module.exports = adminRoute;

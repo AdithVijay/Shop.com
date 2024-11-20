@@ -1,5 +1,6 @@
 const ProductData = require("../../models/productModel");
 const Category = require("../../models/category");
+const Order = require("../../models/order");
 
 // ===============================ADDING THE PRODUCT ==========================================
 const addProduct = async (req, res) => {
@@ -330,6 +331,67 @@ const removeProductOffer = async (req, res) => {
   }
 };
 
+//===========================BEST SELLING PRODUCT ===================
+const getBestSellingProducts = async (req, res) => {
+  try {
+    const bestSellingProducts = await ProductData.find()
+      .sort({ units_sold: -1 }) // Sort by units_sold in descending order
+      .limit(5); // Limit to top 5 products
+
+    if (!bestSellingProducts.length) {
+      return res.status(404).json({ message: 'No products found' });
+    }
+
+    res.status(200).json(bestSellingProducts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching best-selling products', error });
+  }
+};
+
+//===========================BEST SELLING  CATEGORY===================
+const getBestSellingCategories = async (req, res) => {
+  try {
+    const categorySales = await Order.aggregate([
+      { $unwind: '$order_items' }, // Unwind order items
+      {
+        $lookup: {
+          from: 'products', // Join with Product collection
+          localField: 'order_items.product',
+          foreignField: '_id',
+          as: 'productDetails',
+        },
+      },
+      { $unwind: '$productDetails' }, // Unwind product details
+      {
+        $lookup: {
+          from: 'categories', // Join with Category collection
+          localField: 'productDetails.category',
+          foreignField: '_id',
+          as: 'categoryDetails',
+        },
+      },
+      { $unwind: '$categoryDetails' }, // Unwind category details
+      {
+        $group: {
+          _id: '$categoryDetails._id', // Group by category ID
+          name: { $first: '$categoryDetails.category' }, // Get category name
+          totalQty: { $sum: '$order_items.qty' }, // Sum up the quantity sold
+        },
+      },
+      { $sort: { totalQty: -1 } }, // Sort by total quantity sold
+      { $limit: 5 }, // Limit to top 5 categories
+    ]);
+
+    if (!categorySales.length) {
+      return res.status(404).json({ message: 'No categories found' });
+    }
+
+    res.status(200).json(categorySales);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching best-selling categories', error });
+  }
+};
+
 module.exports = {
   addProduct,
   getCatgoryData,
@@ -341,4 +403,6 @@ module.exports = {
   gettingCategoryForCard,
   addProductOffer,
   removeProductOffer,
+  getBestSellingProducts,
+  getBestSellingCategories
 };
