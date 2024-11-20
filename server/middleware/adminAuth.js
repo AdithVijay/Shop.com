@@ -15,7 +15,7 @@ const verifyAdmin = async (req, res, next) => {
                 }
             } else {
                 req.admin = decoded.admin;
-                next();
+                next()
             }
         });
     } else {

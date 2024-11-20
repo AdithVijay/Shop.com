@@ -45,7 +45,7 @@ const Header = () => {
           </Link>
           {/* Navigation Links - Hidden on mobile */}
           <nav className="hidden md:flex items-center space-x-4">
-            <Link to={"/"} className="text-sm font-medium text-muted-foreground hover:text-primary">Home</Link>
+            <Link to={"/home"} className="text-sm font-medium text-muted-foreground hover:text-primary">Home</Link>
             <Link to={"/shop"} className="text-sm font-medium text-muted-foreground hover:text-primary">Shop</Link>
             <Link to={"/our-story"} className="text-sm font-medium text-muted-foreground hover:text-primary">Our Story</Link>
             <Link to={"/contact-us"} className="text-sm font-medium text-muted-foreground hover:text-primary">Contact Us</Link>
@@ -100,10 +100,10 @@ const Header = () => {
               </SheetTrigger>
               <SheetContent side="right">
                 <nav className="flex flex-col space-y-4">
-                  <a href="/" className="text-sm font-medium hover:text-primary">Home</a>
-                  <a href="/shop" className="text-sm font-medium hover:text-primary">Shop</a>
+                  <a to={"/"} className="text-sm font-medium hover:text-primary">Home</a>
+                  <Link to={"/shop"} className="text-sm font-medium hover:text-primary">Shop</Link>
                   <a href="/our-story" className="text-sm font-medium hover:text-primary">Our Story</a>
-                  <a href="/contact-us" className="text-sm font-medium hover:text-primary">Contact Us</a>
+                  <Link href="/contact-us" className="text-sm font-medium hover:text-primary">Contact Us</Link>
                   <button 
                     className="w-full bg-black text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out shadow-md hover:bg-gray-800 hover:shadow-lg hover:scale-105"
                   onClick={loginButton}

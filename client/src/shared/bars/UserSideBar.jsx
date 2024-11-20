@@ -43,6 +43,7 @@ const UserSideBar = () => {
     { name: 'My Orders', icon: <Package size={16} />, path: '/orders' },
     { name: 'My Wallet', icon: <Wallet size={16} />, path: '/wallet' },
     { name: 'Coupons', icon: <Ticket size={16} />, path: '/user-coupons' },
+    { name: 'Cart', icon: <Package size={16} />, path: '/addtocart' },
   ];
 
   return (

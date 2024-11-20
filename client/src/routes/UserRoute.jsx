@@ -16,10 +16,10 @@ import CheckOutPage from "@/pages/userpages/CheckOutPage";
 import ForgotPass from "@/pages/userpages/ForgotPass";
 import ResetPassword from "@/pages/userpages/ResetPassword";
 import Shop1 from "@/pages/userpages/Shop1";
-import NewFilter from "@/shared/bars/NewFilter";
 import ProtectOther from "@/protect/ProtectOther";
 import UserWishList from "@/pages/userpages/UserWishList";
 import PaymentComponent from "@/shared/payment/PaymentComponent";
+import ContactPage from "@/pages/userpages/ContactPage";
 
 
 const UserRoute = () => {
@@ -108,6 +108,15 @@ const UserRoute = () => {
           element={
             <ProtecHome>
                 <PaymentComponent/>
+            </ProtecHome>
+          }
+        ></Route>
+
+        <Route
+          path="/contact-us"
+          element={
+            <ProtecHome>
+                <ContactPage/>
             </ProtecHome>
           }
         ></Route>

@@ -56,7 +56,7 @@ adminRoute.post("/remove-product-offer",verifyAdmin,productController.removeProd
 
   //============LISTING ORDER IN THE ORDER LISTING PAGE========
   adminRoute.get("/retrieveorder",orderController.getOrderDetails)
-  adminRoute.post("/cancelorder/:id",userBlock.checkUserStatus,verifyAdmin, orderController.cancelProduct)
+  adminRoute.post("/cancelorder/:id",verifyAdmin, orderController.cancelProduct)
   adminRoute.post("/return-order",verifyAdmin,orderController.returnOrderRequest)
   adminRoute.get("/retrieve-chart-data",orderController.getOrderDetailsInChart)
 
