@@ -19,6 +19,7 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress}) {
         name: "STARTUP_PROJECTS",
         description: "for testing purpose",
         handler: function(response) { 
+          
           if (response.razorpay_payment_id) {
             toast.success('Payment successful!');
             handlePlaceOrder()
