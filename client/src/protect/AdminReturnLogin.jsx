@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom'
 const AdminReturnLogin = ({children}) => {
     const admin =  useSelector(state=>state.admin.admin)
     if(admin){
-        return <Navigate to = {"/category"}/>
+        return <Navigate to = {"/dashboard"}/>
     }
     return children
 }

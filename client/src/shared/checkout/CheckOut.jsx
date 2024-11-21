@@ -3,7 +3,7 @@ import { CreditCard, Truck, Wallet } from 'lucide-react';
 import { MdDelete } from "react-icons/md";
 import axiosInstance from '@/config/axiosInstance';
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import OrderSuccessModal from '../modal/OrderSuccessModal';
 import PaymentComponent from '../payment/PaymentComponent';
@@ -23,7 +23,7 @@ const CheckOut = () => {
   const [coupoundiscount,setcoupoundiscount] = useState();
   const [actualCoupounDiscount, setactualCoupounDiscount] = useState(null);
   const [paymentfail,setPaymentFail]=useState(false)
-  
+  const navigate = useNavigate()
 
   const [a, seta] = useState(null);
   const shipping = 'Free';
@@ -36,8 +36,7 @@ const CheckOut = () => {
         fetchCoupuns()
     },[relaod]);
 
-  
-
+ 
 //=======================FETCHING ADRESS======================
     async function fetchAdress(){
         try {
@@ -62,7 +61,6 @@ const CheckOut = () => {
             0
           );
           setSubtotal(calculatedSubtotal)
-          setrelaod(false)
         } catch (error) {
           console.log(error)
         }
@@ -77,8 +75,8 @@ const CheckOut = () => {
         return toast.error("choose an address")
        }
 
-       if(paymentfail){
-        console.log("paymenr trueeaaaaa");
+       if(subtotal==0){
+        return toast.error("No Products in the checkout")
        }
 
        try {
@@ -311,6 +309,7 @@ const CheckOut = () => {
            paymentfail={paymentfail}
            selectedAddress = {selectedAddress}
            cartdata={cartdata}
+           subtotal = {subtotal}
           />
           }
 

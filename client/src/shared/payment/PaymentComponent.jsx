@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/config/axiosInstance';
 
-function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata}) {
+function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata,subtotal}) {
 
   const [isfail, setisfail] = useState(false);
   
@@ -12,23 +12,26 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata}) {
     if(!selectedAddress){
       return toast.error("Select address")
     }
+    if(subtotal==0){
+      return toast.error("No Products in the checkout")
+     }
+
 
       try {
         const response = await axiosInstance.post("/user/size-check-in-payment",{cartdata})
         console.log(response);
       } catch (error) {
         console.log(error);
-        return toast.error(error.response.data.message)
+        return toast.error(error?.response?.data?.message)
       }
-
 
       var options = {
         key: "rzp_test_qCInnPOVC7vtPP", // Replace with your Razorpay key
         key_secret: "ebNDS0TwQxpjL3VyQGuzb4O6", // Replace with your Razorpay secret
         amount: amount * 100, // Convert amount to paise
         currency: "INR",
-        name: "STARTUP_PROJECTS",
-        description: "for testing purpose",
+        name: "SHOPCO",
+        // description: "for testing purpose",
 
         handler: function(response) { 
           if (response.razorpay_payment_id) {
@@ -54,7 +57,7 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata}) {
         },
 
       };
-      if(!isfail){
+
         try {
           const pay = new window.Razorpay(options);
           // Handle payment failures
@@ -75,12 +78,11 @@ function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata}) {
             });
           });
           pay.open();
-          setisfail(true)
         } catch (error) {
           toast.error('Failed to initialize payment. Please try again.');
           console.error('Razorpay initialization error:', error);
         }
-      }
+
   }
 
   return (

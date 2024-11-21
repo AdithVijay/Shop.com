@@ -45,15 +45,23 @@ const addItemToCart = async (req, res) => {
 const getCartItems = async(req,res)=>{
   try {
     const id = req.params.id
-    const cart = await Cart.findOne({userId:id}).populate({
-      path:'items.productId',
-      match:{isListed:true}
-    })
-    if(cart){
-      return res.status(200).json(cart)
-    }else{
-      return res.status(404).json({messagee:"Not Found"})
+    const cartdata = await Cart.findOne({ userId: id }).populate({
+      path: 'items.productId',
+      match: { isListed: true },
+    });
+
+    if (cartdata) {
+      // Filter out items with null productId
+      const filteredItems = cartdata.items.filter((item) => item.productId !== null);
+
+      // Update the cart object with filtered items
+      const cart = { ...cartdata.toObject(), items: filteredItems };
+
+      return res.status(200).json(cart);
+    } else {
+      return res.status(404).json({ message: "Not Found" });
     }
+
   } catch (error) {
     console.log(error);
   }

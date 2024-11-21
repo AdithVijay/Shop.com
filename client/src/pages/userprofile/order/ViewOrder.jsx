@@ -199,11 +199,13 @@ const ViewOrder = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2 sm:mb-0">Order Details</h1>
           </div>
 
-          <div className="flex justify-between items-center mb-6">
-            <p className="text-sm text-gray-500">Order# {orderData?._id} | Delivery By {new Date(orderData?.delivery_by).toDateString()} </p>
-            {/* Download invoice */}
-            <button onClick={handleDownloadPdf} className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
-          </div>
+            {orderData?.payment_status=="Failed"?"":
+              <div className="flex justify-between items-center mb-6">
+              <p className="text-sm text-gray-500">Order# {orderData?._id} | Delivery By {new Date(orderData?.delivery_by).toDateString()} </p>
+              {/* Download invoice */}
+              <button onClick={handleDownloadPdf} className="text-blue-600 hover:text-blue-800 font-medium">Download Invoice</button>
+            </div>
+            }
 
           <div className="grid gap-6 md:grid-cols-3">
             <div className="space-y-2">

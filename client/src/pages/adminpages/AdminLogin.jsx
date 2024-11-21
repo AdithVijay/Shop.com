@@ -15,12 +15,12 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting:", {  email, password }); 
+    console.log("Submitting cheyuanneeee:", {  email, password }); 
     try {
-      const response = await axiosInstance.post("/admin/login",{ email, password });
+      const response = await axiosInstance.post("/admin/login",{ email, password })
       console.log(response.data);
       dispatch(addAdmin(response))
-      navigate("/dashboard")
+
     } catch (error) {
       console.error("there is ",error);
       toast.error("You are not the admin")

@@ -26,7 +26,6 @@ const adminLogin = async (req, res) => {
               id: admin._id,
               email: admin.email,
             },
-         
           });
     } catch (error) {
         console.error("Login error:", error);

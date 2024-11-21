@@ -118,7 +118,7 @@ export default function Cart() {
         await new Promise((resolve) => setTimeout(resolve, 200));
         const response = await axiosInstance.get("/admin/getproducts");
         console.log(response.data.data, "Full Product Data");
-        setProducts(response.data.data);        
+        setProducts(response.data.data);      
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -127,9 +127,8 @@ export default function Cart() {
     const check =productDetails && productDetails.map((x)=>{
       return x
     })
-    console.log(check,"======>");
+    console.log(check,"======>")
     
-   
   //=================CHEKOUT================
   async function submitCheckOut(){
     try {
@@ -138,7 +137,9 @@ export default function Cart() {
       navigate("/checkout")
     } catch (error) {
       console.log(error);
-      toast.error(error.response.data.error)
+      if(error.status == 400){
+        toast.error(error.response.data.error)
+      }
     }
   }
 
@@ -154,7 +155,7 @@ export default function Cart() {
         {productDetails &&
           productDetails.map((product) => (
             <>
-            {product.productId.isListed?
+            {product?.productId?.isListed?
             <div
               key={product._id}
               className="flex flex-col sm:flex-row gap-6 mb-6 pb-6 border-b border-gray-200 text-center sm:text-left"
