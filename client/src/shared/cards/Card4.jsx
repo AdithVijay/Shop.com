@@ -37,6 +37,8 @@ export default function Card4() {
       console.error("Error fetching filtered products:", error);
     }
   };
+  console.log("This is the product data",productData);
+  
 
 // ================USEFFECT=================
   useEffect(() => {
@@ -124,7 +126,7 @@ export default function Card4() {
               <option value="Name-A-to-Z">Sort By: Name A to Z</option>
               <option value="Name-Z-to-A">Sort By: Name Z to A</option>
             </select>
-          </div>
+          </div>      
         </div>
       </div>
 

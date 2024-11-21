@@ -87,7 +87,7 @@ export default function Wishlist() {
   //====================DELETING THE PRODUCT IN THE WISHLIST================
     async function deleteItem(productId){
       const response = await axiosInstance.post("/user/delete-wishlist",{productId,userId})
-      setwishlist(response.data.items)
+      fetchData()
     }
 
    
@@ -102,8 +102,8 @@ export default function Wishlist() {
           <div key={item._id} className="flex flex-col transform transition-transform duration-200 hover:scale-105 ">
             <div className="relative aspect-[3/4] mb-4">
               <img
-                src={item?.productId?.images[0]}
-                alt={item.name}
+                src={item?.productId?.images?.[0] || "/placeholder-image.jpg"}
+                alt={item?.name}
                 layout="fill"
                 style={{ objectFit: "cover" }} 
                 className="rounded-lg"

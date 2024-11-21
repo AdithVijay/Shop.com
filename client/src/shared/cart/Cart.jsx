@@ -26,6 +26,8 @@ export default function Cart() {
     fetchTotalProductData();
     window.scrollTo(0, 0);
   }, [relaod]);
+  console.log("ithane sanam",productDetails);
+  
 
   //=================FETCHING THE PRODUCT TO DISPLAY IN CART PAGE =================
   async function fetchProduct() {
@@ -151,6 +153,8 @@ export default function Cart() {
 
         {productDetails &&
           productDetails.map((product) => (
+            <>
+            {product.productId.isListed?
             <div
               key={product._id}
               className="flex flex-col sm:flex-row gap-6 mb-6 pb-6 border-b border-gray-200 text-center sm:text-left"
@@ -229,6 +233,8 @@ export default function Cart() {
                 </p>
               </div>
             </div>
+            :""}
+            </>
           ))}
 
         {/*  */}

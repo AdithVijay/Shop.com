@@ -313,7 +313,7 @@ const ViewOrder = () => {
                     ? "bg-red-600 text-white hover:bg-red-700"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                  }`}
-                disabled={orderData?.order_status === "Cancelled"}  
+                disabled={orderData?.order_status === "Cancelled" || orderData?.order_status === "Shipped" || orderData?.order_status === "Delivered" }  
               >
                 {orderData?.order_status === "Pending" ? "Cancel" : "Cancel"}
             </button>

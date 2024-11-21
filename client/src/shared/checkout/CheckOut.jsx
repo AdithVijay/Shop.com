@@ -24,8 +24,6 @@ const CheckOut = () => {
   const [actualCoupounDiscount, setactualCoupounDiscount] = useState(null);
   const [paymentfail,setPaymentFail]=useState(false)
   
-  // console.log("thiissisivjgfjdsgfdsgjhfgjklds",paymentfail);
-  
 
   const [a, seta] = useState(null);
   const shipping = 'Free';
@@ -38,9 +36,7 @@ const CheckOut = () => {
         fetchCoupuns()
     },[relaod]);
 
-    useEffect(()=>{
-      submitCheckout
-    },[paymentfail])
+  
 
 //=======================FETCHING ADRESS======================
     async function fetchAdress(){
@@ -81,6 +77,10 @@ const CheckOut = () => {
         return toast.error("choose an address")
        }
 
+       if(paymentfail){
+        console.log("paymenr trueeaaaaa");
+       }
+
        try {
           console.log("payment successs")
           
@@ -107,7 +107,7 @@ const CheckOut = () => {
             amount: actualCoupounDiscount||subtotal,
             // expectedDelivery: "27 - September - 2024" 
           });
-      
+          setPaymentFail(true)
          
        } catch (error) {
         console.log(error);
@@ -157,6 +157,8 @@ const CheckOut = () => {
     }
   }
 
+  console.log("cartdat",cartdata);
+  
   
 //==========================FUNCTION TO REMOVE COUPOUN========================
   function handleDeleteCoupon(){
@@ -218,6 +220,8 @@ const CheckOut = () => {
         <div className="md:w-1/3">
           <h2 className="text-2xl font-bold mb-4">Order Summary</h2>
           {cartdata.map((product) => (
+            <>
+            {product?.productId?.isListed==true ?
             <div key={product._id} className="flex items-center mb-4">
               <img src={product.productId.images[0]} alt={product.name} className="w-16 h-18 object-cover mr-4" />
               <div>
@@ -226,7 +230,9 @@ const CheckOut = () => {
                 <p className='text-sm text-gray-600 mb-1'>SIZE : {product.selectedSize}</p>
                 <p className=' text-sm font-semibold'>₹{product.price}</p>
               </div>
-            </div>
+            </div> : ""
+            }
+            </>
           ))}
           <div className="border-t pt-4 mt-4">
             <div className="flex justify-between mb-2">
@@ -302,9 +308,9 @@ const CheckOut = () => {
            user={user}
            amount={actualCoupounDiscount || subtotal }
            handlePlaceOrder={submitCheckout}
-           setPaymentFail={setPaymentFail}
            paymentfail={paymentfail}
            selectedAddress = {selectedAddress}
+           cartdata={cartdata}
           />
           }
 

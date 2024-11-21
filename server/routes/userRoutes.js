@@ -55,6 +55,7 @@ userRoute.get("/retrieveorder/:id",orderController.getOrderDetails)//TO GET THE 
 userRoute.get("/vieworder/:id",verifyAdmin,orderController.viewOrderDetails)//WHEN USER PRESS ORDER BUTTON IN OREDR.JSX
 userRoute.post("/change-payment-status",verifyAdmin,orderController.changePaymentStatus)//WHEN USER PRESS PAY BUTTON IN VIEWORDER.JSX
 userRoute.post("/return-order",verifyAdmin,orderController.returnOrderRequest)
+userRoute.post("/size-check-in-payment",verifyAdmin,sizeExist.checkSizeInCheckoutPaymentExists)
 
 //=============================TO DISPLAY THE FILTERED PRODUCTS==============================
 userRoute.post('/getFilteredProducts', productController.getFilteredProducts);//TO FILTER THE PRODUCTS TO DISPLAY IN SHOP

@@ -45,8 +45,10 @@ const addItemToCart = async (req, res) => {
 const getCartItems = async(req,res)=>{
   try {
     const id = req.params.id
-    const cart = await Cart.findOne({userId:id}).populate('items.productId')
-
+    const cart = await Cart.findOne({userId:id}).populate({
+      path:'items.productId',
+      match:{isListed:true}
+    })
     if(cart){
       return res.status(200).json(cart)
     }else{
