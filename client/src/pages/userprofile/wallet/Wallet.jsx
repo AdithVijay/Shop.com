@@ -59,7 +59,8 @@ export default function Wallet() {
             <div className="p-4 sm:p-6 lg:p-8">
               <h3 className="text-2xl font-bold mb-6 text-gray-800">Recent Transactions</h3>
               
-              <div className="overflow-x-auto">
+              {/* Scrollable div with fixed height */}
+              <div className="overflow-y-auto max-h-80 w-full">
                 <table className="w-full">
                   <thead>
                     <tr className="text-left text-gray-600">
@@ -70,38 +71,39 @@ export default function Wallet() {
                     </tr>
                   </thead>
                   <tbody>
-                    {wallet && wallet?.transaction.map((transaction) => (
+                    {wallet?.transaction?.map((transaction) => (
                       <tr key={transaction._id} className="border-t">
                         <td className="py-4">
                           <div className="flex items-center gap-2">
-                          {transaction.transactionType === "credit" ? (
-                            <>
-                              <RefreshCw className="w-5 h-5 text-green-500" />
-                              <span className="text-gray-800">{transaction.transactionType}</span>
-                            </>
-                          ) : (
-                            <>
-                              <RefreshCw className="w-5 h-5 text-red-500 transform rotate-90" />
-                              <span className="text-gray-800">{transaction.transactionType}</span>
-                            </>
-                          )}
+                            {transaction.transactionType === "credit" ? (
+                              <>
+                                <RefreshCw className="w-5 h-5 text-green-500" />
+                                <span className="text-gray-800">{transaction.transactionType}</span>
+                              </>
+                            ) : (
+                              <>
+                                <RefreshCw className="w-5 h-5 text-red-500 transform rotate-90" />
+                                <span className="text-gray-800">{transaction.transactionType}</span>
+                              </>
+                            )}
                           </div>
                         </td>
-                        {transaction.transactionType=="credit"?
-                        <td className="py-4 text-green-600">
-                        +₹{transaction.amount}
-                      </td>:
-                      <td className="py-4 text-red-500">
-                      -₹{transaction.amount}
-                    </td>
-                        }
-                        
+                        <td
+                          className={`py-4 ${
+                            transaction.transactionType === "credit"
+                              ? "text-green-600"
+                              : "text-red-500"
+                          }`}
+                        >
+                          {transaction.transactionType === "credit" ? "+" : "-"}₹{transaction.amount}
+                        </td>
                         <td className="py-4 text-gray-600">
-                        {transaction.placed_at && new Date(transaction.placed_at).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric'
-                          })}
+                          {transaction.placed_at &&
+                            new Date(transaction.placed_at).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
                         </td>
                         <td className="py-4">
                           <span className="px-2 py-1 text-sm text-gray-600">

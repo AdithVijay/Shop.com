@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux'
 import { toast } from 'sonner'
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver'
 
 export default function SalesReport() {
   const user = useSelector((state)=>state.user.users)
@@ -120,6 +122,41 @@ export default function SalesReport() {
           doc.save(`Sales_Report_${reportType}.pdf`);
         };
 
+
+  //============FUNCTION TO DOWNLOAD THE SALES REPORT==========
+  const handleDownloadExcel = () => {
+    if (!orderData || orderData.length === 0) {
+      toast.error("No data available to export");
+      return;
+    }
+  
+    // Prepare data for Excel
+    const excelData = orderData.map((order) => ({
+      User: order.user?.name || "N/A",
+      Date: new Date(order.placed_at).toLocaleDateString(),
+      "Payment Method": order.payment_method,
+      Quantity: order.order_items.reduce((acc, item) => acc + item.qty, 0),
+      Amount: order.total_price_with_discount || order.total_amount,
+    }));
+  
+    // Add totals
+    excelData.push({});
+    excelData.push({ User: "Total", Amount: totalamout || 0 });
+    excelData.push({ User: "Total Discount", Amount: toatalDiscount || 0 });
+  
+    // Create a new workbook
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sales Report");
+  
+    // Convert to Blob and save
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(blob, `Sales_Report_${reportType}.xlsx`);
+  };
+  
+
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <Sidebar />
@@ -227,6 +264,12 @@ export default function SalesReport() {
                 className="px-4 py-2 bg-green-500 text-white rounded-md"
               >
                 Download as PDF
+              </button>
+              <button
+                onClick={handleDownloadExcel}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Download as CSV
               </button>
             </div>
           </div>
