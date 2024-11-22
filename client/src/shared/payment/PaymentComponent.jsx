@@ -1,20 +1,22 @@
 import { toast } from 'sonner';
 import React, { useEffect, useState } from 'react';
 import axiosInstance from '@/config/axiosInstance';
+import { useSelector } from 'react-redux';
 
 function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata,subtotal}) {
 
+  const user = useSelector((state)=>state.user.users)
+  console.log(user);
+  
   const handleSubmit =async () => {
 
     try {
-      const response = await axiosInstance.post("/user/size-check-in-payment",{cartdata})
+      const response = await axiosInstance.post("/user/size-check-in-payment",{cartdata,user})
       console.log("this is the resposnse" , response);
     } catch (error) {
       console.log(error);
       return toast.error(error?.response?.data?.message)
     }
-
-     console.log("fsdsf");
      
     if(!selectedAddress){
       return toast.error("Select address")

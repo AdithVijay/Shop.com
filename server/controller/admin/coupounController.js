@@ -35,7 +35,8 @@ const createCoupon = async (req, res) => {
 
 //===================TO GET COUPONS===================
 const getCoupons = async(req,res)=>{
-    const coupouns = await Coupon.find()
+    const coupouns = await Coupon.find().sort({
+      createdAt:-1})
     return res.json({coupouns})
 }
 

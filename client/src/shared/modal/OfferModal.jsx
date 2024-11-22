@@ -14,6 +14,10 @@ export default function OfferModal({handleReloadChangeForOffer,submitOffer,targe
   //==================== SUBMITING THE OFFER =================
   async function handleSubmit() {
     try {
+      if (offerData > 100) {
+        toast.error("Offer cannot be more than 100.");
+        return;
+      }
       submitOffer({offerData,targetId})
       handleReloadChangeForOffer()
       closeModal()

@@ -7,8 +7,18 @@ const applyCoupounOffer = async(req,res)=>{
 
         const couponData = await Coupon.findOne({code:selectedCoupun})// coupoun data from db
 
+        console.log("It copoun",couponData);
+        
+
         if (!couponData) {
             return res.status(404).json({ message: 'Coupon not found or inactive.' });
+        }
+
+        const currentDate = new Date();
+        const expirationDate = new Date(couponData.expirationDate);
+
+        if (!couponData.isActive || currentDate > expirationDate) {
+            return res.status(400).json({ message: 'Coupon has expired or is inactive.' });
         }
 
         if(subtotal < couponData.minPurchaseAmount){
