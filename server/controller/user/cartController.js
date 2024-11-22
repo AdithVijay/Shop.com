@@ -42,9 +42,9 @@ const addItemToCart = async (req, res) => {
   };
   
 // ==========================FETCHING DATA TO CART============================
-const getCartItems = async(req,res)=>{
+const getCartItems = async (req, res) => {
   try {
-    const id = req.params.id
+    const id = req.params.id;
     const cartdata = await Cart.findOne({ userId: id }).populate({
       path: 'items.productId',
       match: { isListed: true },
@@ -54,18 +54,33 @@ const getCartItems = async(req,res)=>{
       // Filter out items with null productId
       const filteredItems = cartdata.items.filter((item) => item.productId !== null);
 
-      // Update the cart object with filtered items
-      const cart = { ...cartdata.toObject(), items: filteredItems };
+      // Update totalItemPrice based on salePrice
+      const updatedItems = filteredItems.map((item) => {
+        const product = item.productId;
+
+        // Use salePrice directly
+        const price = product.salePrice;
+        const totalItemPrice = price * item.quantity; // Compute total price for the item
+
+        return {
+          ...item.toObject(),
+          price: price, // Format price to 2 decimal points
+          totalItemPrice: totalItemPrice, // Format totalItemPrice to 2 decimal points
+        };
+      });
+
+      // Update the cart object with filtered and updated items
+      const cart = { ...cartdata.toObject(), items: updatedItems };
 
       return res.status(200).json(cart);
     } else {
       return res.status(404).json({ message: "Not Found" });
     }
-
   } catch (error) {
     console.log(error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 // ==========================INCREMENTING PRODUCT COUNT============================
 const incrementProductCount = async(req,res)=>{

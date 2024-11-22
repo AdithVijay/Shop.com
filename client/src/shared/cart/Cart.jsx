@@ -33,8 +33,6 @@ export default function Cart() {
   async function fetchProduct() {
     try {
       const response = await axiosInstance.get(`/user/cartdata/${userId}`);
-      console.log("resposnsss",response)
-      console.log("response from the server", response.data.items);
       setproductDetails(response.data.items);
 
       const calculatedSubtotal = response.data.items.reduce(
@@ -56,15 +54,17 @@ export default function Cart() {
   //=====================INCREASE THE COUNT===================
   async function plus(productId, selectedSize, qty) {
     const product = productDetails.find((x)=>x.productId._id==productId)
-    console.log(product);
+    
     const availableStock = product.productId.sizes[selectedSize]
-    console.log(availableStock); 
+  
+
     if(qty==availableStock ){
       return toast.error(`Only ${qty} Stock left`)
     }
     if(qty==5 ){
       return toast.error(`Only 5 Products could be buyed at a time `)
     }
+
     if (qty < 5 && qty<availableStock ) {
       try {
         const response = await axiosInstance.post("user/incrementproduct", {
@@ -117,17 +117,14 @@ export default function Cart() {
       try {
         await new Promise((resolve) => setTimeout(resolve, 200));
         const response = await axiosInstance.get("/admin/getproducts");
-        console.log(response.data.data, "Full Product Data");
+        // console.log(response.data.data, "Full Product Data");
         setProducts(response.data.data);      
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     }
 
-    const check =productDetails && productDetails.map((x)=>{
-      return x
-    })
-    console.log(check,"======>")
+
     
   //=================CHEKOUT================
   async function submitCheckOut(){

@@ -25,6 +25,10 @@ const walletSchema = new mongoose.Schema({
                 type:String,
                 default:"completed"
             },
+            placed_at: {
+                type: Date,
+                default: Date.now,
+            },
         },
     ]
 },

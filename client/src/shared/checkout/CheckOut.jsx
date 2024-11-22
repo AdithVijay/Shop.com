@@ -298,20 +298,27 @@ const CheckOut = () => {
                 </div>
 
                    {/* PAYMENT SUBMISSION */}
-
-          {paymentMethod!= "RazorPay"?
-          <button onClick={()=>submitCheckout()} className="bg-black text-white px-4 py-2 w-full mt-4">Place Order</button>:
-          
-          <PaymentComponent
-           user={user}
-           amount={actualCoupounDiscount || subtotal }
-           handlePlaceOrder={submitCheckout}
-           paymentfail={paymentfail}
-           selectedAddress = {selectedAddress}
-           cartdata={cartdata}
-           subtotal = {subtotal}
-          />
-          }
+                  
+                   {subtotal > 0 && (
+                      paymentMethod !== "RazorPay" ? (
+                        <button 
+                          onClick={() => submitCheckout()} 
+                          className="bg-black text-white px-4 py-2 w-full mt-4"
+                        >
+                          Place Order
+                        </button>
+                      ) : (  
+                        <PaymentComponent
+                          user={user}
+                          amount={actualCoupounDiscount || subtotal}
+                          handlePlaceOrder={submitCheckout}
+                          paymentfail={paymentfail}
+                          selectedAddress={selectedAddress}
+                          cartdata={cartdata}
+                          subtotal={subtotal}
+                        />
+                      )
+                    )}
 
         </div>
       </div>

@@ -22,7 +22,7 @@ const addFundInWallet = async(req,res)=>{
         const {user,offerData} = req.body
         const userdata = User.findById({_id:user})
 
-        if (!userdata.isListed) {
+        if (userdata.isListed==false) {
             return res.status(403).json({ message: "Account is blocked. You cannot access this resource." });
           }
 

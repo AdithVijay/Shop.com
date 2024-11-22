@@ -97,8 +97,11 @@ export default function Wallet() {
                         }
                         
                         <td className="py-4 text-gray-600">
-                        {new Date(wallet.createdAt).toLocaleDateString()}
-
+                        {transaction.placed_at && new Date(transaction.placed_at).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric'
+                          })}
                         </td>
                         <td className="py-4">
                           <span className="px-2 py-1 text-sm text-gray-600">

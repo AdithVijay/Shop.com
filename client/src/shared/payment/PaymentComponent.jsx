@@ -4,27 +4,22 @@ import axiosInstance from '@/config/axiosInstance';
 
 function PaymentComponent({amount,handlePlaceOrder,selectedAddress,cartdata,subtotal}) {
 
-  const [isfail, setisfail] = useState(false);
-  
-
   const handleSubmit =async () => {
 
+    try {
+      const response = await axiosInstance.post("/user/size-check-in-payment",{cartdata})
+      console.log("this is the resposnse" , response);
+    } catch (error) {
+      console.log(error);
+      return toast.error(error?.response?.data?.message)
+    }
+
+     console.log("fsdsf");
+     
     if(!selectedAddress){
       return toast.error("Select address")
     }
-    if(subtotal==0){
-      return toast.error("No Products in the checkout")
-     }
-
-
-      try {
-        const response = await axiosInstance.post("/user/size-check-in-payment",{cartdata})
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-        return toast.error(error?.response?.data?.message)
-      }
-
+     
       var options = {
         key: "rzp_test_qCInnPOVC7vtPP", // Replace with your Razorpay key
         key_secret: "ebNDS0TwQxpjL3VyQGuzb4O6", // Replace with your Razorpay secret
