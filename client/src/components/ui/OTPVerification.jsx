@@ -43,10 +43,11 @@ export function OTPVerification({ isOpen, onClose, onVerify, email }) {
     setTimer(20);
     try {
       const response  = await axiosInstance.post("/user/resendotp",{email})
-      // toast.success(response.message)
+      toast.success("Otp send")
       console.log(response);
     } catch (error) {
       console.log(error);
+      // toast.error(error)
     }
   };
 

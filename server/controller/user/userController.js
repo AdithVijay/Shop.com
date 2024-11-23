@@ -114,12 +114,12 @@ const resendOtp = async (req,res)=>{
       console.log(email)
       const checkuser = await User.findOne({email})
 
-      if(checkuser){
-        return res.status(401).json({
-          success: false,
-          message: `User is Already Registered`,
-        });
-      }
+      // if(checkuser){
+      //   return res.status(401).json({
+      //     success: false,
+      //     message: `User is Already Registered`,
+      //   })
+      // }
       var otp = otpGenerator.generate(6, {
         upperCaseAlphabets: false,
         lowerCaseAlphabets: false,

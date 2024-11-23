@@ -36,8 +36,11 @@ const addFundInWallet = async(req,res)=>{
     }
 }
 
+
+
 module.exports={
     getWalletData,
-    addFundInWallet
+    addFundInWallet,
+    
 }
 

@@ -27,10 +27,10 @@ const ForgotPass = () => {
       const response = await axiosInstance.post("/user/password-forgot-otp",{ email });
       console.log("response from server", response.data)
       setIsOTPDialogOpen(true);
-      toast(response.data.message)
+      toast(response?.data?.message)
     } catch (error) {
-      toast.error(error.response.data.message);
-      console.log(error.response);
+      toast.error(error.response?.data?.message);
+      console.log("ithane errrorr",error.response)
     }
   };
 
@@ -46,8 +46,9 @@ const ForgotPass = () => {
     } catch (error) {
         console.log(error);
       console.log("Error da response:", error.response)
+      toast.error(error.response?.data?.message);
     }
-    setIsOTPDialogOpen(false)
+
   };
 
   return (
@@ -89,7 +90,7 @@ const ForgotPass = () => {
           </form>
           <OTPVerification
             isOpen={isOTPDialogOpen}
-            onClose={() => setIsOTPDialogOpen(false)}
+            // onClose={() => setIsOTPDialogOpen(false)}
             onVerify={handleOTPVerify}
             email={email} // Pass the email to the OTPVerification component
             />

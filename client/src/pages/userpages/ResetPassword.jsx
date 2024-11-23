@@ -15,11 +15,13 @@ const ResetPassword = () => {
   const [newPassword, setnewPassword] = useState("");
   const navigate = useNavigate()
   const {id} = useParams()
-  console.log(id);
 
 
 // ======================Login========================
   const handleSubmit = async (e) => {
+    if(password!==newPassword){
+      return toast.error("passwords dosent match")
+    }
     e.preventDefault();
     try {
       const response = await axiosInstance.post("/user/reset-password",{ id,password });

@@ -47,7 +47,6 @@ function PaymentInOrder({amount,handlePlaceOrder}) {
           toast.error(`Payment failed: ${error.description}`);
            let orderStatus = "Failed"
             let paymentstatus = "Failed"
-            handlePlaceOrder(orderStatus,paymentstatus)
           
           // You might want to log the full error details
           console.error('Payment failed:', {
@@ -71,9 +70,9 @@ function PaymentInOrder({amount,handlePlaceOrder}) {
       
       <button 
         onClick={handleSubmit} 
-        className="bg-black text-white px-8 py-2 font-medium uppercase tracking-wide rounded"
+        className=" bg-black mt-4 text-white px-5 py-1 text-sm uppercase tracking-wide rounded"
       >
-        Submit
+        Pay Now
       </button>
     </div>
   );
