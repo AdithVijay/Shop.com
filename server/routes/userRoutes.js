@@ -73,4 +73,5 @@ userRoute.get("/get-wallet-data/:id",walletController.getWalletData)
 userRoute.post("/add-wallet-fund",walletController.addFundInWallet)
 
 
+
 module.exports = userRoute;

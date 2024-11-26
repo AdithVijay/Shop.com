@@ -79,14 +79,14 @@ const UserSignup = () => {
     // console.log("Submitting at front end :", { name, email, password, phonenumber }); 
     try {
       const response = await axiosInstance.post("/user/otp",{ email });
-      console.log(response.data);
-      console.log(response.message)
+      console.log(response?.data);
+      console.log(response?.message)
        setIsOTPDialogOpen(true);
        toast.success("...enter the otp sent")
     } catch (error) {
-       toast.error(error.response.data.message);
-        console.error("Error da response:", error.response);
-         console.log("Message:", error.response.data.message); // Access the error message
+       toast.error(error?.response?.data.message);
+        console.error("Error da response:", error?.response);
+         console.log("Message:", error?.response?.data.message); // Access the error message
     }
   };
 
