@@ -4,7 +4,7 @@ import UserSideBar from "@/shared/bars/UserSideBar";
 import { Button } from "@/components/ui/button";
 import axiosInstance from "@/config/axiosInstance";
 import { RefreshCw } from "lucide-react";
-import FundModal from "./fundModal";
+import FundModal from "./FundModal";
 
 
 export default function Wallet() {
