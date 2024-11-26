@@ -32,19 +32,10 @@ const addToWishlist = async(req,res)=>{
 
 //====================GETTING DATA TO DISPLAY IN WISHLIST===================
 const gettingWishlistData = async(req,res)=>{
-    try {
-        const {id} = req.params
-        console.log("===>",id)
-        const wishlist = await Wishlist.findOne({user:id}).populate(["items.productId"])
-        console.log(wishlist);
-        if(!wishlist){
-            return res.json({message:"No wihslist"})
-        }else{
-            return res.json(wishlist)
-        }
-    } catch (error) {
-        console.log(error);
-    }
+    const {id} = req.params
+    console.log(id)
+    const wishlist = await Wishlist.findOne({user:id}).populate(["items.productId"])
+    return res.json(wishlist)
 }
 
 //=====================TO DELTE THE DATA IN WISHLIST====================

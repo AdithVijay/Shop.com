@@ -1,5 +1,5 @@
 const Admin = require("../../models/adminModel")
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const genarateAccesTocken = require('../../utils/genarateAccesTocken');
 const genarateRefreshTocken = require('../../utils/genarateRefreshTocken');
 

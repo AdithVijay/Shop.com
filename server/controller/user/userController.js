@@ -2,7 +2,7 @@ const OTP = require("../../models/otp")
 const User = require("../../models/usersModel")
 const otpGenerator = require("otp-generator");
 const { OAuth2Client } = require('google-auth-library');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const genarateAccesTocken = require('../../utils/genarateAccesTocken');
 const genarateRefreshTocken = require('../../utils/genarateRefreshTocken');
@@ -54,10 +54,11 @@ const signup = async(req,res)=>{
             console.log(res.json);
             return res.status(200).json({ message: "User is registered", user });
     }catch(err){
-        console.log(err.message);
+        console.log("Err is msg:",err.message);
+
         return res.status(500).json({
           success: false,
-          message : "User registration failed"
+          message : err.message
       })
     }
 }

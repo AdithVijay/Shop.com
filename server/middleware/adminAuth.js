@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 
 
 const verifyAdmin = async (req, res, next) => {
+    console.log(req.cookies);
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
 

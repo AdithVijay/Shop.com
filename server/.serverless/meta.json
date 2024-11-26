@@ -1,0 +1,850 @@
+{
+  "/Users/arjuns/Downloads/Shop.com-main/server": {
+    "versionSfCore": null,
+    "versionFramework": "4.4.12",
+    "isWithinCompose": false,
+    "isCompose": false,
+    "composeOrgName": null,
+    "composeResolverProviders": {
+      "default-aws-credential-resolver": "<REDACTED>",
+      "sls": {
+        "instance": {
+          "credentials": "<REDACTED>",
+          "serviceConfigFile": {
+            "org": "arjun112",
+            "app": "shop",
+            "service": "shpo",
+            "provider": {
+              "name": "aws",
+              "runtime": "nodejs20.x",
+              "environment": {
+                "MONGO_URI": "mongodb+srv://arjun:Arjun777@cluster0.dflo2ii.mongodb.net/Shopcom?retryWrites=true&w=majority&appName=Cluster0",
+                "PORT": "3002",
+                "VITE_API_BASE_URL": "https://shop-com-wekt.vercel.app/",
+                "MAIL_HOST": "smtp.gmail.com",
+                "MAIL_USER": "athulkp22321@gmail.com",
+                "MAIL_PASS": "athul@123",
+                "ACCESS_TOKEN_SECRET": "<REDACTED>",
+                "REFRESH_TOKEN_SECRET": "<REDACTED>"
+              },
+              "stage": "dev",
+              "region": "us-east-1",
+              "versionFunctions": true,
+              "compiledCloudFormationTemplate": {
+                "AWSTemplateFormatVersion": "2010-09-09",
+                "Description": "The AWS CloudFormation template for this Serverless application",
+                "Resources": {
+                  "AppLogGroup": {
+                    "Type": "AWS::Logs::LogGroup",
+                    "Properties": {
+                      "LogGroupName": "/aws/lambda/shpo-dev-app"
+                    }
+                  },
+                  "IamRoleLambdaExecution": {
+                    "Type": "AWS::IAM::Role",
+                    "Properties": {
+                      "AssumeRolePolicyDocument": {
+                        "Version": "2012-10-17",
+                        "Statement": [
+                          {
+                            "Effect": "Allow",
+                            "Principal": {
+                              "Service": [
+                                "lambda.amazonaws.com"
+                              ]
+                            },
+                            "Action": [
+                              "sts:AssumeRole"
+                            ]
+                          }
+                        ]
+                      },
+                      "Policies": [
+                        {
+                          "PolicyName": {
+                            "Fn::Join": [
+                              "-",
+                              [
+                                "shpo",
+                                "dev",
+                                "lambda"
+                              ]
+                            ]
+                          },
+                          "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:CreateLogStream",
+                                  "logs:CreateLogGroup",
+                                  "logs:TagResource"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/shpo-dev*:*"
+                                  }
+                                ]
+                              },
+                              {
+                                "Effect": "Allow",
+                                "Action": [
+                                  "logs:PutLogEvents"
+                                ],
+                                "Resource": [
+                                  {
+                                    "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/shpo-dev*:*:*"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "Path": "/",
+                      "RoleName": {
+                        "Fn::Join": [
+                          "-",
+                          [
+                            "shpo",
+                            "dev",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            "lambdaRole"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "AppLambdaFunction": {
+                    "Type": "AWS::Lambda::Function",
+                    "Properties": {
+                      "Code": {
+                        "S3Bucket": "serverless-framework-deployments-us-east-1-3649e993-1fc9",
+                        "S3Key": "serverless/shpo/dev/1732644076010-2024-11-26T18:01:16.010Z/shpo.zip"
+                      },
+                      "Handler": "/Users/arjuns/Downloads/Shop.com-main/server/server.js/server.handler",
+                      "Runtime": "nodejs20.x",
+                      "FunctionName": "shpo-dev-app",
+                      "MemorySize": 1024,
+                      "Timeout": 6,
+                      "Environment": {
+                        "Variables": {
+                          "MONGO_URI": "mongodb+srv://arjun:Arjun777@cluster0.dflo2ii.mongodb.net/Shopcom?retryWrites=true&w=majority&appName=Cluster0",
+                          "PORT": "3002",
+                          "VITE_API_BASE_URL": "https://shop-com-wekt.vercel.app/",
+                          "MAIL_HOST": "smtp.gmail.com",
+                          "MAIL_USER": "athulkp22321@gmail.com",
+                          "MAIL_PASS": "athul@123",
+                          "ACCESS_TOKEN_SECRET": "<REDACTED>",
+                          "REFRESH_TOKEN_SECRET": "<REDACTED>"
+                        }
+                      },
+                      "Role": {
+                        "Fn::GetAtt": [
+                          "IamRoleLambdaExecution",
+                          "Arn"
+                        ]
+                      }
+                    },
+                    "DependsOn": [
+                      "AppLogGroup"
+                    ]
+                  },
+                  "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0": {
+                    "Type": "AWS::Lambda::Version",
+                    "DeletionPolicy": "Retain",
+                    "Properties": {
+                      "FunctionName": {
+                        "Ref": "AppLambdaFunction"
+                      },
+                      "CodeSha256": "VA5jipqIxPaZmRUb80KFeJxpapi8jXX0SqMtRgkgqiA="
+                    }
+                  },
+                  "HttpApi": {
+                    "Type": "AWS::ApiGatewayV2::Api",
+                    "Properties": {
+                      "Name": "dev-shpo",
+                      "ProtocolType": "HTTP"
+                    }
+                  },
+                  "HttpApiStage": {
+                    "Type": "AWS::ApiGatewayV2::Stage",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "StageName": "$default",
+                      "AutoDeploy": true,
+                      "DefaultRouteSettings": {
+                        "DetailedMetricsEnabled": false
+                      }
+                    }
+                  },
+                  "AppLambdaPermissionHttpApi": {
+                    "Type": "AWS::Lambda::Permission",
+                    "Properties": {
+                      "FunctionName": {
+                        "Fn::GetAtt": [
+                          "AppLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "Action": "lambda:InvokeFunction",
+                      "Principal": "apigateway.amazonaws.com",
+                      "SourceArn": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            "arn:",
+                            {
+                              "Ref": "AWS::Partition"
+                            },
+                            ":execute-api:",
+                            {
+                              "Ref": "AWS::Region"
+                            },
+                            ":",
+                            {
+                              "Ref": "AWS::AccountId"
+                            },
+                            ":",
+                            {
+                              "Ref": "HttpApi"
+                            },
+                            "/*"
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  "HttpApiIntegrationApp": {
+                    "Type": "AWS::ApiGatewayV2::Integration",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "IntegrationType": "AWS_PROXY",
+                      "IntegrationUri": {
+                        "Fn::GetAtt": [
+                          "AppLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "PayloadFormatVersion": "2.0",
+                      "TimeoutInMillis": 30000
+                    }
+                  },
+                  "HttpApiRouteAny": {
+                    "Type": "AWS::ApiGatewayV2::Route",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "RouteKey": "ANY /",
+                      "Target": {
+                        "Fn::Join": [
+                          "/",
+                          [
+                            "integrations",
+                            {
+                              "Ref": "HttpApiIntegrationApp"
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "DependsOn": "HttpApiIntegrationApp"
+                  },
+                  "HttpApiRouteAnyProxyVar": {
+                    "Type": "AWS::ApiGatewayV2::Route",
+                    "Properties": {
+                      "ApiId": {
+                        "Ref": "HttpApi"
+                      },
+                      "RouteKey": "ANY /{proxy+}",
+                      "Target": {
+                        "Fn::Join": [
+                          "/",
+                          [
+                            "integrations",
+                            {
+                              "Ref": "HttpApiIntegrationApp"
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "DependsOn": "HttpApiIntegrationApp"
+                  }
+                },
+                "Outputs": {
+                  "ServerlessDeploymentBucketName": {
+                    "Value": "serverless-framework-deployments-us-east-1-3649e993-1fc9",
+                    "Export": {
+                      "Name": "sls-shpo-dev-ServerlessDeploymentBucketName"
+                    }
+                  },
+                  "AppLambdaFunctionQualifiedArn": {
+                    "Description": "Current Lambda function version",
+                    "Value": {
+                      "Ref": "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0"
+                    },
+                    "Export": {
+                      "Name": "sls-shpo-dev-AppLambdaFunctionQualifiedArn"
+                    }
+                  },
+                  "HttpApiId": {
+                    "Description": "Id of the HTTP API",
+                    "Value": {
+                      "Ref": "HttpApi"
+                    },
+                    "Export": {
+                      "Name": "sls-shpo-dev-HttpApiId"
+                    }
+                  },
+                  "HttpApiUrl": {
+                    "Description": "URL of the HTTP API",
+                    "Value": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "https://",
+                          {
+                            "Ref": "HttpApi"
+                          },
+                          ".execute-api.",
+                          {
+                            "Ref": "AWS::Region"
+                          },
+                          ".",
+                          {
+                            "Ref": "AWS::URLSuffix"
+                          }
+                        ]
+                      ]
+                    },
+                    "Export": {
+                      "Name": "sls-shpo-dev-HttpApiUrl"
+                    }
+                  }
+                }
+              },
+              "vpc": {}
+            },
+            "functions": {
+              "app": {
+                "handler": "/Users/arjuns/Downloads/Shop.com-main/server/server.js/server.handler",
+                "events": [
+                  {
+                    "httpApi": {
+                      "path": "/",
+                      "method": "ANY"
+                    },
+                    "resolvedMethod": "ANY",
+                    "resolvedPath": "/"
+                  },
+                  {
+                    "httpApi": {
+                      "path": "/{proxy+}",
+                      "method": "ANY"
+                    },
+                    "resolvedMethod": "ANY",
+                    "resolvedPath": "/{proxy+}"
+                  }
+                ],
+                "name": "shpo-dev-app",
+                "package": {},
+                "memory": 1024,
+                "timeout": 6,
+                "runtime": "nodejs20.x",
+                "vpc": {},
+                "versionLogicalId": "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0"
+              }
+            },
+            "plugins": [
+              "serverless-dotenv-plugin"
+            ],
+            "custom": {
+              "dotenv": {
+                "basePath": "../",
+                "include": [
+                  "MONGO_URI"
+                ]
+              }
+            }
+          },
+          "configFileDirPath": "/Users/arjuns/Downloads/Shop.com-main/server",
+          "config": {
+            "type": "sls"
+          },
+          "options": {},
+          "stage": "dev",
+          "dashboard": {
+            "aws": {
+              "accessKeyId": "<REDACTED>",
+              "secretAccessKey": "<REDACTED>",
+              "sessionToken": "<REDACTED>",
+              "$source": {
+                "CREDENTIALS_CODE": "<REDACTED>"
+              }
+            },
+            "params": null,
+            "accessKey": "<REDACTED>"
+          },
+          "logger": {
+            "namespace": "s:core:resolver:sls",
+            "prefix": null,
+            "prefixColor": null
+          },
+          "_credentialsPromise": "<REDACTED>"
+        },
+        "resolvers": {}
+      }
+    },
+    "composeServiceName": null,
+    "servicePath": "/Users/arjuns/Downloads/Shop.com-main/server",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "org": "arjun112",
+      "app": "shop",
+      "service": "shpo",
+      "provider": {
+        "name": "aws",
+        "runtime": "nodejs20.x",
+        "environment": {
+          "MONGO_URI": "mongodb+srv://arjun:Arjun777@cluster0.dflo2ii.mongodb.net/Shopcom?retryWrites=true&w=majority&appName=Cluster0",
+          "PORT": "3002",
+          "VITE_API_BASE_URL": "https://shop-com-wekt.vercel.app/",
+          "MAIL_HOST": "smtp.gmail.com",
+          "MAIL_USER": "athulkp22321@gmail.com",
+          "MAIL_PASS": "athul@123",
+          "ACCESS_TOKEN_SECRET": "<REDACTED>",
+          "REFRESH_TOKEN_SECRET": "<REDACTED>"
+        },
+        "stage": "dev",
+        "region": "us-east-1",
+        "versionFunctions": true,
+        "compiledCloudFormationTemplate": {
+          "AWSTemplateFormatVersion": "2010-09-09",
+          "Description": "The AWS CloudFormation template for this Serverless application",
+          "Resources": {
+            "AppLogGroup": {
+              "Type": "AWS::Logs::LogGroup",
+              "Properties": {
+                "LogGroupName": "/aws/lambda/shpo-dev-app"
+              }
+            },
+            "IamRoleLambdaExecution": {
+              "Type": "AWS::IAM::Role",
+              "Properties": {
+                "AssumeRolePolicyDocument": {
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Principal": {
+                        "Service": [
+                          "lambda.amazonaws.com"
+                        ]
+                      },
+                      "Action": [
+                        "sts:AssumeRole"
+                      ]
+                    }
+                  ]
+                },
+                "Policies": [
+                  {
+                    "PolicyName": {
+                      "Fn::Join": [
+                        "-",
+                        [
+                          "shpo",
+                          "dev",
+                          "lambda"
+                        ]
+                      ]
+                    },
+                    "PolicyDocument": {
+                      "Version": "2012-10-17",
+                      "Statement": [
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:CreateLogStream",
+                            "logs:CreateLogGroup",
+                            "logs:TagResource"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/shpo-dev*:*"
+                            }
+                          ]
+                        },
+                        {
+                          "Effect": "Allow",
+                          "Action": [
+                            "logs:PutLogEvents"
+                          ],
+                          "Resource": [
+                            {
+                              "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/shpo-dev*:*:*"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                ],
+                "Path": "/",
+                "RoleName": {
+                  "Fn::Join": [
+                    "-",
+                    [
+                      "shpo",
+                      "dev",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      "lambdaRole"
+                    ]
+                  ]
+                }
+              }
+            },
+            "AppLambdaFunction": {
+              "Type": "AWS::Lambda::Function",
+              "Properties": {
+                "Code": {
+                  "S3Bucket": "serverless-framework-deployments-us-east-1-3649e993-1fc9",
+                  "S3Key": "serverless/shpo/dev/1732644076010-2024-11-26T18:01:16.010Z/shpo.zip"
+                },
+                "Handler": "/Users/arjuns/Downloads/Shop.com-main/server/server.js/server.handler",
+                "Runtime": "nodejs20.x",
+                "FunctionName": "shpo-dev-app",
+                "MemorySize": 1024,
+                "Timeout": 6,
+                "Environment": {
+                  "Variables": {
+                    "MONGO_URI": "mongodb+srv://arjun:Arjun777@cluster0.dflo2ii.mongodb.net/Shopcom?retryWrites=true&w=majority&appName=Cluster0",
+                    "PORT": "3002",
+                    "VITE_API_BASE_URL": "https://shop-com-wekt.vercel.app/",
+                    "MAIL_HOST": "smtp.gmail.com",
+                    "MAIL_USER": "athulkp22321@gmail.com",
+                    "MAIL_PASS": "athul@123",
+                    "ACCESS_TOKEN_SECRET": "<REDACTED>",
+                    "REFRESH_TOKEN_SECRET": "<REDACTED>"
+                  }
+                },
+                "Role": {
+                  "Fn::GetAtt": [
+                    "IamRoleLambdaExecution",
+                    "Arn"
+                  ]
+                }
+              },
+              "DependsOn": [
+                "AppLogGroup"
+              ]
+            },
+            "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0": {
+              "Type": "AWS::Lambda::Version",
+              "DeletionPolicy": "Retain",
+              "Properties": {
+                "FunctionName": {
+                  "Ref": "AppLambdaFunction"
+                },
+                "CodeSha256": "VA5jipqIxPaZmRUb80KFeJxpapi8jXX0SqMtRgkgqiA="
+              }
+            },
+            "HttpApi": {
+              "Type": "AWS::ApiGatewayV2::Api",
+              "Properties": {
+                "Name": "dev-shpo",
+                "ProtocolType": "HTTP"
+              }
+            },
+            "HttpApiStage": {
+              "Type": "AWS::ApiGatewayV2::Stage",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "StageName": "$default",
+                "AutoDeploy": true,
+                "DefaultRouteSettings": {
+                  "DetailedMetricsEnabled": false
+                }
+              }
+            },
+            "AppLambdaPermissionHttpApi": {
+              "Type": "AWS::Lambda::Permission",
+              "Properties": {
+                "FunctionName": {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "Action": "lambda:InvokeFunction",
+                "Principal": "apigateway.amazonaws.com",
+                "SourceArn": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:",
+                      {
+                        "Ref": "AWS::Partition"
+                      },
+                      ":execute-api:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":",
+                      {
+                        "Ref": "HttpApi"
+                      },
+                      "/*"
+                    ]
+                  ]
+                }
+              }
+            },
+            "HttpApiIntegrationApp": {
+              "Type": "AWS::ApiGatewayV2::Integration",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "IntegrationType": "AWS_PROXY",
+                "IntegrationUri": {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "PayloadFormatVersion": "2.0",
+                "TimeoutInMillis": 30000
+              }
+            },
+            "HttpApiRouteAny": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "ANY /",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationApp"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationApp"
+            },
+            "HttpApiRouteAnyProxyVar": {
+              "Type": "AWS::ApiGatewayV2::Route",
+              "Properties": {
+                "ApiId": {
+                  "Ref": "HttpApi"
+                },
+                "RouteKey": "ANY /{proxy+}",
+                "Target": {
+                  "Fn::Join": [
+                    "/",
+                    [
+                      "integrations",
+                      {
+                        "Ref": "HttpApiIntegrationApp"
+                      }
+                    ]
+                  ]
+                }
+              },
+              "DependsOn": "HttpApiIntegrationApp"
+            }
+          },
+          "Outputs": {
+            "ServerlessDeploymentBucketName": {
+              "Value": "serverless-framework-deployments-us-east-1-3649e993-1fc9",
+              "Export": {
+                "Name": "sls-shpo-dev-ServerlessDeploymentBucketName"
+              }
+            },
+            "AppLambdaFunctionQualifiedArn": {
+              "Description": "Current Lambda function version",
+              "Value": {
+                "Ref": "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0"
+              },
+              "Export": {
+                "Name": "sls-shpo-dev-AppLambdaFunctionQualifiedArn"
+              }
+            },
+            "HttpApiId": {
+              "Description": "Id of the HTTP API",
+              "Value": {
+                "Ref": "HttpApi"
+              },
+              "Export": {
+                "Name": "sls-shpo-dev-HttpApiId"
+              }
+            },
+            "HttpApiUrl": {
+              "Description": "URL of the HTTP API",
+              "Value": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "https://",
+                    {
+                      "Ref": "HttpApi"
+                    },
+                    ".execute-api.",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ".",
+                    {
+                      "Ref": "AWS::URLSuffix"
+                    }
+                  ]
+                ]
+              },
+              "Export": {
+                "Name": "sls-shpo-dev-HttpApiUrl"
+              }
+            }
+          }
+        },
+        "vpc": {}
+      },
+      "functions": {
+        "app": {
+          "handler": "/Users/arjuns/Downloads/Shop.com-main/server/server.js/server.handler",
+          "events": [
+            {
+              "httpApi": {
+                "path": "/",
+                "method": "ANY"
+              },
+              "resolvedMethod": "ANY",
+              "resolvedPath": "/"
+            },
+            {
+              "httpApi": {
+                "path": "/{proxy+}",
+                "method": "ANY"
+              },
+              "resolvedMethod": "ANY",
+              "resolvedPath": "/{proxy+}"
+            }
+          ],
+          "name": "shpo-dev-app",
+          "package": {},
+          "memory": 1024,
+          "timeout": 6,
+          "runtime": "nodejs20.x",
+          "vpc": {},
+          "versionLogicalId": "AppLambdaVersionyQqUmXKCQrXfkFwNzKZtHKryk0edBOLlNSqUtE5Wr0"
+        }
+      },
+      "plugins": [
+        "serverless-dotenv-plugin"
+      ],
+      "custom": {
+        "dotenv": {
+          "basePath": "../",
+          "include": [
+            "MONGO_URI"
+          ]
+        }
+      }
+    },
+    "serviceRawFile": "# \"org\" ensures this Service is used with the correct Serverless Framework Access Key.\norg: arjun112\n# \"app\" enables Serverless Framework Dashboard features and sharing them with other Services.\napp: shop\n# \"service\" is the name of this project. This will also be added to your AWS resource names.\nservice: shpo\n\nprovider:\n  name: aws\n  runtime: nodejs20.x\n  environment:\n    MONGO_URI: 'mongodb+srv://arjun:Arjun777@cluster0.dflo2ii.mongodb.net/Shopcom?retryWrites=true&w=majority&appName=Cluster0'\n    PORT: 3002\n    VITE_API_BASE_URL: 'https://shop-com-wekt.vercel.app/'\n    MAIL_HOST: 'smtp.gmail.com'\n    MAIL_USER: 'athulkp22321@gmail.com'\n    MAIL_PASS: 'athul@123'\n    ACCESS_TOKEN_SECRET: '9e665e03f0bf768fdf82277e91bac380274b738707701c6c2ad8b2fd4851273941171578a4512b29e649e4daabaaa801989cb30b0980f1ab3079c46b65f44537'\n    REFRESH_TOKEN_SECRET: '1a541bcb39bf6fef8d8a339c51bca77fbe9a253981710564f955375044a1b8a12e1bce1140722ff24e2818cc195d52c734f098cab80fef9cf2b704faba77b319'\n\nfunctions:\n  app:\n    handler: /Users/arjuns/Downloads/Shop.com-main/server/server.js/server.handler\n    events:\n      - httpApi:\n          path: /\n          method: ANY\n      - httpApi:\n          path: /{proxy+}\n          method: ANY\n\nplugins:\n  - serverless-dotenv-plugin\n\ncustom:\n  dotenv:\n    basePath: ../\n    include:\n      - MONGO_URI\n",
+    "command": [
+      "deploy"
+    ],
+    "options": {},
+    "error": null,
+    "params": {},
+    "machineId": "424001af4105f5afe9da55a14d231df2",
+    "stage": "dev",
+    "accessKeyV2": "<REDACTED>",
+    "accessKeyV1": "<REDACTED>",
+    "orgId": "ec39f938-8fc9-4c6b-b628-21c94e42e50c",
+    "orgName": "arjun112",
+    "userId": "kzJ1Z6sCDVwcCFfCn2",
+    "dashboard": {
+      "isEnabledForService": true,
+      "requiredAuthentication": false,
+      "orgFeaturesInUse": {
+        "providers": true,
+        "monitoring": false
+      },
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": "bN3HmKhJWsS3mYDhN4",
+      "serviceProvider": {
+        "accessKeyId": "<REDACTED>",
+        "secretAccessKey": "<REDACTED>",
+        "sessionToken": "<REDACTED>",
+        "$source": {
+          "CREDENTIALS_CODE": "<REDACTED>"
+        }
+      },
+      "instanceParameters": null
+    },
+    "userName": "arjun112",
+    "subscription": null,
+    "userEmail": "arjinsreekumaroo7@gmail.com",
+    "serviceProviderAwsRegion": "us-east-1",
+    "serviceProviderAwsCredentials": "<REDACTED>",
+    "serviceProviderAwsAccountId": "109181451123",
+    "projectType": "traditional",
+    "versionSf": "4.4.12",
+    "serviceProviderAwsCfStackName": "shpo-dev",
+    "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:us-east-1:109181451123:stack/shpo-dev/d76a6cb0-abae-11ef-8917-12178398f891",
+    "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:109181451123:stack/shpo-dev/d76a6cb0-abae-11ef-8917-12178398f891",
+    "serviceProviderAwsCfStackCreated": "2024-11-26T04:28:09.972Z",
+    "serviceProviderAwsCfStackUpdated": "2024-11-26T18:02:15.737Z",
+    "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
+    "serviceProviderAwsCfStackOutputs": [
+      {
+        "OutputKey": "AppLambdaFunctionQualifiedArn",
+        "OutputValue": "arn:aws:lambda:us-east-1:109181451123:function:shpo-dev-app:19",
+        "Description": "Current Lambda function version",
+        "ExportName": "sls-shpo-dev-AppLambdaFunctionQualifiedArn"
+      },
+      {
+        "OutputKey": "HttpApiId",
+        "OutputValue": "ef7c7iljl2",
+        "Description": "Id of the HTTP API",
+        "ExportName": "sls-shpo-dev-HttpApiId"
+      },
+      {
+        "OutputKey": "ServerlessDeploymentBucketName",
+        "OutputValue": "serverless-framework-deployments-us-east-1-3649e993-1fc9",
+        "ExportName": "sls-shpo-dev-ServerlessDeploymentBucketName"
+      },
+      {
+        "OutputKey": "HttpApiUrl",
+        "OutputValue": "https://ef7c7iljl2.execute-api.us-east-1.amazonaws.com",
+        "Description": "URL of the HTTP API",
+        "ExportName": "sls-shpo-dev-HttpApiUrl"
+      }
+    ]
+  }
+}
