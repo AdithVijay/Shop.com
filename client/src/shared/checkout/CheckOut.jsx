@@ -121,7 +121,7 @@ const CheckOut = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 200));
       const response = await axiosInstance.get("/admin/get-coupons");
-      // console.log(response, "Data reciving");
+      console.log(response, "Data Coupoun reciving");
       setcoupon(response.data.coupouns)
     } catch (error) {
       console.error("Error fetching products:", error);
@@ -149,7 +149,7 @@ const CheckOut = () => {
         console.log("coupoun db response",response)
         setactualCoupounDiscount(response.data.newSubtotal)//The price displayed as total 
         setcoupoundiscount(a)//The amount to be displayed in Coupoun discount
-        toast.success(response.data.message) 
+        toast(response.data.message) 
     } catch (error) {
       toast.error(error.response?.data?.message)
     }
