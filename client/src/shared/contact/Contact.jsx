@@ -30,7 +30,7 @@ export default function Contact() {
   }
 
   function btn(){
-    toast.success("message send")
+    toast("message send")
   }
 
   return (
