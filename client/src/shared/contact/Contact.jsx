@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail, Send } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { toast } from 'sonner'
 // import { toast } from "@/components/ui/use-toast"
 
 export default function Contact() {
@@ -26,6 +27,10 @@ export default function Contact() {
       description: "We'll get back to you as soon as possible.",
     })
     setFormData({ name: '', email: '', message: '' })
+  }
+
+  function btn(){
+    toast.success("message send")
   }
 
   return (
@@ -76,7 +81,7 @@ export default function Contact() {
               required
               className="min-h-[150px]"
             />
-            <Button type="submit" className="w-full">
+            <Button onclick={btn} type="submit" className="w-full">
               Send Message
               <Send className="ml-2 h-4 w-4" />
             </Button>
