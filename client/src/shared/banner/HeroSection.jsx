@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, ShoppingBag } from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import banner1 from "../../assets/banner1.webp"
+import banner1 from "../../assets/banner1.avif"
 import banner2 from "../../assets/banner2.webp"
 import banner4 from "../../assets/banner4.png"
 const HeroSection = () => {
