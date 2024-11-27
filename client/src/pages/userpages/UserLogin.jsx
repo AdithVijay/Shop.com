@@ -41,9 +41,9 @@ const UserLogin = () => {
       <div className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
         {/* Left Section - Form */}
         <div className="flex-1 flex flex-col justify-center p-6 sm:p-8 lg:p-12">
-          <div className="mb-2">
+          {/* <div className="mb-2">
             <img className="w-24" src={logo} alt="" />
-          </div>
+          </div> */}
 
           <h2 className="text-xl font-bold mb-2">Login</h2>
           <form onSubmit={handleSubmit}>

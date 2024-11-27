@@ -30,7 +30,7 @@ const Landing = () => {
       <Header/>
       <HeroSection/>
       <Card1 name={"Categories"} productData ={productData} />
-      <Card2/>
+      {/* <Card2/> */}
       <Card3 productData ={productData}  />
       <Footer/>
     </div>
