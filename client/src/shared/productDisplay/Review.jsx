@@ -17,7 +17,7 @@ const reviews = [
 export default function ProductReview() {
   const { id } = useParams();
 
-  const [activeTab, setActiveTab] = useState("reviews")
+  const [activeTab, setActiveTab] = useState("details")
   const [userRating, setUserRating] = useState(0)
   const [reviewContent, setReviewContent] = useState("")
   const [productData, setproductData] = useState([]);
