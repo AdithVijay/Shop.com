@@ -39,6 +39,7 @@ export default function AddCoupon() {
     e.preventDefault()
 
     if(discountValue>minPurchaseAmount ){
+      console.log("less");
       return toast.error("MinPurchaseAmount should be greater than discount value")
     }
 
