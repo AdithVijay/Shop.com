@@ -39,11 +39,11 @@ const DropdownMenu = () => {
       path: '/profile',
       action: () => navigate('/profile')
     },
-    { 
-      icon: <LogOut size={18} />, 
-      label: 'Logout',
-      action: handleLogout
-    }
+    // { 
+    //   icon: <LogOut size={18} />, 
+    //   label: 'Logout',
+    //   action: handleLogout
+    // }
   ];
 
   const handleMenuClick = (item) => {
