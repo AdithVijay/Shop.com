@@ -38,7 +38,13 @@ export default function AddCoupon() {
   const handleSubmit = async(e) => {
     e.preventDefault()
 
-    if(discountValue>minPurchaseAmount ){
+    console.log(discountValue);
+    console.log(minPurchaseAmount);
+    
+    let a = parseInt( discountValue)
+    let b = parseInt(minPurchaseAmount)
+    
+    if(a>b){
       console.log("less");
       return toast.error("MinPurchaseAmount should be greater than discount value")
     }
