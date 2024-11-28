@@ -38,14 +38,13 @@ export default function AddCoupon() {
   const handleSubmit = async(e) => {
     e.preventDefault()
 
-    console.log(discountValue);
-    console.log(minPurchaseAmount);
+
     
     let a = parseInt( discountValue)
     let b = parseInt(minPurchaseAmount)
     
     if(a>b){
-      console.log("less");
+
       return toast.error("MinPurchaseAmount should be greater than discount value")
     }
 
@@ -64,15 +63,15 @@ export default function AddCoupon() {
 
     
     
-    // try {
-    //     const response = await axiosInstance.post('/admin/create-coupon', formData)
-    //     console.log('Coupon added:', response.data)
-    //     toast(response.data.message)
-    //     navigate("/coupons")
-    //   } catch (error) {
-    //     console.error('Error adding coupon:', error)
-    //     toast(error.response.data.message)
-    //   }
+    try {
+        const response = await axiosInstance.post('/admin/create-coupon', formData)
+        console.log('Coupon added:', response.data)
+        toast(response.data.message)
+        navigate("/coupons")
+      } catch (error) {
+        console.error('Error adding coupon:', error)
+        toast(error.response.data.message)
+      }
 
   }
 
