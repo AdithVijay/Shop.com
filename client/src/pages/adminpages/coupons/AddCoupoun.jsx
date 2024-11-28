@@ -42,6 +42,12 @@ export default function AddCoupon() {
     
     let a = parseInt( discountValue)
     let b = parseInt(minPurchaseAmount)
+    let c = parseInt(perPersonLimit)
+    let d = parseInt(usageLimit)
+
+    if(d>c){
+      return toast.error("Usage Limit should be greater than Per Person limit")
+    }
     
     if(a>b){
 
