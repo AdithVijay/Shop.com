@@ -101,9 +101,9 @@ const HeroSection = () => {
                   {images[currentIndex].subtitle}
                 </h3>
                 <p className="text-2xl text-white mb-6">{images[currentIndex].offer}</p>
-                <Button size="lg" className="bg-white text-black hover:bg-gray-200">
-                 <Link to={"/shop"}> <ShoppingBag className="mr-2 h-5 w-5" /> SHOP NOW</Link>
-                </Button>
+                <Link to={"/shop"}> <Button size="lg" className="bg-white text-black hover:bg-gray-200">
+                  <ShoppingBag className="mr-2 h-5 w-5" /> SHOP NOW
+                </Button></Link>
               </motion.div>
             </div>
           </div>
