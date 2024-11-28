@@ -105,7 +105,7 @@ const UserSideBar = () => {
           }`}
         >
           <LogOut size={16} />
-          {isExpanded && <span className="ml-2">Logout</span>}
+          {/* {isExpanded && <span className="ml-2">Logout</span>} */}
         </Link>
       </div>
     </div>
