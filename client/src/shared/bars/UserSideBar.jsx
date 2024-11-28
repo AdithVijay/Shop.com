@@ -98,15 +98,15 @@ const UserSideBar = () => {
       </nav>
 
       <div className="p-2 border-t mt-auto flex-shrink-0">
-        <Link
+        {/* <Link
           to="/logout"
           className={`flex items-center px-2 py-1.5 text-sm text-gray-700 hover:bg-gray-200 transition-colors duration-200 ${
             isExpanded ? 'justify-start' : 'justify-center'
           }`}
         >
           <LogOut size={16} />
-          {/* {isExpanded && <span className="ml-2">Logout</span>} */}
-        </Link>
+          // {/* {isExpanded && <span className="ml-2">Logout</span>} */}
+        {/* </Link> */} 
       </div>
     </div>
   );
