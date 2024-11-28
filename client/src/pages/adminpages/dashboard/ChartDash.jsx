@@ -233,7 +233,7 @@ console.log(bestProduct);
               <Card>
                 <CardContent className="p-6">
                 <div className="space-y-2">
-                    <h3 className="text-xl font-bold">Best selling Product</h3>
+                    <h3 className="text-xl font-bold">Best selling category</h3>
                     {bestCategories?.map((x)=>
                        <p className="text-sm text-muted-foreground ">{x. name}</p>
                     )}
