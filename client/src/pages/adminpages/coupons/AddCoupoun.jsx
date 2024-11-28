@@ -40,18 +40,17 @@ export default function AddCoupon() {
 
 
     
-    let a = parseInt( discountValue)
-    let b = parseInt(minPurchaseAmount)
-    let c = parseInt(perPersonLimit)
-    let d = parseInt(usageLimit)
+    const a = parseInt(discountValue);
+    const b = parseInt(minPurchaseAmount);
+    const c = parseInt(perPersonLimit);
+    const d = parseInt(usageLimit);
 
-    if(d>c){
-      return toast.error("Usage Limit should be greater than Per Person limit")
+    if (c > d) { // Correct comparison
+      return toast.error("Usage Limit should be greater than Per Person limit");
     }
-    
-    if(a>b){
 
-      return toast.error("MinPurchaseAmount should be greater than discount value")
+    if (a > b) {
+      return toast.error("MinPurchaseAmount should be greater than discount value");
     }
 
     if (!validateForm()) return
