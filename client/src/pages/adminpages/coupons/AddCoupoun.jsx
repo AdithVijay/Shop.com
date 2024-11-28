@@ -45,7 +45,7 @@ export default function AddCoupon() {
     const c = parseInt(perPersonLimit);
     const d = parseInt(usageLimit);
 
-    if (c > d) { // Correct comparison
+    if (d < c) { // Correct comparison
       return toast.error("Usage Limit should be greater than Per Person limit");
     }
 
