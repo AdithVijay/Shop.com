@@ -38,6 +38,10 @@ export default function AddCoupon() {
   const handleSubmit = async(e) => {
     e.preventDefault()
 
+    if(minPurchaseAmount < discountValue){
+      return toast.error("MinPurchaseAmount should be greater than discount value")
+    }
+
     if (!validateForm()) return
 
     const formData = {
@@ -50,6 +54,8 @@ export default function AddCoupon() {
       usageLimit
     }
     console.log(formData)
+
+    
     
     try {
         const response = await axiosInstance.post('/admin/create-coupon', formData)
