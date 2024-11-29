@@ -18,7 +18,8 @@ export default function OfferModal({handleReloadChangeForOffer,submitOffer,targe
         toast.error("Offer cannot be more than 100.");
         return;
       }
-      if(offerData<0){
+
+      if(offerData == 0){
         toast.error("Offer cannot be less than 0")
       }
       submitOffer({offerData,targetId})
